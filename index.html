@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Back Workout Program</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9em;
+        }
+        
+        .workout-day {
+            margin: 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .workout-day:last-child {
+            border-bottom: none;
+        }
+        
+        .day-header {
+            background: #f8f9fa;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+        
+        .day-header:hover {
+            background: #e9ecef;
+        }
+        
+        .day-header.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .day-title {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .arrow {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+        
+        .arrow.rotated {
+            transform: rotate(180deg);
+        }
+        
+        .workout-content {
+            display: none;
+            padding: 0 20px 20px;
+        }
+        
+        .workout-content.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .exercise {
+            background: #f8f9fa;
+            margin: 15px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .exercise-header {
+            background: #fff;
+            padding: 15px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .exercise-name {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .exercise-details {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .media-placeholder {
+            background: #ecf0f1;
+            padding: 40px 20px;
+            text-align: center;
+            color: #95a5a6;
+            font-style: italic;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .media-placeholder:hover {
+            background: #d5dbdb;
+            cursor: pointer;
+        }
+        
+        .tips {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px;
+        }
+        
+        .tips h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .tips ul {
+            color: #856404;
+            padding-left: 20px;
+        }
+        
+        .tips li {
+            margin: 5px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .day-header {
+                padding: 15px;
+            }
+            
+            .workout-content {
+                padding: 0 15px 15px;
+            }
+            
+            .exercise-header {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💪 Enhanced Back Program</h1>
+            <p>10-15 minutes • Every other day • 8:30 AM</p>
+        </div>
+        
+        <div class="workout-day">
+            <div class="day-header" onclick="toggleDay('dayA')">
+                <div class="day-title">Day A: Vertical Pull Focus</div>
+                <div class="arrow" id="arrowA">▼</div>
+            </div>
+            <div class="workout-content" id="dayA">
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-name">Negative Pull-ups</div>
+                        <div class="exercise-details">3 sets × 3-5 reps (5-second descent)</div>
+                    </div>
+                    <div class="media-placeholder">
+                        <img src="https://www.pftaschools.com/images/portrait/pull-up-assisted.jpg" style="max-width: 100%; height: auto; border-radius: 8px;" alt="Negative Pull-up demonstration">
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-name">Inverted Rows</div>
+                        <div class="exercise-details">2 sets × 8-12 reps</div>
+                    </div>
+                    <div class="media-placeholder">
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/qOux_HZ0XHo" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-name">KB High Pulls</div>
+                        <div class="exercise-details">2 sets × 10 reps</div>
+                    </div>
+                    <div class="media-placeholder">
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/mP1BHxBeAEM" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="workout-day">
+            <div class="day-header" onclick="toggleDay('dayB')">
+                <div class="day-title">Day B: Horizontal Pull & Barbell</div>
+                <div class="arrow" id="arrowB">▼</div>
+            </div>
+            <div class="workout-content" id="dayB">
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-name">Bent-Over Barbell Rows</div>
+                        <div class="exercise-details">3 sets × 8-10 reps</div>
+                    </div>
+                    <div class="media-placeholder">
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/UL8ZcK64KxA" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-name">Inverted Rows</div>
+                        <div class="exercise-details">2 sets × 8-12 reps</div>
+                    </div>
+                    <div class="media-placeholder" onclick="editMedia(this)">
+                        📸 Tap to add image/video
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-name">Single-Arm KB Deadlifts</div>
+                        <div class="exercise-details">2 sets × 8 reps each side</div>
+                    </div>
+                    <div class="media-placeholder">
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/4SFg7GaKI0A" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="workout-day">
+            <div class="day-header" onclick="toggleDay('dayC')">
+                <div class="day-title">Day C: Power & Mixed Patterns</div>
+                <div class="arrow" id="arrowC">▼</div>
+            </div>
+            <div class="workout-content" id="dayC">
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-name">KB Swings</div>
+                        <div class="exercise-details">3 sets × 20 reps</div>
+                    </div>
+                    <div class="media-placeholder">
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/YSxHifyI6s8" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-name">Barbell Deadlifts</div>
+                        <div class="exercise-details">3 sets × 6-8 reps</div>
+                    </div>
+                    <div class="media-placeholder">
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/r4MzxtBKyNE" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-name">Face Pulls</div>
+                        <div class="exercise-details">2 sets × 12-15 reps</div>
+                    </div>
+                    <div class="media-placeholder">
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/Jbyoxer58j4" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <h3>💡 Quick Tips</h3>
+            <ul>
+                <li>Rest 45-60 seconds between sets</li>
+                <li>Focus on controlled movements</li>
+                <li>Squeeze shoulder blades together</li>
+                <li>Keep core engaged throughout</li>
+                <li>Progress gradually with weight/reps</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>Building your V-back • Stay consistent • Track progress</p>
+        </div>
+    </div>
+    
+    <script>
+        function toggleDay(dayId) {
+            const content = document.getElementById(dayId);
+            const header = content.previousElementSibling;
+            const arrow = header.querySelector('.arrow');
+            
+            // Close other open days
+            document.querySelectorAll('.workout-content').forEach(day => {
+                if (day.id !== dayId) {
+                    day.classList.remove('active');
+                    day.previousElementSibling.classList.remove('active');
+                    day.previousElementSibling.querySelector('.arrow').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current day
+            content.classList.toggle('active');
+            header.classList.toggle('active');
+            arrow.classList.toggle('rotated');
+        }
+        
+        function editMedia(element) {
+            const newContent = prompt('Enter image URL or video embed code:');
+            if (newContent) {
+                if (newContent.includes('http')) {
+                    element.innerHTML = `<img src="${newContent}" style="max-width: 100%; height: auto; border-radius: 8px;" alt="Exercise demonstration">`;
+                } else {
+                    element.innerHTML = newContent;
+                }
+            }
+        }
+        
+        // Auto-open first day on mobile
+        if (window.innerWidth <= 768) {
+            setTimeout(() => {
+                toggleDay('dayA');
+            }, 500);
+        }
+    </script>
+</body>
+</html>
