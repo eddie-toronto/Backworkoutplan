@@ -667,11 +667,16 @@
         // Make Firebase available globally
         window.firebase = { db, auth, addDoc, collection, getDocs, query, orderBy, limit, onSnapshot };
         
-        // Sign in anonymously
+        // Sign in anonymously with better error handling
         signInAnonymously(auth).catch((error) => {
             console.error('Firebase auth error:', error);
-            document.getElementById('firebaseStatus').textContent = '❌ Firebase Error';
+            console.log('Running in offline mode...');
+            document.getElementById('firebaseStatus').textContent = '📱 Offline Mode';
             document.getElementById('firebaseStatus').className = 'firebase-status disconnected';
+            
+            // Set up offline mode
+            window.currentUser = { uid: 'offline-user-' + Date.now() };
+            loadUserData();
         });
         
         // Auth state listener
@@ -831,10 +836,11 @@
                 `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
         
-        // Save workout to Firebase
+        // Save workout to Firebase with error handling
         async function saveWorkout() {
             if (!window.firebase || !window.currentUser) {
                 console.log('Firebase not available or user not authenticated');
+                saveWorkoutLocally();
                 return;
             }
             
@@ -848,16 +854,39 @@
             
             try {
                 await window.firebase.addDoc(window.firebase.collection(window.firebase.db, 'workouts'), workoutSummary);
-                console.log('Workout saved successfully');
+                console.log('Workout saved successfully to Firebase');
                 updateStats();
             } catch (error) {
-                console.error('Error saving workout:', error);
+                console.error('Error saving workout to Firebase:', error);
+                console.log('Saving workout locally instead...');
+                saveWorkoutLocally(workoutSummary);
+                updateStats();
             }
         }
         
-        // Load user data
+        // Save workout locally as backup
+        function saveWorkoutLocally(workoutData = null) {
+            const workout = workoutData || {
+                day: currentDay,
+                date: new Date().toISOString(),
+                duration: elapsedTime,
+                exercises: currentWorkout,
+                userId: window.currentUser?.uid || 'local-user'
+            };
+            
+            const localWorkouts = JSON.parse(localStorage.getItem('localWorkouts') || '[]');
+            localWorkouts.push(workout);
+            localStorage.setItem('localWorkouts', JSON.stringify(localWorkouts));
+            console.log('Workout saved locally');
+        }
+        
+        // Load user data with fallback to local storage
         async function loadUserData() {
-            if (!window.firebase || !window.currentUser) return;
+            if (!window.firebase || !window.currentUser) {
+                console.log('Loading data from local storage...');
+                loadLocalData();
+                return;
+            }
             
             try {
                 const q = window.firebase.query(
@@ -874,8 +903,23 @@
                 
                 updateStatsWithData(workouts);
                 updateHistoryDisplay(workouts);
+                console.log('Data loaded from Firebase');
             } catch (error) {
-                console.error('Error loading user data:', error);
+                console.error('Error loading user data from Firebase:', error);
+                console.log('Loading data from local storage instead...');
+                loadLocalData();
+            }
+        }
+        
+        // Load data from local storage
+        function loadLocalData() {
+            const localWorkouts = JSON.parse(localStorage.getItem('localWorkouts') || '[]');
+            updateStatsWithData(localWorkouts);
+            updateHistoryDisplay(localWorkouts);
+            
+            if (localWorkouts.length > 0) {
+                document.getElementById('firebaseStatus').textContent = '📱 Local Storage';
+                document.getElementById('firebaseStatus').className = 'firebase-status';
             }
         }
         
