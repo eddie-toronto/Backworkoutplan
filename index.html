@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Back Workout Program</title>
+    <title>Back Workout Tracker</title>
     <style>
         * {
             margin: 0;
@@ -33,6 +33,7 @@
             color: white;
             padding: 30px 20px;
             text-align: center;
+            position: relative;
         }
         
         .header h1 {
@@ -45,62 +46,109 @@
             font-size: 0.9em;
         }
         
-        .workout-day {
-            margin: 0;
-            border-bottom: 1px solid #f0f0f0;
+        .streak-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
         }
         
-        .workout-day:last-child {
-            border-bottom: none;
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
         }
         
-        .day-header {
-            background: #f8f9fa;
+        .progress-fill {
+            background: #2ecc71;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .workout-selector {
             padding: 20px;
-            cursor: pointer;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .day-buttons {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid #3498db;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .day-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
             transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
         }
         
-        .day-header:hover {
-            background: #e9ecef;
-        }
-        
-        .day-header.active {
+        .day-btn.active {
+            border-color: #3498db;
             background: #3498db;
             color: white;
         }
         
-        .day-title {
-            font-size: 1.2em;
+        .day-btn:hover {
+            border-color: #3498db;
+        }
+        
+        .timer-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .timer {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .timer-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .timer-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
             font-weight: 600;
+            transition: all 0.3s ease;
         }
         
-        .arrow {
-            font-size: 1.2em;
-            transition: transform 0.3s ease;
+        .start-btn {
+            background: #2ecc71;
+            color: white;
         }
         
-        .arrow.rotated {
-            transform: rotate(180deg);
+        .pause-btn {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .stop-btn {
+            background: #e74c3c;
+            color: white;
         }
         
         .workout-content {
-            display: none;
-            padding: 0 20px 20px;
-        }
-        
-        .workout-content.active {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-        
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            padding: 20px;
         }
         
         .exercise {
@@ -115,6 +163,13 @@
             background: #fff;
             padding: 15px;
             border-left: 4px solid #e74c3c;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .exercise-info {
+            flex: 1;
         }
         
         .exercise-name {
@@ -129,47 +184,123 @@
             font-size: 0.9em;
         }
         
-        .media-placeholder {
-            background: #ecf0f1;
-            padding: 40px 20px;
-            text-align: center;
-            color: #95a5a6;
-            font-style: italic;
-            border-top: 1px solid #e0e0e0;
+        .exercise-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
         
-        .media-placeholder:hover {
-            background: #d5dbdb;
+        .rep-counter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+        }
+        
+        .rep-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 50%;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
         
-        .tips {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
+        .rep-btn:hover {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .completed-btn {
+            padding: 8px 16px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+        
+        .completed-btn.completed {
+            background: #27ae60;
+        }
+        
+        .completed-btn:hover {
+            background: #27ae60;
+        }
+        
+        .progress-section {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .stat-label {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .workout-history {
+            background: white;
             border-radius: 8px;
             padding: 15px;
-            margin: 20px;
+            max-height: 200px;
+            overflow-y: auto;
         }
         
-        .tips h3 {
-            color: #856404;
-            margin-bottom: 10px;
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
         }
         
-        .tips ul {
-            color: #856404;
-            padding-left: 20px;
+        .history-item:last-child {
+            border-bottom: none;
         }
         
-        .tips li {
-            margin: 5px 0;
+        .firebase-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2ecc71;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
         
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #7f8c8d;
-            font-size: 0.9em;
+        .firebase-status.disconnected {
+            background: #e74c3c;
         }
         
         @media (max-width: 480px) {
@@ -177,20 +308,19 @@
                 padding: 10px;
             }
             
-            .header {
-                padding: 20px 15px;
+            .day-buttons {
+                flex-direction: column;
             }
             
-            .day-header {
-                padding: 15px;
-            }
-            
-            .workout-content {
-                padding: 0 15px 15px;
+            .timer-section {
+                flex-direction: column;
+                gap: 15px;
             }
             
             .exercise-header {
-                padding: 12px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
             }
         }
     </style>
@@ -198,178 +328,418 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>💪 Enhanced Back Program</h1>
-            <p>10-15 minutes • Every other day • 8:30 AM</p>
-        </div>
-        
-        <div class="workout-day">
-            <div class="day-header" onclick="toggleDay('dayA')">
-                <div class="day-title">Day A: Vertical Pull Focus</div>
-                <div class="arrow" id="arrowA">▼</div>
+            <div class="streak-counter">
+                🔥 <span id="streak">0</span> day streak
             </div>
-            <div class="workout-content" id="dayA">
-                <div class="exercise">
-                    <div class="exercise-header">
-                        <div class="exercise-name">Negative Pull-ups</div>
-                        <div class="exercise-details">3 sets × 3-5 reps (5-second descent)</div>
-                    </div>
-                    <div class="media-placeholder">
-                        <img src="https://www.pftaschools.com/images/portrait/pull-up-assisted.jpg" style="max-width: 100%; height: auto; border-radius: 8px;" alt="Negative Pull-up demonstration">
-                    </div>
-                </div>
-                
-                <div class="exercise">
-                    <div class="exercise-header">
-                        <div class="exercise-name">Inverted Rows</div>
-                        <div class="exercise-details">2 sets × 8-12 reps</div>
-                    </div>
-                    <div class="media-placeholder">
-                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/qOux_HZ0XHo" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
-                    </div>
-                </div>
-                
-                <div class="exercise">
-                    <div class="exercise-header">
-                        <div class="exercise-name">KB High Pulls</div>
-                        <div class="exercise-details">2 sets × 10 reps</div>
-                    </div>
-                    <div class="media-placeholder">
-                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/mP1BHxBeAEM" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="workout-day">
-            <div class="day-header" onclick="toggleDay('dayB')">
-                <div class="day-title">Day B: Horizontal Pull & Barbell</div>
-                <div class="arrow" id="arrowB">▼</div>
-            </div>
-            <div class="workout-content" id="dayB">
-                <div class="exercise">
-                    <div class="exercise-header">
-                        <div class="exercise-name">Bent-Over Barbell Rows</div>
-                        <div class="exercise-details">3 sets × 8-10 reps</div>
-                    </div>
-                    <div class="media-placeholder">
-                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/UL8ZcK64KxA" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
-                    </div>
-                </div>
-                
-                <div class="exercise">
-                    <div class="exercise-header">
-                        <div class="exercise-name">Inverted Rows</div>
-                        <div class="exercise-details">2 sets × 8-12 reps</div>
-                    </div>
-                    <div class="media-placeholder" onclick="editMedia(this)">
-                        📸 Tap to add image/video
-                    </div>
-                </div>
-                
-                <div class="exercise">
-                    <div class="exercise-header">
-                        <div class="exercise-name">Single-Arm KB Deadlifts</div>
-                        <div class="exercise-details">2 sets × 8 reps each side</div>
-                    </div>
-                    <div class="media-placeholder">
-                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/4SFg7GaKI0A" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="workout-day">
-            <div class="day-header" onclick="toggleDay('dayC')">
-                <div class="day-title">Day C: Power & Mixed Patterns</div>
-                <div class="arrow" id="arrowC">▼</div>
-            </div>
-            <div class="workout-content" id="dayC">
-                <div class="exercise">
-                    <div class="exercise-header">
-                        <div class="exercise-name">KB Swings</div>
-                        <div class="exercise-details">3 sets × 20 reps</div>
-                    </div>
-                    <div class="media-placeholder">
-                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/YSxHifyI6s8" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
-                    </div>
-                </div>
-                
-                <div class="exercise">
-                    <div class="exercise-header">
-                        <div class="exercise-name">Barbell Deadlifts</div>
-                        <div class="exercise-details">3 sets × 6-8 reps</div>
-                    </div>
-                    <div class="media-placeholder">
-                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/r4MzxtBKyNE" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
-                    </div>
-                </div>
-                
-                <div class="exercise">
-                    <div class="exercise-header">
-                        <div class="exercise-name">Face Pulls</div>
-                        <div class="exercise-details">2 sets × 12-15 reps</div>
-                    </div>
-                    <div class="media-placeholder">
-                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/Jbyoxer58j4" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="tips">
-            <h3>💡 Quick Tips</h3>
-            <ul>
-                <li>Rest 45-60 seconds between sets</li>
-                <li>Focus on controlled movements</li>
-                <li>Squeeze shoulder blades together</li>
-                <li>Keep core engaged throughout</li>
-                <li>Progress gradually with weight/reps</li>
-            </ul>
-        </div>
-        
-        <div class="footer">
+            <h1>💪 Back Workout Tracker</h1>
             <p>Building your V-back • Stay consistent • Track progress</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="dailyProgress"></div>
+            </div>
+        </div>
+        
+        <div class="workout-selector">
+            <div class="day-buttons">
+                <button class="day-btn active" onclick="selectDay('A')">Day A</button>
+                <button class="day-btn" onclick="selectDay('B')">Day B</button>
+                <button class="day-btn" onclick="selectDay('C')">Day C</button>
+            </div>
+            
+            <div class="timer-section">
+                <div class="timer" id="timer">00:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn start-btn" onclick="startTimer()">Start</button>
+                    <button class="timer-btn pause-btn" onclick="pauseTimer()">Pause</button>
+                    <button class="timer-btn stop-btn" onclick="stopTimer()">Stop</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="workout-content" id="workoutContent">
+            <!-- Workout content will be dynamically loaded here -->
+        </div>
+        
+        <div class="progress-section">
+            <div class="progress-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalWorkouts">0</div>
+                    <div class="stat-label">Total Workouts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalPullUps">0</div>
+                    <div class="stat-label">Pull-ups Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgDuration">0</div>
+                    <div class="stat-label">Avg Duration (min)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="thisWeek">0</div>
+                    <div class="stat-label">This Week</div>
+                </div>
+            </div>
+            
+            <div class="workout-history">
+                <h3 style="margin-bottom: 10px; color: #2c3e50;">Recent Workouts</h3>
+                <div id="historyList">
+                    <!-- History will be populated here -->
+                </div>
+            </div>
         </div>
     </div>
     
+    <div class="firebase-status" id="firebaseStatus">
+        🔗 Connected to Firebase
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        
+      // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBIJ6KUPeGSHvHWwz5ncRLClhh74kMQDa8",
+  authDomain: "workouttracker-e1688.firebaseapp.com",
+  projectId: "workouttracker-e1688",
+  storageBucket: "workouttracker-e1688.firebasestorage.app",
+  messagingSenderId: "948286237385",
+  appId: "1:948286237385:web:35669c5a8fd3beb76b7b18",
+  measurementId: "G-NJ7JDVLLEQ"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        // Make Firebase available globally
+        window.firebase = { db, auth, addDoc, collection, getDocs, query, orderBy, limit, onSnapshot };
+        
+        // Sign in anonymously
+        signInAnonymously(auth).catch((error) => {
+            console.error('Firebase auth error:', error);
+            document.getElementById('firebaseStatus').textContent = '❌ Firebase Error';
+            document.getElementById('firebaseStatus').className = 'firebase-status disconnected';
+        });
+        
+        // Auth state listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log('User signed in:', user.uid);
+                window.currentUser = user;
+                loadUserData();
+            }
+        });
+    </script>
+    
     <script>
-        function toggleDay(dayId) {
-            const content = document.getElementById(dayId);
-            const header = content.previousElementSibling;
-            const arrow = header.querySelector('.arrow');
-            
-            // Close other open days
-            document.querySelectorAll('.workout-content').forEach(day => {
-                if (day.id !== dayId) {
-                    day.classList.remove('active');
-                    day.previousElementSibling.classList.remove('active');
-                    day.previousElementSibling.querySelector('.arrow').classList.remove('rotated');
-                }
-            });
-            
-            // Toggle current day
-            content.classList.toggle('active');
-            header.classList.toggle('active');
-            arrow.classList.toggle('rotated');
+        // Workout data
+        const workoutData = {
+            A: [
+                { name: 'Pull-ups (Progressive)', details: '3 sets × Start with full pull-ups, finish with negatives (total 3-5 reps)', sets: 3, targetReps: 5 },
+                { name: 'Inverted Rows', details: '2 sets × 8-12 reps', sets: 2, targetReps: 10 },
+                { name: 'KB High Pulls', details: '2 sets × 10 reps', sets: 2, targetReps: 10 }
+            ],
+            B: [
+                { name: 'Bent-Over Barbell Rows', details: '3 sets × 8-10 reps', sets: 3, targetReps: 9 },
+                { name: 'Inverted Rows', details: '2 sets × 8-12 reps', sets: 2, targetReps: 10 },
+                { name: 'Single-Arm KB Deadlifts', details: '2 sets × 8 reps each side', sets: 2, targetReps: 8 }
+            ],
+            C: [
+                { name: 'KB Swings', details: '3 sets × 20 reps', sets: 3, targetReps: 20 },
+                { name: 'Barbell Deadlifts', details: '3 sets × 6-8 reps', sets: 3, targetReps: 7 },
+                { name: 'Face Pulls', details: '2 sets × 12-15 reps', sets: 2, targetReps: 13 }
+            ]
+        };
+        
+        // App state
+        let currentDay = 'A';
+        let currentWorkout = {};
+        let timerInterval = null;
+        let elapsedTime = 0;
+        let isTimerRunning = false;
+        
+        // Initialize app
+        function init() {
+            selectDay('A');
+            updateStats();
         }
         
-        function editMedia(element) {
-            const newContent = prompt('Enter image URL or video embed code:');
-            if (newContent) {
-                if (newContent.includes('http')) {
-                    element.innerHTML = `<img src="${newContent}" style="max-width: 100%; height: auto; border-radius: 8px;" alt="Exercise demonstration">`;
-                } else {
-                    element.innerHTML = newContent;
+        // Select workout day
+        function selectDay(day) {
+            currentDay = day;
+            currentWorkout = {};
+            
+            // Update button states
+            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Load workout content
+            loadWorkoutContent();
+            updateProgress();
+        }
+        
+        // Load workout content
+        function loadWorkoutContent() {
+            const content = document.getElementById('workoutContent');
+            const exercises = workoutData[currentDay];
+            
+            content.innerHTML = exercises.map((exercise, index) => `
+                <div class="exercise">
+                    <div class="exercise-header">
+                        <div class="exercise-info">
+                            <div class="exercise-name">${exercise.name}</div>
+                            <div class="exercise-details">${exercise.details}</div>
+                        </div>
+                        <div class="exercise-controls">
+                            <div class="rep-counter">
+                                <button class="rep-btn" onclick="adjustReps(${index}, -1)">-</button>
+                                <span id="reps-${index}">${currentWorkout[index]?.reps || 0}</span>
+                                <button class="rep-btn" onclick="adjustReps(${index}, 1)">+</button>
+                            </div>
+                            <button class="completed-btn" id="complete-${index}" onclick="toggleComplete(${index})">
+                                Complete Set
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Initialize workout state
+            exercises.forEach((exercise, index) => {
+                if (!currentWorkout[index]) {
+                    currentWorkout[index] = { reps: 0, completed: false };
                 }
+            });
+        }
+        
+        // Adjust reps
+        function adjustReps(exerciseIndex, change) {
+            currentWorkout[exerciseIndex].reps = Math.max(0, currentWorkout[exerciseIndex].reps + change);
+            document.getElementById(`reps-${exerciseIndex}`).textContent = currentWorkout[exerciseIndex].reps;
+            updateProgress();
+        }
+        
+        // Toggle complete
+        function toggleComplete(exerciseIndex) {
+            currentWorkout[exerciseIndex].completed = !currentWorkout[exerciseIndex].completed;
+            const btn = document.getElementById(`complete-${exerciseIndex}`);
+            
+            if (currentWorkout[exerciseIndex].completed) {
+                btn.textContent = '✓ Completed';
+                btn.classList.add('completed');
+            } else {
+                btn.textContent = 'Complete Set';
+                btn.classList.remove('completed');
+            }
+            
+            updateProgress();
+        }
+        
+        // Timer functions
+        function startTimer() {
+            if (!isTimerRunning) {
+                isTimerRunning = true;
+                timerInterval = setInterval(() => {
+                    elapsedTime++;
+                    updateTimerDisplay();
+                }, 1000);
             }
         }
         
-        // Auto-open first day on mobile
-        if (window.innerWidth <= 768) {
-            setTimeout(() => {
-                toggleDay('dayA');
-            }, 500);
+        function pauseTimer() {
+            isTimerRunning = false;
+            clearInterval(timerInterval);
         }
+        
+        function stopTimer() {
+            isTimerRunning = false;
+            clearInterval(timerInterval);
+            
+            // Save workout if there's progress
+            const hasProgress = Object.values(currentWorkout).some(ex => ex.reps > 0 || ex.completed);
+            if (hasProgress) {
+                saveWorkout();
+            }
+            
+            elapsedTime = 0;
+            updateTimerDisplay();
+            resetWorkout();
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Save workout to Firebase
+        async function saveWorkout() {
+            if (!window.firebase || !window.currentUser) {
+                console.log('Firebase not available or user not authenticated');
+                return;
+            }
+            
+            const workoutSummary = {
+                day: currentDay,
+                date: new Date().toISOString(),
+                duration: elapsedTime,
+                exercises: currentWorkout,
+                userId: window.currentUser.uid
+            };
+            
+            try {
+                await window.firebase.addDoc(window.firebase.collection(window.firebase.db, 'workouts'), workoutSummary);
+                console.log('Workout saved successfully');
+                updateStats();
+            } catch (error) {
+                console.error('Error saving workout:', error);
+            }
+        }
+        
+        // Load user data
+        async function loadUserData() {
+            if (!window.firebase || !window.currentUser) return;
+            
+            try {
+                const q = window.firebase.query(
+                    window.firebase.collection(window.firebase.db, 'workouts'),
+                    window.firebase.orderBy('date', 'desc'),
+                    window.firebase.limit(10)
+                );
+                
+                const querySnapshot = await window.firebase.getDocs(q);
+                const workouts = [];
+                querySnapshot.forEach((doc) => {
+                    workouts.push({ id: doc.id, ...doc.data() });
+                });
+                
+                updateStatsWithData(workouts);
+                updateHistoryDisplay(workouts);
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+        
+        // Update stats with data
+        function updateStatsWithData(workouts) {
+            const totalWorkouts = workouts.length;
+            const totalPullUps = workouts.reduce((sum, workout) => {
+                return sum + (workout.exercises[0]?.reps || 0); // Assuming first exercise is pull-ups
+            }, 0);
+            
+            const avgDuration = workouts.length > 0 ? 
+                Math.round(workouts.reduce((sum, w) => sum + w.duration, 0) / workouts.length / 60) : 0;
+            
+            const thisWeek = workouts.filter(w => {
+                const workoutDate = new Date(w.date);
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                return workoutDate > oneWeekAgo;
+            }).length;
+            
+            document.getElementById('totalWorkouts').textContent = totalWorkouts;
+            document.getElementById('totalPullUps').textContent = totalPullUps;
+            document.getElementById('avgDuration').textContent = avgDuration;
+            document.getElementById('thisWeek').textContent = thisWeek;
+            
+            // Update streak
+            const streak = calculateStreak(workouts);
+            document.getElementById('streak').textContent = streak;
+        }
+        
+        // Calculate streak
+        function calculateStreak(workouts) {
+            if (workouts.length === 0) return 0;
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            let streak = 0;
+            let currentDate = new Date(today);
+            
+            for (let workout of workouts) {
+                const workoutDate = new Date(workout.date);
+                workoutDate.setHours(0, 0, 0, 0);
+                
+                if (workoutDate.getTime() === currentDate.getTime()) {
+                    streak++;
+                    currentDate.setDate(currentDate.getDate() - 2); // Every other day
+                } else if (workoutDate.getTime() < currentDate.getTime()) {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+        
+        // Update history display
+        function updateHistoryDisplay(workouts) {
+            const historyList = document.getElementById('historyList');
+            
+            if (workouts.length === 0) {
+                historyList.innerHTML = '<p style="color: #7f8c8d; font-style: italic;">No workouts yet. Start your first session!</p>';
+                return;
+            }
+            
+            historyList.innerHTML = workouts.map(workout => {
+                const date = new Date(workout.date).toLocaleDateString();
+                const duration = Math.round(workout.duration / 60);
+                return `
+                    <div class="history-item">
+                        <span>Day ${workout.day} - ${date}</span>
+                        <span>${duration} min</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Update progress
+        function updateProgress() {
+            const exercises = workoutData[currentDay];
+            const totalExercises = exercises.length;
+            const completedExercises = Object.values(currentWorkout).filter(ex => ex.completed).length;
+            
+            const progress = totalExercises > 0 ? (completedExercises / totalExercises) * 100 : 0;
+            document.getElementById('dailyProgress').style.width = `${progress}%`;
+        }
+        
+        // Reset workout
+        function resetWorkout() {
+            currentWorkout = {};
+            loadWorkoutContent();
+            updateProgress();
+        }
+        
+        // Update stats (fallback for offline)
+        function updateStats() {
+            // This will be overridden by loadUserData when Firebase is available
+            document.getElementById('totalWorkouts').textContent = '0';
+            document.getElementById('totalPullUps').textContent = '0';
+            document.getElementById('avgDuration').textContent = '0';
+            document.getElementById('thisWeek').textContent = '0';
+            document.getElementById('streak').textContent = '0';
+        }
+        
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
