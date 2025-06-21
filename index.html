@@ -1032,6 +1032,9 @@
                 case 'restored':
                     indicator.textContent = '🔄 Restored';
                     break;
+                case 'signed-out':
+                    indicator.textContent = '👋 Signed Out';
+                    break;
                 default:
                     indicator.textContent = '✅ Ready';
             }
@@ -1542,10 +1545,22 @@
                         });
                     }
                     
-                    closeAuthModal();
+                    // Show success message for account creation
+                    showAuthSuccess(`Welcome ${displayName || email}! Your account has been created successfully.`);
+                    
+                    setTimeout(() => {
+                        closeAuthModal();
+                    }, 2000);
+                    
                 } else {
                     await window.firebase.signInWithEmailAndPassword(window.firebase.auth, email, password);
-                    closeAuthModal();
+                    
+                    // Show success message for login
+                    showAuthSuccess('Successfully logged in!');
+                    
+                    setTimeout(() => {
+                        closeAuthModal();
+                    }, 1500);
                 }
             } catch (error) {
                 console.error('Auth error:', error);
@@ -1576,6 +1591,13 @@
                 submitBtn.disabled = false;
                 submitBtn.textContent = authMode === 'login' ? 'Login' : 'Create Account';
             }
+        }
+
+        function showAuthSuccess(message) {
+            const errorDiv = document.getElementById('authError');
+            errorDiv.textContent = message;
+            errorDiv.style.background = '#2ecc71';
+            errorDiv.style.display = 'block';
         }
 
         // Feedback functions
