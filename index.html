@@ -866,6 +866,46 @@
             signOut: firebaseSignOut  // Make signOut available
         };
 
+        // Make auth functions globally available
+        window.showAuthModal = function(mode) {
+            authMode = mode;
+            const modal = document.getElementById('authModal');
+            const title = document.getElementById('authModalTitle');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const confirmGroup = document.getElementById('confirmPasswordGroup');
+            const nameGroup = document.getElementById('displayNameGroup');
+            const switchText = document.getElementById('authSwitchText');
+            const switchBtn = document.getElementById('authSwitchBtn');
+            
+            if (mode === 'login') {
+                title.textContent = '🔐 Login';
+                submitBtn.textContent = 'Login';
+                confirmGroup.style.display = 'none';
+                nameGroup.style.display = 'none';
+                switchText.textContent = "Don't have an account?";
+                switchBtn.textContent = 'Sign Up';
+            } else {
+                title.textContent = '📝 Sign Up';
+                submitBtn.textContent = 'Create Account';
+                confirmGroup.style.display = 'block';
+                nameGroup.style.display = 'block';
+                switchText.textContent = 'Already have an account?';
+                switchBtn.textContent = 'Login';
+            }
+            
+            clearAuthError();
+            document.getElementById('authForm').reset();
+            modal.style.display = 'block';
+        };
+
+        window.closeAuthModal = function() {
+            document.getElementById('authModal').style.display = 'none';
+        };
+
+        window.switchAuthMode = function() {
+            const newMode = authMode === 'login' ? 'signup' : 'login';
+            showAuthModal(newMode);
+        };
         // Make signOut function globally available
         window.signOut = async function() {
             try {
@@ -1100,22 +1140,32 @@
             // Hide all sections
             document.querySelectorAll('.home-container, .workout-container').forEach(section => {
                 section.style.display = 'none';
-                section.classList.remove('active');
+                if (section.classList) {
+                    section.classList.remove('active');
+                }
             });
             
             // Remove active class from all tabs
             document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
+                if (tab.classList) {
+                    tab.classList.remove('active');
+                }
             });
             
             // Show selected section and activate tab
             if (sectionName === 'home') {
-                document.getElementById('homeSection').style.display = 'block';
-                document.getElementById('homeSection').classList.add('active');
+                const homeSection = document.getElementById('homeSection');
+                if (homeSection) {
+                    homeSection.style.display = 'block';
+                    homeSection.classList.add('active');
+                }
                 appState.currentSection = 'home';
             } else if (sectionName.startsWith('day')) {
                 const day = sectionName.replace('day', '');
-                document.getElementById(`day${day}Section`).style.display = 'block';
+                const daySection = document.getElementById(`day${day}Section`);
+                if (daySection) {
+                    daySection.style.display = 'block';
+                }
                 appState.currentSection = sectionName;
                 appState.currentDay = day;
                 loadExercises(day);
@@ -1127,8 +1177,10 @@
                 return; // Don't update tab state for modal
             }
             
-            // Activate the clicked tab
-            event.target.classList.add('active');
+            // Activate the clicked tab if event exists
+            if (window.event && window.event.target && window.event.target.classList) {
+                window.event.target.classList.add('active');
+            }
             
             // Update timer display for current section
             updateTimerDisplay();
