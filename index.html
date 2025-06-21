@@ -852,13 +852,16 @@
         // Make Firebase available globally
         window.firebase = { db, auth, addDoc, collection, getDocs, query, orderBy, limit, onSnapshot, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile };
         
-        // Auth state listener
+        // Auth state listener with debugging
         onAuthStateChanged(auth, (user) => {
+            console.log('Auth state changed:', user); // Debug log
             if (user) {
+                console.log('User details:', { uid: user.uid, email: user.email, displayName: user.displayName }); // Debug log
                 window.currentUser = user;
                 updateAuthUI(user);
                 loadUserData();
             } else {
+                console.log('No user signed in'); // Debug log
                 window.currentUser = null;
                 updateAuthUI(null);
             }
