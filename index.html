@@ -863,7 +863,35 @@
             createUserWithEmailAndPassword, 
             signInWithEmailAndPassword, 
             updateProfile,
-            firebaseSignOut
+            signOut: firebaseSignOut  // Make signOut available
+        };
+
+        // Make signOut function globally available
+        window.signOut = async function() {
+            try {
+                await firebaseSignOut(auth);
+                
+                // Clear local state on sign out
+                localStorage.removeItem('workoutAppState');
+                
+                // Reset app state
+                appState.workout.exercises = {};
+                appState.timer.elapsed = 0;
+                appState.timer.isRunning = false;
+                appState.workout.active = false;
+                
+                // Show sign out confirmation
+                updateStateIndicator('signed-out');
+                
+                // Refresh to home page
+                showSection('home');
+                
+                console.log('User signed out successfully');
+                
+            } catch (error) {
+                console.error('Sign out error:', error);
+                updateStateIndicator('error');
+            }
         };
         
         // Auth state listener with debugging
