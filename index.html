@@ -850,7 +850,21 @@
         const auth = getAuth(app);
         
         // Make Firebase available globally
-        window.firebase = { db, auth, addDoc, collection, getDocs, query, orderBy, limit, onSnapshot, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile };
+        window.firebase = { 
+            db, 
+            auth, 
+            addDoc, 
+            collection, 
+            getDocs, 
+            query, 
+            orderBy, 
+            limit, 
+            onSnapshot, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            updateProfile,
+            firebaseSignOut
+        };
         
         // Auth state listener with debugging
         onAuthStateChanged(auth, (user) => {
