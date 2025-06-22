@@ -786,6 +786,165 @@
                 flex-direction: column;
             }
         }
+
+        /* Floating Timer Styles */
+        .floating-timer {
+            position: fixed;
+            top: 80px; /* Below the app banner */
+            right: 15px;
+            background: rgba(52, 152, 219, 0.95);
+            color: white;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            max-width: 200px;
+        }
+
+        .floating-timer.collapsed {
+            padding: 8px;
+            background: rgba(52, 152, 219, 0.8);
+            transform: scale(0.9);
+        }
+
+        .floating-timer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .floating-timer-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            min-width: 80px;
+        }
+
+        .floating-timer.collapsed .floating-timer-display {
+            font-size: 1.1em;
+        }
+
+        .floating-timer-controls {
+            display: flex;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .floating-timer.collapsed .floating-timer-controls {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .floating-timer-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .floating-timer-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .floating-timer-btn:active {
+            transform: translateY(0);
+        }
+
+        .floating-timer-btn.start {
+            background: rgba(46, 204, 113, 0.3);
+        }
+
+        .floating-timer-btn.pause {
+            background: rgba(243, 156, 18, 0.3);
+        }
+
+        .floating-timer-btn.stop {
+            background: rgba(231, 76, 60, 0.3);
+        }
+
+        .floating-timer-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.7em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            margin-top: 2px;
+        }
+
+        .floating-timer-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(180deg);
+        }
+
+        /* Pulsing animation when timer is active */
+        .floating-timer.active {
+            animation: timerPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { 
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 0 0 rgba(52, 152, 219, 0.7);
+            }
+            50% { 
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 0 8px rgba(52, 152, 219, 0);
+            }
+        }
+
+        /* Enhanced mobile styles for floating timer */
+        @media (max-width: 480px) {
+            .floating-timer {
+                right: 8px;
+                top: 75px;
+                max-width: 160px;
+            }
+            
+            .floating-timer-display {
+                font-size: 1.2em;
+            }
+            
+            .floating-timer-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7em;
+            }
+        }
+
+        /* Smooth show/hide transitions */
+        .floating-timer.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .floating-timer.hide {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -858,6 +1017,19 @@
     
     <!-- Navigation Drawer Overlay -->
     <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="closeDrawer()"></div>
+
+    <!-- Floating Timer - Always visible during workout sessions -->
+    <div class="floating-timer" id="floatingTimer" style="display: none;">
+        <div class="floating-timer-content">
+            <div class="floating-timer-display" id="floatingTimerDisplay">00:00</div>
+            <div class="floating-timer-controls">
+                <button class="floating-timer-btn start" onclick="startTimer()" id="floatingStartBtn">▶️</button>
+                <button class="floating-timer-btn pause" onclick="pauseTimer()" id="floatingPauseBtn">⏸️</button>
+                <button class="floating-timer-btn stop" onclick="stopTimer()" id="floatingStopBtn">⏹️</button>
+            </div>
+            <button class="floating-timer-toggle" onclick="toggleFloatingTimer()" id="floatingToggle">📍</button>
+        </div>
+    </div>
 
     <!-- Main Content Area -->
     <div class="main-content">
@@ -1902,6 +2074,491 @@
 
     <!-- Global Functions Script - These functions need to be accessible to HTML onclick handlers -->
     <script>
+        // Floating Timer Management Functions
+        let floatingTimerCollapsed = false;
+
+        function showFloatingTimer() {
+            const floatingTimer = document.getElementById('floatingTimer');
+            if (floatingTimer) {
+                floatingTimer.style.display = 'block';
+                // Small delay to ensure smooth animation
+                setTimeout(() => {
+                    floatingTimer.classList.add('show');
+                    floatingTimer.classList.remove('hide');
+                }, 50);
+            }
+        }
+
+        function hideFloatingTimer() {
+            const floatingTimer = document.getElementById('floatingTimer');
+            if (floatingTimer) {
+                floatingTimer.classList.add('hide');
+                floatingTimer.classList.remove('show');
+                // Hide completely after animation
+                setTimeout(() => {
+                    floatingTimer.style.display = 'none';
+                }, 300);
+            }
+        }
+
+        function toggleFloatingTimer() {
+            const floatingTimer = document.getElementById('floatingTimer');
+            if (!floatingTimer) return;
+            
+            floatingTimerCollapsed = !floatingTimerCollapsed;
+            
+            if (floatingTimerCollapsed) {
+                floatingTimer.classList.add('collapsed');
+            } else {
+                floatingTimer.classList.remove('collapsed');
+            }
+            
+            // Update toggle button icon to provide visual feedback
+            const toggleBtn = document.getElementById('floatingToggle');
+            if (toggleBtn) {
+                toggleBtn.textContent = floatingTimerCollapsed ? '📌' : '📍';
+            }
+        }
+
+        function updateFloatingTimerState() {
+            const floatingTimer = document.getElementById('floatingTimer');
+            const isWorkoutActive = window.appState?.workout?.active || false;
+            const isTimerRunning = window.appState?.timer?.isRunning || false;
+            const currentSection = window.appState?.currentSection || 'home';
+            
+            // Show floating timer only during workout sections and when workout is active
+            if (currentSection.startsWith('day') && (isWorkoutActive || isTimerRunning)) {
+                showFloatingTimer();
+                
+                // Add pulsing animation when timer is running to provide visual feedback
+                if (isTimerRunning) {
+                    floatingTimer.classList.add('active');
+                } else {
+                    floatingTimer.classList.remove('active');
+                }
+                
+                // Update button states to show appropriate controls
+                updateFloatingTimerButtons();
+            } else {
+                hideFloatingTimer();
+                if (floatingTimer) {
+                    floatingTimer.classList.remove('active');
+                }
+            }
+        }
+
+        function updateFloatingTimerButtons() {
+            const isTimerRunning = window.appState?.timer?.isRunning || false;
+            const startBtn = document.getElementById('floatingStartBtn');
+            const pauseBtn = document.getElementById('floatingPauseBtn');
+            
+            if (startBtn && pauseBtn) {
+                if (isTimerRunning) {
+                    startBtn.style.display = 'none';
+                    pauseBtn.style.display = 'flex';
+                } else {
+                    startBtn.style.display = 'flex';
+                    pauseBtn.style.display = 'none';
+                }
+            }
+        }
+
+        function updateFloatingTimerDisplay() {
+            const floatingDisplay = document.getElementById('floatingTimerDisplay');
+            if (!floatingDisplay) return;
+            
+            const elapsed = window.appState?.timer?.elapsed || 0;
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            floatingDisplay.textContent = timeString;
+        }
+
+        // Enhanced timer functions that coordinate both displays
+        function enhancedUpdateTimerDisplay() {
+            // Update the original timer displays in day banners
+            if (window.updateTimerDisplay) {
+                window.updateTimerDisplay();
+            }
+            
+            // Update the floating timer display
+            updateFloatingTimerDisplay();
+            
+            // Update floating timer state and visibility
+            updateFloatingTimerState();
+        }
+
+        function enhancedShowSection(sectionName) {
+            // Call the original showSection function first
+            if (window.showSection) {
+                window.showSection(sectionName);
+            }
+            
+            // Update floating timer visibility based on new section after a brief delay
+            setTimeout(() => {
+                updateFloatingTimerState();
+            }, 100);
+        }
+
+        function enhancedStartTimer() {
+            if (window.startTimer) {
+                window.startTimer();
+            }
+            updateFloatingTimerState();
+        }
+
+        function enhancedPauseTimer() {
+            if (window.pauseTimer) {
+                window.pauseTimer();
+            }
+            updateFloatingTimerState();
+        }
+
+        function enhancedStopTimer() {
+            if (window.stopTimer) {
+                window.stopTimer();
+            }
+            updateFloatingTimerState();
+        }
+
+        // Navigation drawer functionality
+        function toggleDrawer() {
+            const drawer = document.getElementById('navDrawer');
+            const isOpen = drawer.classList.contains('open');
+            
+            if (isOpen) {
+                closeDrawer();
+            } else {
+                openDrawer();
+            }
+        }
+
+        function openDrawer() {
+            const drawer = document.getElementById('navDrawer');
+            const overlay = document.getElementById('navDrawerOverlay');
+            const menuIcon = document.getElementById('menuIcon');
+            
+            // Add the 'open' class to trigger CSS animations
+            drawer.classList.add('open');
+            overlay.classList.add('open');
+            
+            // Change hamburger to X
+            menuIcon.textContent = '✕';
+            menuIcon.classList.add('open');
+            
+            // Prevent scrolling the page behind the drawer
+            document.body.style.overflow = 'hidden';
+            
+            // Update user info in the drawer
+            if (window.updateDrawerUserSection) {
+                window.updateDrawerUserSection();
+            }
+        }
+
+        function closeDrawer() {
+            const drawer = document.getElementById('navDrawer');
+            const overlay = document.getElementById('navDrawerOverlay');
+            const menuIcon = document.getElementById('menuIcon');
+            
+            // Remove the 'open' class to trigger close animation
+            drawer.classList.remove('open');
+            overlay.classList.remove('open');
+            
+            // Change X back to hamburger
+            menuIcon.textContent = '☰';
+            menuIcon.classList.remove('open');
+            
+            // Restore page scrolling
+            document.body.style.overflow = '';
+        }
+
+        function navigateToSection(sectionName) {
+            // Remove active highlighting from all navigation items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Highlight the clicked navigation item
+            const clickedItem = document.querySelector(`[data-section="${sectionName}"]`);
+            if (clickedItem) {
+                clickedItem.classList.add('active');
+            }
+            
+            // Close the drawer after selection
+            closeDrawer();
+            
+            // Navigate to the selected section using enhanced function
+            enhancedShowSection(sectionName);
+        }
+
+        // Workout section navigation and content loading
+        function showSection(sectionName) {
+            console.log('Switching to section:', sectionName);
+            
+            // Hide all sections first
+            document.querySelectorAll('.home-container, .workout-container').forEach(section => {
+                section.style.display = 'none';
+                if (section.classList) {
+                    section.classList.remove('active');
+                }
+            });
+            
+            // Update the app state to track which section we're in
+            if (window.appState) {
+                window.appState.currentSection = sectionName;
+            }
+            
+            // Show the correct section based on what was selected
+            if (sectionName === 'home') {
+                const homeSection = document.getElementById('homeSection');
+                if (homeSection) {
+                    homeSection.style.display = 'block';
+                    homeSection.classList.add('active');
+                }
+                // Load fresh statistics when returning to home
+                if (window.loadUserData) {
+                    window.loadUserData();
+                }
+            } else if (sectionName.startsWith('day')) {
+                // Handle workout day sections (dayA, dayB, dayC)
+                const day = sectionName.replace('day', ''); // Extract 'A', 'B', or 'C'
+                const daySection = document.getElementById(`day${day}Section`);
+                
+                if (daySection) {
+                    daySection.style.display = 'block';
+                    console.log(`Showing ${sectionName} section`);
+                } else {
+                    console.error(`Could not find section element: day${day}Section`);
+                }
+                
+                // Update app state to track current workout day
+                if (window.appState) {
+                    window.appState.currentDay = day;
+                }
+                
+                // Load the exercises for this specific day
+                if (window.loadExercises) {
+                    window.loadExercises(day);
+                } else {
+                    console.error('loadExercises function not available');
+                }
+            } else if (sectionName === 'settings') {
+                openSettings();
+                return; // Don't continue with section switching for modal
+            } else if (sectionName === 'feedback') {
+                openFeedback();
+                return; // Don't continue with section switching for modal
+            }
+            
+            // Update the timer display for the current section
+            if (window.updateTimerDisplay) {
+                window.updateTimerDisplay();
+            }
+            
+            // Save the current state so it persists across browser sessions
+            if (window.saveState) {
+                window.saveState();
+            }
+        }
+
+        // Quick workout starter from home page buttons
+        function startQuickWorkout() {
+            console.log('Starting quick workout');
+            
+            // For now, default to Day A - in Phase 2 this could be smarter
+            enhancedShowSection('dayA');
+            
+            // Auto-start the timer to begin the workout session
+            enhancedStartTimer();
+        }
+
+        // Authentication modal functions
+        function showAuthModal(mode) {
+            window.authMode = mode;
+            const modal = document.getElementById('authModal');
+            const title = document.getElementById('authModalTitle');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const confirmGroup = document.getElementById('confirmPasswordGroup');
+            const nameGroup = document.getElementById('displayNameGroup');
+            const switchText = document.getElementById('authSwitchText');
+            const switchBtn = document.getElementById('authSwitchBtn');
+            
+            // Configure the modal based on login vs signup
+            if (mode === 'login') {
+                title.textContent = '🔐 Login';
+                submitBtn.textContent = 'Login';
+                confirmGroup.style.display = 'none';
+                nameGroup.style.display = 'none';
+                switchText.textContent = "Don't have an account?";
+                switchBtn.textContent = 'Sign Up';
+            } else {
+                title.textContent = '📝 Sign Up';
+                submitBtn.textContent = 'Create Account';
+                confirmGroup.style.display = 'block';
+                nameGroup.style.display = 'block';
+                switchText.textContent = 'Already have an account?';
+                switchBtn.textContent = 'Login';
+            }
+            
+            // Clear any previous errors and show the modal
+            clearAuthError();
+            document.getElementById('authForm').reset();
+            modal.style.display = 'block';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function switchAuthMode() {
+            const newMode = window.authMode === 'login' ? 'signup' : 'login';
+            showAuthModal(newMode);
+        }
+
+        function clearAuthError() {
+            const errorDiv = document.getElementById('authError');
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+            }
+        }
+
+        // Sign out function
+        async function signOut() {
+            try {
+                await window.firebase.signOut(window.firebase.auth);
+                
+                // Clear local state on sign out
+                localStorage.removeItem('workoutAppState');
+                
+                // Reset app state if available
+                if (window.appState) {
+                    window.appState.workout.exercises = {};
+                    window.appState.timer.elapsed = 0;
+                    window.appState.timer.isRunning = false;
+                    window.appState.workout.active = false;
+                }
+                
+                // Show sign out confirmation
+                if (window.updateStateIndicator) {
+                    window.updateStateIndicator('signed-out');
+                }
+                
+                // Refresh to home page and hide floating timer
+                showSection('home');
+                hideFloatingTimer();
+                
+                console.log('User signed out successfully');
+                
+            } catch (error) {
+                console.error('Sign out error:', error);
+                if (window.updateStateIndicator) {
+                    window.updateStateIndicator('error');
+                }
+            }
+        }
+
+        // Settings placeholder function
+        function openSettings() {
+            alert('Settings panel coming in Phase 2! Will include:\n• Training frequency configuration\n• Weight tracking setup\n• Exercise customization\n• Goal setting');
+        }
+
+        // Feedback system functions
+        function openFeedback() {
+            document.getElementById('feedbackModal').style.display = 'block';
+            document.getElementById('feedbackSuccess').style.display = 'none';
+            document.getElementById('feedbackForm').style.display = 'block';
+            updateFeedbackContext();
+            document.getElementById('feedbackText').focus();
+        }
+
+        function closeFeedback() {
+            document.getElementById('feedbackModal').style.display = 'none';
+            document.getElementById('feedbackForm').reset();
+            window.selectedFeedbackType = 'bug';
+            updateFeedbackTypeButtons();
+        }
+
+        function selectFeedbackType(type) {
+            window.selectedFeedbackType = type;
+            updateFeedbackTypeButtons();
+        }
+
+        function updateFeedbackTypeButtons() {
+            document.querySelectorAll('.feedback-type-btn').forEach(btn => {
+                if (btn.dataset.type === window.selectedFeedbackType) {
+                    btn.style.background = '#3498db';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#3498db';
+                } else {
+                    btn.style.background = 'white';
+                    btn.style.color = '#333';
+                    btn.style.borderColor = '#e9ecef';
+                }
+            });
+        }
+
+        function updateFeedbackContext() {
+            const context = {
+                currentSection: window.appState?.currentSection || 'unknown',
+                currentDay: window.appState?.currentDay || 'unknown',
+                isLoggedIn: !!window.currentUser,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                timerRunning: window.appState?.timer?.isRunning || false,
+                workoutActive: window.appState?.workout?.active || false
+            };
+            
+            const contextInfo = document.getElementById('contextInfo');
+            if (contextInfo) {
+                contextInfo.innerHTML = `
+                    Current Section: ${context.currentSection}<br>
+                    Current Day: ${context.currentDay}<br>
+                    Logged In: ${context.isLoggedIn ? 'Yes' : 'No'}<br>
+                    Device: ${context.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'}<br>
+                    Workout Active: ${context.workoutActive ? 'Yes' : 'No'}<br>
+                    Timer Running: ${context.timerRunning ? 'Yes' : 'No'}
+                `;
+            }
+        }
+
+        // Override global functions to use enhanced versions that support floating timer
+        window.showSection = enhancedShowSection;
+        window.startQuickWorkout = startQuickWorkout;
+        window.startTimer = enhancedStartTimer;
+        window.pauseTimer = enhancedPauseTimer;
+        window.stopTimer = enhancedStopTimer;
+        window.updateTimerDisplay = enhancedUpdateTimerDisplay;
+
+        // Initialize floating timer state when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for app to initialize before setting up floating timer
+            setTimeout(() => {
+                updateFloatingTimerState();
+            }, 1000);
+        });
+
+        // Periodic update of floating timer state during active workouts
+        setInterval(() => {
+            if (window.appState?.workout?.active || window.appState?.timer?.isRunning) {
+                updateFloatingTimerState();
+            }
+        }, 5000); // Check every 5 seconds during workouts
+
+        // Modal click-outside-to-close functionality
+        window.onclick = function(event) {
+            const authModal = document.getElementById('authModal');
+            const feedbackModal = document.getElementById('feedbackModal');
+            
+            if (event.target === authModal) {
+                closeAuthModal();
+            }
+            if (event.target === feedbackModal) {
+                closeFeedback();
+            }
+        }
+    </script>
         // Navigation drawer functionality
         function toggleDrawer() {
             const drawer = document.getElementById('navDrawer');
