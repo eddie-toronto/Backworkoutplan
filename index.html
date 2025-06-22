@@ -2529,6 +2529,222 @@
             }
         }
 
+        // Store original timer functions to avoid infinite recursion
+        let originalUpdateTimerDisplay = null;
+        let originalStartTimer = null;
+        let originalPauseTimer = null;
+        let originalStopTimer = null;
+
+        // Enhanced timer functions that coordinate both displays
+        function enhancedUpdateTimerDisplay() {
+            // Call the original function directly from the module
+            if (originalUpdateTimerDisplay) {
+                originalUpdateTimerDisplay();
+            }
+            
+            // Update the floating timer display
+            updateFloatingTimerDisplay();
+            
+            // Update floating timer state and visibility
+            updateFloatingTimerState();
+        }
+
+        function enhancedStartTimer() {
+            if (originalStartTimer) {
+                originalStartTimer();
+            }
+            updateFloatingTimerState();
+        }
+
+        function enhancedPauseTimer() {
+            if (originalPauseTimer) {
+                originalPauseTimer();
+            }
+            updateFloatingTimerState();
+        }
+
+        function enhancedStopTimer() {
+            if (originalStopTimer) {
+                originalStopTimer();
+            }
+            updateFloatingTimerState();
+        }
+
+        // Timer function wrappers for floating timer buttons
+        function startTimer() {
+            if (originalStartTimer) {
+                originalStartTimer();
+            } else if (window.startTimer && window.startTimer !== startTimer) {
+                window.startTimer();
+            }
+            updateFloatingTimerState();
+        }
+
+        function pauseTimer() {
+            if (originalPauseTimer) {
+                originalPauseTimer();
+            } else if (window.pauseTimer && window.pauseTimer !== pauseTimer) {
+                window.pauseTimer();
+            }
+            updateFloatingTimerState();
+        }
+
+        function stopTimer() {
+            if (originalStopTimer) {
+                originalStopTimer();
+            } else if (window.stopTimer && window.stopTimer !== stopTimer) {
+                window.stopTimer();
+            }
+            updateFloatingTimerState();
+        }
+
+        // Set up enhanced timer functions after original functions are available
+        function setupEnhancedTimers() {
+            // Store references to original functions to avoid recursion
+            if (window.updateTimerDisplay && !originalUpdateTimerDisplay) {
+                originalUpdateTimerDisplay = window.updateTimerDisplay;
+                window.updateTimerDisplay = enhancedUpdateTimerDisplay;
+            }
+            
+            if (window.startTimer && !originalStartTimer && window.startTimer !== startTimer) {
+                originalStartTimer = window.startTimer;
+                window.startTimer = enhancedStartTimer;
+            }
+            
+            if (window.pauseTimer && !originalPauseTimer && window.pauseTimer !== pauseTimer) {
+                originalPauseTimer = window.pauseTimer;
+                window.pauseTimer = enhancedPauseTimer;
+            }
+            
+            if (window.stopTimer && !originalStopTimer && window.stopTimer !== stopTimer) {
+                originalStopTimer = window.stopTimer;
+                window.stopTimer = enhancedStopTimer;
+            }
+        }
+
+        // Initialize floating timer state when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for app to initialize before setting up floating timer
+            setTimeout(() => {
+                setupEnhancedTimers();
+                updateFloatingTimerState();
+            }, 1500); // Increased delay to ensure module functions are ready
+        });
+
+        // Periodic update of floating timer state during active workouts
+        setInterval(() => {
+            if (window.appState?.workout?.active || window.appState?.timer?.isRunning) {
+                updateFloatingTimerState();
+            }
+        }, 5000); // Check every 5 seconds during workouts
+
+        // Modal click-outside-to-close functionality
+        window.onclick = function(event) {
+            const authModal = document.getElementById('authModal');
+            const feedbackModal = document.getElementById('feedbackModal');
+            
+            if (event.target === authModal) {
+                closeAuthModal();
+            }
+            if (event.target === feedbackModal) {
+                closeFeedback();
+            }
+        }
+    </script>
+</body>
+</html>');
+                
+                // Reset app state if available
+                if (window.appState) {
+                    window.appState.workout.exercises = {};
+                    window.appState.timer.elapsed = 0;
+                    window.appState.timer.isRunning = false;
+                    window.appState.workout.active = false;
+                }
+                
+                // Show sign out confirmation
+                if (window.updateStateIndicator) {
+                    window.updateStateIndicator('signed-out');
+                }
+                
+                // Hide floating timer when signing out
+                hideFloatingTimer();
+                
+                console.log('User signed out successfully');
+                
+            } catch (error) {
+                console.error('Sign out error:', error);
+                if (window.updateStateIndicator) {
+                    window.updateStateIndicator('error');
+                }
+            }
+        }
+
+        // Settings placeholder function
+        function openSettings() {
+            alert('Settings panel coming in Phase 2! Will include:\n• Training frequency configuration\n• Weight tracking setup\n• Exercise customization\n• Goal setting');
+        }
+
+        // Feedback system functions
+        function openFeedback() {
+            document.getElementById('feedbackModal').style.display = 'block';
+            document.getElementById('feedbackSuccess').style.display = 'none';
+            document.getElementById('feedbackForm').style.display = 'block';
+            updateFeedbackContext();
+            document.getElementById('feedbackText').focus();
+        }
+
+        function closeFeedback() {
+            document.getElementById('feedbackModal').style.display = 'none';
+            document.getElementById('feedbackForm').reset();
+            window.selectedFeedbackType = 'bug';
+            updateFeedbackTypeButtons();
+        }
+
+        function selectFeedbackType(type) {
+            window.selectedFeedbackType = type;
+            updateFeedbackTypeButtons();
+        }
+
+        function updateFeedbackTypeButtons() {
+            document.querySelectorAll('.feedback-type-btn').forEach(btn => {
+                if (btn.dataset.type === window.selectedFeedbackType) {
+                    btn.style.background = '#3498db';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#3498db';
+                } else {
+                    btn.style.background = 'white';
+                    btn.style.color = '#333';
+                    btn.style.borderColor = '#e9ecef';
+                }
+            });
+        }
+
+        function updateFeedbackContext() {
+            const context = {
+                currentSection: window.appState?.currentSection || 'unknown',
+                currentDay: window.appState?.currentDay || 'unknown',
+                isLoggedIn: !!window.currentUser,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                timerRunning: window.appState?.timer?.isRunning || false,
+                workoutActive: window.appState?.workout?.active || false
+            };
+            
+            const contextInfo = document.getElementById('contextInfo');
+            if (contextInfo) {
+                contextInfo.innerHTML = `
+                    Current Section: ${context.currentSection}<br>
+                    Current Day: ${context.currentDay}<br>
+                    Logged In: ${context.isLoggedIn ? 'Yes' : 'No'}<br>
+                    Device: ${context.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'}<br>
+                    Workout Active: ${context.workoutActive ? 'Yes' : 'No'}<br>
+                    Timer Running: ${context.timerRunning ? 'Yes' : 'No'}
+                `;
+            }
+        }
+
         // Set up enhanced timer functions after original functions are available
         function setupEnhancedTimers() {
             // Store references to original functions to avoid recursion
