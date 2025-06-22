@@ -2175,11 +2175,17 @@
             floatingDisplay.textContent = timeString;
         }
 
+        // Store original timer functions to avoid infinite recursion
+        let originalUpdateTimerDisplay = null;
+        let originalStartTimer = null;
+        let originalPauseTimer = null;
+        let originalStopTimer = null;
+
         // Enhanced timer functions that coordinate both displays
         function enhancedUpdateTimerDisplay() {
-            // Update the original timer displays in day banners
-            if (window.updateTimerDisplay) {
-                window.updateTimerDisplay();
+            // Call the original function directly from the module
+            if (originalUpdateTimerDisplay) {
+                originalUpdateTimerDisplay();
             }
             
             // Update the floating timer display
@@ -2189,35 +2195,23 @@
             updateFloatingTimerState();
         }
 
-        function enhancedShowSection(sectionName) {
-            // Call the original showSection function first
-            if (window.showSection) {
-                window.showSection(sectionName);
-            }
-            
-            // Update floating timer visibility based on new section after a brief delay
-            setTimeout(() => {
-                updateFloatingTimerState();
-            }, 100);
-        }
-
         function enhancedStartTimer() {
-            if (window.startTimer) {
-                window.startTimer();
+            if (originalStartTimer) {
+                originalStartTimer();
             }
             updateFloatingTimerState();
         }
 
         function enhancedPauseTimer() {
-            if (window.pauseTimer) {
-                window.pauseTimer();
+            if (originalPauseTimer) {
+                originalPauseTimer();
             }
             updateFloatingTimerState();
         }
 
         function enhancedStopTimer() {
-            if (window.stopTimer) {
-                window.stopTimer();
+            if (originalStopTimer) {
+                originalStopTimer();
             }
             updateFloatingTimerState();
         }
@@ -2288,8 +2282,14 @@
             // Close the drawer after selection
             closeDrawer();
             
-            // Navigate to the selected section using enhanced function
-            enhancedShowSection(sectionName);
+            // Navigate to the selected section - call showSection directly
+            showSection(sectionName);
+            
+            // Update floating timer after navigation
+            setTimeout(() => {
+                updateFloatingTimerState();
+            }, 100);
+        }
         }
 
         // Workout section navigation and content loading
@@ -2366,11 +2366,18 @@
         function startQuickWorkout() {
             console.log('Starting quick workout');
             
-            // For now, default to Day A - in Phase 2 this could be smarter
-            enhancedShowSection('dayA');
+            // Navigate to Day A directly
+            showSection('dayA');
             
-            // Auto-start the timer to begin the workout session
-            enhancedStartTimer();
+            // Auto-start the timer and update floating timer state
+            setTimeout(() => {
+                if (originalStartTimer) {
+                    originalStartTimer();
+                } else if (window.startTimer) {
+                    window.startTimer();
+                }
+                updateFloatingTimerState();
+            }, 200);
         }
 
         // Authentication modal functions
@@ -2444,8 +2451,7 @@
                     window.updateStateIndicator('signed-out');
                 }
                 
-                // Refresh to home page and hide floating timer
-                showSection('home');
+                // Hide floating timer when signing out
                 hideFloatingTimer();
                 
                 console.log('User signed out successfully');
@@ -2523,20 +2529,41 @@
             }
         }
 
+        // Set up enhanced timer functions after original functions are available
+        function setupEnhancedTimers() {
+            // Store references to original functions to avoid recursion
+            if (window.updateTimerDisplay && !originalUpdateTimerDisplay) {
+                originalUpdateTimerDisplay = window.updateTimerDisplay;
+                window.updateTimerDisplay = enhancedUpdateTimerDisplay;
+            }
+            
+            if (window.startTimer && !originalStartTimer) {
+                originalStartTimer = window.startTimer;
+                window.startTimer = enhancedStartTimer;
+            }
+            
+            if (window.pauseTimer && !originalPauseTimer) {
+                originalPauseTimer = window.pauseTimer;
+                window.pauseTimer = enhancedPauseTimer;
+            }
+            
+            if (window.stopTimer && !originalStopTimer) {
+                originalStopTimer = window.stopTimer;
+                window.stopTimer = enhancedStopTimer;
+            }
+        }
+
         // Override global functions to use enhanced versions that support floating timer
-        window.showSection = enhancedShowSection;
+        window.showSection = showSection;
         window.startQuickWorkout = startQuickWorkout;
-        window.startTimer = enhancedStartTimer;
-        window.pauseTimer = enhancedPauseTimer;
-        window.stopTimer = enhancedStopTimer;
-        window.updateTimerDisplay = enhancedUpdateTimerDisplay;
 
         // Initialize floating timer state when page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Wait for app to initialize before setting up floating timer
             setTimeout(() => {
+                setupEnhancedTimers();
                 updateFloatingTimerState();
-            }, 1000);
+            }, 1500); // Increased delay to ensure module functions are ready
         });
 
         // Periodic update of floating timer state during active workouts
