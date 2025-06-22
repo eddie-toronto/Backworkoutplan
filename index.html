@@ -1550,6 +1550,7 @@
         window.loadExercises = loadExercises;
         window.updateTimerDisplay = updateTimerDisplay;
         window.setupScrollHandling = setupScrollHandling;
+        window.loadUserData = loadUserData;
         
         // Enhanced timer functions
         window.startTimer = function() {
@@ -2130,11 +2131,21 @@
                 }
                 
                 // Load the exercises for this specific day
-                if (window.loadExercises) {
-                    window.loadExercises(day);
-                } else {
-                    console.error('loadExercises function not available');
-                }
+                setTimeout(() => {
+                    if (window.loadExercises) {
+                        window.loadExercises(day);
+                    } else {
+                        console.error('loadExercises function not available, retrying...');
+                        // Retry after a short delay to allow Firebase module to load
+                        setTimeout(() => {
+                            if (window.loadExercises) {
+                                window.loadExercises(day);
+                            } else {
+                                console.error('loadExercises still not available after retry');
+                            }
+                        }, 100);
+                    }
+                }, 50);
             } else if (sectionName === 'settings') {
                 openSettings();
                 return; // Don't continue with section switching for modal
