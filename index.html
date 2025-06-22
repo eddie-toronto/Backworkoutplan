@@ -1104,362 +1104,66 @@
             createUserWithEmailAndPassword, 
             signInWithEmailAndPassword, 
             updateProfile,
-            signOut: firebaseSignOut  // Make signOut available
+            signOut: firebaseSignOut
         };
 
-        // Make all auth and navigation functions globally available
-        window.showAuthModal = function(mode) {
-            authMode = mode;
-            const modal = document.getElementById('authModal');
-            const title = document.getElementById('authModalTitle');
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const confirmGroup = document.getElementById('confirmPasswordGroup');
-            const nameGroup = document.getElementById('displayNameGroup');
-            const switchText = document.getElementById('authSwitchText');
-            const switchBtn = document.getElementById('authSwitchBtn');
-            
-            if (mode === 'login') {
-                title.textContent = '🔐 Login';
-                submitBtn.textContent = 'Login';
-                confirmGroup.style.display = 'none';
-                nameGroup.style.display = 'none';
-                switchText.textContent = "Don't have an account?";
-                switchBtn.textContent = 'Sign Up';
-            } else {
-                title.textContent = '📝 Sign Up';
-                submitBtn.textContent = 'Create Account';
-                confirmGroup.style.display = 'block';
-                nameGroup.style.display = 'block';
-                switchText.textContent = 'Already have an account?';
-                switchBtn.textContent = 'Login';
-            }
-            
-            clearAuthError();
-            document.getElementById('authForm').reset();
-            modal.style.display = 'block';
-        };
-
-        window.closeAuthModal = function() {
-            document.getElementById('authModal').style.display = 'none';
-        };
-
-        window.switchAuthMode = function() {
-            const newMode = authMode === 'login' ? 'signup' : 'login';
-            showAuthModal(newMode);
-        };
-
-        window.openFeedback = function() {
-            document.getElementById('feedbackModal').style.display = 'block';
-            document.getElementById('feedbackSuccess').style.display = 'none';
-            document.getElementById('feedbackForm').style.display = 'block';
-            updateFeedbackContext();
-            document.getElementById('feedbackText').focus();
-        };
-
-        window.closeFeedback = function() {
-            document.getElementById('feedbackModal').style.display = 'none';
-            document.getElementById('feedbackForm').reset();
-            selectedFeedbackType = 'bug';
-            updateFeedbackTypeButtons();
-        };
-
-        window.selectFeedbackType = function(type) {
-            selectedFeedbackType = type;
-            updateFeedbackTypeButtons();
-        };
-
-        window.openSettings = function() {
-            alert('Settings panel coming in Phase 2! Will include:\n• Training frequency configuration\n• Weight tracking setup\n• Exercise customization\n• Goal setting');
-        };
-        // Make signOut function globally available
-        window.signOut = async function() {
-            try {
-                await firebaseSignOut(auth);
-                
-                // Clear local state on sign out
-                localStorage.removeItem('workoutAppState');
-                
-                // Reset app state
-                appState.workout.exercises = {};
-                appState.timer.elapsed = 0;
-                appState.timer.isRunning = false;
-                appState.workout.active = false;
-                
-                // Show sign out confirmation
-                updateStateIndicator('signed-out');
-                
-                // Refresh to home page
-                showSection('home');
-                
-                console.log('User signed out successfully');
-                
-            } catch (error) {
-                console.error('Sign out error:', error);
-                updateStateIndicator('error');
-            }
-        };
-        
-     // Global variables that need to be accessible from HTML
-window.authMode = 'login';
-window.selectedFeedbackType = 'bug';
-window.currentUser = null;
-
-// Make updateAuthUI function globally accessible
-window.updateAuthUI = function(user) {
-    const authInfo = document.getElementById('authInfo');
-    
-    if (user) {
-        authInfo.innerHTML = `
-            <span style="color: white; font-size: 0.8em; margin-right: 10px;">
-                ${user.displayName || user.email || 'User'}
-            </span>
-            <button class="auth-btn" onclick="signOut()">Sign Out</button>
-        `;
-    } else {
-        authInfo.innerHTML = `
-            <button class="auth-btn" onclick="showAuthModal('login')">Login</button>
-        `;
-    }
-    
-    // Update the navigation drawer user section
-    updateDrawerUserSection();
-};
-
-// Make the drawer user section updater globally accessible
-window.updateDrawerUserSection = function() {
-    const navUserSection = document.getElementById('navUserSection');
-    const user = window.currentUser;
-    
-    if (user) {
-        const initials = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
-        navUserSection.innerHTML = `
-            <div class="nav-user-info">
-                <div class="nav-user-avatar">${initials}</div>
-                <div class="nav-user-details">
-                    <div class="nav-user-name">${user.displayName || 'User'}</div>
-                    <div class="nav-user-email">${user.email}</div>
-                </div>
-            </div>
-            <div class="nav-auth-buttons">
-                <button class="nav-auth-btn" onclick="signOut()">Sign Out</button>
-            </div>
-        `;
-    } else {
-        navUserSection.innerHTML = `
-            <div class="nav-auth-buttons">
-                <button class="nav-auth-btn primary" onclick="showAuthModal('signup')">Sign Up</button>
-                <button class="nav-auth-btn" onclick="showAuthModal('login')">Login</button>
-            </div>
-        `;
-    }
-};
-
-// Enhanced auth state listener that uses our global functions
-onAuthStateChanged(auth, (user) => {
-    console.log('Auth state changed:', user);
-    if (user) {
-        console.log('User details:', { uid: user.uid, email: user.email, displayName: user.displayName });
-        window.currentUser = user;
-        window.updateAuthUI(user);  // Now using the global version
-        loadUserData();
-    } else {
-        console.log('No user signed in');
+        // Global variables that need to be accessible from HTML
+        window.authMode = 'login';
+        window.selectedFeedbackType = 'bug';
         window.currentUser = null;
-        window.updateAuthUI(null);  // Now using the global version
-    }
-});
-    </script>
-<script>
-// This is a regular script (not a module) so functions are globally accessible
 
-// Navigation drawer functionality
-function toggleDrawer() {
-    const drawer = document.getElementById('navDrawer');
-    const isOpen = drawer.classList.contains('open');
-    
-    if (isOpen) {
-        closeDrawer();
-    } else {
-        openDrawer();
-    }
-}
+        // Make updateAuthUI function globally accessible
+        window.updateAuthUI = function(user) {
+            const authInfo = document.getElementById('authInfo');
+            
+            if (user) {
+                authInfo.innerHTML = `
+                    <span style="color: white; font-size: 0.8em; margin-right: 10px;">
+                        ${user.displayName || user.email || 'User'}
+                    </span>
+                    <button class="auth-btn" onclick="signOut()">Sign Out</button>
+                `;
+            } else {
+                authInfo.innerHTML = `
+                    <button class="auth-btn" onclick="showAuthModal('login')">Login</button>
+                `;
+            }
+            
+            // Update the navigation drawer user section
+            if (window.updateDrawerUserSection) {
+                window.updateDrawerUserSection();
+            }
+        };
 
-function openDrawer() {
-    const drawer = document.getElementById('navDrawer');
-    const overlay = document.getElementById('navDrawerOverlay');
-    const menuIcon = document.getElementById('menuIcon');
-    
-    // Add the 'open' class to trigger CSS animations
-    drawer.classList.add('open');
-    overlay.classList.add('open');
-    
-    // Change hamburger to X
-    menuIcon.textContent = '✕';
-    menuIcon.classList.add('open');
-    
-    // Prevent scrolling the page behind the drawer
-    document.body.style.overflow = 'hidden';
-    
-    // Update user info in the drawer
-    if (window.updateDrawerUserSection) {
-        window.updateDrawerUserSection();
-    }
-}
+        // Make the drawer user section updater globally accessible
+        window.updateDrawerUserSection = function() {
+            const navUserSection = document.getElementById('navUserSection');
+            const user = window.currentUser;
+            
+            if (user) {
+                const initials = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
+                navUserSection.innerHTML = `
+                    <div class="nav-user-info">
+                        <div class="nav-user-avatar">${initials}</div>
+                        <div class="nav-user-details">
+                            <div class="nav-user-name">${user.displayName || 'User'}</div>
+                            <div class="nav-user-email">${user.email}</div>
+                        </div>
+                    </div>
+                    <div class="nav-auth-buttons">
+                        <button class="nav-auth-btn" onclick="signOut()">Sign Out</button>
+                    </div>
+                `;
+            } else {
+                navUserSection.innerHTML = `
+                    <div class="nav-auth-buttons">
+                        <button class="nav-auth-btn primary" onclick="showAuthModal('signup')">Sign Up</button>
+                        <button class="nav-auth-btn" onclick="showAuthModal('login')">Login</button>
+                    </div>
+                `;
+            }
+        };
 
-function closeDrawer() {
-    const drawer = document.getElementById('navDrawer');
-    const overlay = document.getElementById('navDrawerOverlay');
-    const menuIcon = document.getElementById('menuIcon');
-    
-    // Remove the 'open' class to trigger close animation
-    drawer.classList.remove('open');
-    overlay.classList.remove('open');
-    
-    // Change X back to hamburger
-    menuIcon.textContent = '☰';
-    menuIcon.classList.remove('open');
-    
-    // Restore page scrolling
-    document.body.style.overflow = '';
-}
-
-function navigateToSection(sectionName) {
-    // Remove active highlighting from all navigation items
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Highlight the clicked navigation item
-    const clickedItem = document.querySelector(`[data-section="${sectionName}"]`);
-    if (clickedItem) {
-        clickedItem.classList.add('active');
-    }
-    
-    // Close the drawer after selection
-    closeDrawer();
-    
-    // Navigate to the selected section
-    if (window.showSection) {
-        window.showSection(sectionName);
-    }
-}
-
-// Authentication modal functions
-function showAuthModal(mode) {
-    window.authMode = mode;
-    const modal = document.getElementById('authModal');
-    const title = document.getElementById('authModalTitle');
-    const submitBtn = document.getElementById('authSubmitBtn');
-    const confirmGroup = document.getElementById('confirmPasswordGroup');
-    const nameGroup = document.getElementById('displayNameGroup');
-    const switchText = document.getElementById('authSwitchText');
-    const switchBtn = document.getElementById('authSwitchBtn');
-    
-    // Configure the modal based on login vs signup
-    if (mode === 'login') {
-        title.textContent = '🔐 Login';
-        submitBtn.textContent = 'Login';
-        confirmGroup.style.display = 'none';
-        nameGroup.style.display = 'none';
-        switchText.textContent = "Don't have an account?";
-        switchBtn.textContent = 'Sign Up';
-    } else {
-        title.textContent = '📝 Sign Up';
-        submitBtn.textContent = 'Create Account';
-        confirmGroup.style.display = 'block';
-        nameGroup.style.display = 'block';
-        switchText.textContent = 'Already have an account?';
-        switchBtn.textContent = 'Login';
-    }
-    
-    // Clear any previous errors and show the modal
-    clearAuthError();
-    document.getElementById('authForm').reset();
-    modal.style.display = 'block';
-}
-
-function closeAuthModal() {
-    document.getElementById('authModal').style.display = 'none';
-}
-
-function switchAuthMode() {
-    const newMode = window.authMode === 'login' ? 'signup' : 'login';
-    showAuthModal(newMode);
-}
-
-function clearAuthError() {
-    const errorDiv = document.getElementById('authError');
-    if (errorDiv) {
-        errorDiv.style.display = 'none';
-    }
-}
-
-// Settings placeholder function
-function openSettings() {
-    alert('Settings panel coming in Phase 2! Will include:\n• Training frequency configuration\n• Weight tracking setup\n• Exercise customization\n• Goal setting');
-}
-
-// Feedback system functions
-function openFeedback() {
-    document.getElementById('feedbackModal').style.display = 'block';
-    document.getElementById('feedbackSuccess').style.display = 'none';
-    document.getElementById('feedbackForm').style.display = 'block';
-    updateFeedbackContext();
-    document.getElementById('feedbackText').focus();
-}
-
-function closeFeedback() {
-    document.getElementById('feedbackModal').style.display = 'none';
-    document.getElementById('feedbackForm').reset();
-    window.selectedFeedbackType = 'bug';
-    updateFeedbackTypeButtons();
-}
-
-function selectFeedbackType(type) {
-    window.selectedFeedbackType = type;
-    updateFeedbackTypeButtons();
-}
-
-function updateFeedbackTypeButtons() {
-    document.querySelectorAll('.feedback-type-btn').forEach(btn => {
-        if (btn.dataset.type === window.selectedFeedbackType) {
-            btn.style.background = '#3498db';
-            btn.style.color = 'white';
-            btn.style.borderColor = '#3498db';
-        } else {
-            btn.style.background = 'white';
-            btn.style.color = '#333';
-            btn.style.borderColor = '#e9ecef';
-        }
-    });
-}
-
-function updateFeedbackContext() {
-    const context = {
-        currentSection: window.appState?.currentSection || 'unknown',
-        currentDay: window.appState?.currentDay || 'unknown',
-        isLoggedIn: !!window.currentUser,
-        userAgent: navigator.userAgent,
-        timestamp: new Date().toISOString(),
-        url: window.location.href,
-        timerRunning: window.appState?.timer?.isRunning || false,
-        workoutActive: window.appState?.workout?.active || false
-    };
-    
-    const contextInfo = document.getElementById('contextInfo');
-    if (contextInfo) {
-        contextInfo.innerHTML = `
-            Current Section: ${context.currentSection}<br>
-            Current Day: ${context.currentDay}<br>
-            Logged In: ${context.isLoggedIn ? 'Yes' : 'No'}<br>
-            Device: ${context.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'}<br>
-            Workout Active: ${context.workoutActive ? 'Yes' : 'No'}<br>
-            Timer Running: ${context.timerRunning ? 'Yes' : 'No'}
-        `;
-    }
-}
-</script>
-    <script>
         // Enhanced workout data with predefined sets
         let workoutData = {
             A: [
@@ -1644,121 +1348,6 @@ function updateFeedbackContext() {
             }
         }
 
-        // Make navigation drawer functions globally available
-        window.toggleDrawer = function() {
-            const drawer = document.getElementById('navDrawer');
-            const overlay = document.getElementById('navDrawerOverlay');
-            const menuIcon = document.getElementById('menuIcon');
-            
-            const isOpen = drawer.classList.contains('open');
-            
-            if (isOpen) {
-                closeDrawer();
-            } else {
-                openDrawer();
-            }
-        };
-        
-        window.openDrawer = function() {
-            const drawer = document.getElementById('navDrawer');
-            const overlay = document.getElementById('navDrawerOverlay');
-            const menuIcon = document.getElementById('menuIcon');
-            
-            drawer.classList.add('open');
-            overlay.classList.add('open');
-            menuIcon.textContent = '✕';
-            menuIcon.classList.add('open');
-            
-            // Prevent body scroll when drawer is open
-            document.body.style.overflow = 'hidden';
-            
-            // Update drawer user section
-            updateDrawerUserSection();
-        };
-        
-        window.closeDrawer = function() {
-            const drawer = document.getElementById('navDrawer');
-            const overlay = document.getElementById('navDrawerOverlay');
-            const menuIcon = document.getElementById('menuIcon');
-            
-            drawer.classList.remove('open');
-            overlay.classList.remove('open');
-            menuIcon.textContent = '☰';
-            menuIcon.classList.remove('open');
-            
-            // Restore body scroll
-            document.body.style.overflow = '';
-        };
-        
-        window.navigateToSection = function(sectionName) {
-            // Update active nav item
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            const clickedItem = document.querySelector(`[data-section="${sectionName}"]`);
-            if (clickedItem) {
-                clickedItem.classList.add('active');
-            }
-            
-            // Close drawer
-            closeDrawer();
-            
-            // Navigate to section
-            showSection(sectionName);
-        };
-            // Hide all sections
-            document.querySelectorAll('.home-container, .workout-container').forEach(section => {
-                section.style.display = 'none';
-                if (section.classList) {
-                    section.classList.remove('active');
-                }
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                if (tab.classList) {
-                    tab.classList.remove('active');
-                }
-            });
-            
-            // Show selected section and activate tab
-            if (sectionName === 'home') {
-                const homeSection = document.getElementById('homeSection');
-                if (homeSection) {
-                    homeSection.style.display = 'block';
-                    homeSection.classList.add('active');
-                }
-                appState.currentSection = 'home';
-            } else if (sectionName.startsWith('day')) {
-                const day = sectionName.replace('day', '');
-                const daySection = document.getElementById(`day${day}Section`);
-                if (daySection) {
-                    daySection.style.display = 'block';
-                }
-                appState.currentSection = sectionName;
-                appState.currentDay = day;
-                loadExercises(day);
-            } else if (sectionName === 'settings') {
-                openSettings();
-                return; // Don't update tab state for modal
-            } else if (sectionName === 'feedback') {
-                openFeedback();
-                return; // Don't update tab state for modal
-            }
-            
-            // Activate the clicked tab if event exists
-            if (window.event && window.event.target && window.event.target.classList) {
-                window.event.target.classList.add('active');
-            }
-            
-            // Update timer display for current section
-            updateTimerDisplay();
-            
-            // Save state
-            saveState();
-        }
-
         // Timer functions with persistent state
         function updateTimerDisplay() {
             const minutes = Math.floor(appState.timer.elapsed / 60);
@@ -1839,8 +1428,6 @@ function updateFeedbackContext() {
             });
         }
 
-        // Set management functions - removed duplicates, now only window.adjustReps and window.completeSet exist above
-
         // Utility functions
         function convertToEmbedUrl(url) {
             if (!url) return '';
@@ -1858,40 +1445,6 @@ function updateFeedbackContext() {
             }
             
             return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
-        }
-
-        // Authentication functions
-        function updateAuthUI(user) {
-            const authInfo = document.getElementById('authInfo');
-            
-            if (user) {
-                authInfo.innerHTML = `
-                    <span style="color: white; font-size: 0.8em; margin-right: 10px;">
-                        ${user.displayName || user.email || 'User'}
-                    </span>
-                    <button class="auth-btn" onclick="signOut()">Sign Out</button>
-                `;
-            } else {
-                authInfo.innerHTML = `
-                    <button class="auth-btn" onclick="showAuthModal('login')">Login</button>
-                `;
-            }
-        }
-
-        function showAuthModal(mode) {
-            // Placeholder for auth modal - implement based on previous version
-            console.log('Show auth modal:', mode);
-        }
-
-        async function signOut() {
-            try {
-                await firebaseSignOut(window.firebase.auth);
-                // Clear local state on sign out
-                localStorage.removeItem('workoutAppState');
-                appState.workout.exercises = {};
-            } catch (error) {
-                console.error('Sign out error:', error);
-            }
         }
 
         // Data functions
@@ -2004,13 +1557,7 @@ function updateFeedbackContext() {
             return streak;
         }
 
-        // Make other essential functions globally available
-        window.startQuickWorkout = function() {
-            // Determine next workout day based on recent history
-            showSection('dayA'); // Default to Day A for now
-            startTimer();
-        };
-
+        // Make essential functions globally accessible for workout management
         window.adjustReps = function(exerciseKey, setIndex, change) {
             if (!appState.workout.exercises[exerciseKey]) return;
             
@@ -2131,51 +1678,29 @@ function updateFeedbackContext() {
             loadUserData();
         };
 
-        // Global variables for auth and feedback
-        let authMode = 'login';
-        let selectedFeedbackType = 'bug';
+        // Make state and exercise functions globally accessible
+        window.saveState = saveState;
+        window.loadUserData = loadUserData;
+        window.updateTimerDisplay = updateTimerDisplay;
+        window.loadExercises = loadExercises;
+        window.appState = appState;
+
+        // Enhanced auth state listener that uses our global functions
+        onAuthStateChanged(auth, (user) => {
+            console.log('Auth state changed:', user);
+            if (user) {
+                console.log('User details:', { uid: user.uid, email: user.email, displayName: user.displayName });
+                window.currentUser = user;
+                window.updateAuthUI(user);
+                loadUserData();
+            } else {
+                console.log('No user signed in');
+                window.currentUser = null;
+                window.updateAuthUI(null);
+            }
+        });
 
         // Authentication functions
-        function showAuthModal(mode) {
-            authMode = mode;
-            const modal = document.getElementById('authModal');
-            const title = document.getElementById('authModalTitle');
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const confirmGroup = document.getElementById('confirmPasswordGroup');
-            const nameGroup = document.getElementById('displayNameGroup');
-            const switchText = document.getElementById('authSwitchText');
-            const switchBtn = document.getElementById('authSwitchBtn');
-            
-            if (mode === 'login') {
-                title.textContent = '🔐 Login';
-                submitBtn.textContent = 'Login';
-                confirmGroup.style.display = 'none';
-                nameGroup.style.display = 'none';
-                switchText.textContent = "Don't have an account?";
-                switchBtn.textContent = 'Sign Up';
-            } else {
-                title.textContent = '📝 Sign Up';
-                submitBtn.textContent = 'Create Account';
-                confirmGroup.style.display = 'block';
-                nameGroup.style.display = 'block';
-                switchText.textContent = 'Already have an account?';
-                switchBtn.textContent = 'Login';
-            }
-            
-            clearAuthError();
-            document.getElementById('authForm').reset();
-            modal.style.display = 'block';
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').style.display = 'none';
-        }
-
-        function switchAuthMode() {
-            const newMode = authMode === 'login' ? 'signup' : 'login';
-            showAuthModal(newMode);
-        }
-
         function showAuthError(message) {
             const errorDiv = document.getElementById('authError');
             errorDiv.textContent = message;
@@ -2197,10 +1722,10 @@ function updateFeedbackContext() {
             
             clearAuthError();
             submitBtn.disabled = true;
-            submitBtn.textContent = authMode === 'login' ? 'Logging in...' : 'Creating account...';
+            submitBtn.textContent = window.authMode === 'login' ? 'Logging in...' : 'Creating account...';
             
             try {
-                if (authMode === 'signup') {
+                if (window.authMode === 'signup') {
                     if (password !== confirmPassword) {
                         throw new Error('Passwords do not match');
                     }
@@ -2257,7 +1782,7 @@ function updateFeedbackContext() {
                 showAuthError(errorMessage);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = authMode === 'login' ? 'Login' : 'Create Account';
+                submitBtn.textContent = window.authMode === 'login' ? 'Login' : 'Create Account';
             }
         }
 
@@ -2269,63 +1794,6 @@ function updateFeedbackContext() {
         }
 
         // Feedback functions
-        function openFeedback() {
-            document.getElementById('feedbackModal').style.display = 'block';
-            document.getElementById('feedbackSuccess').style.display = 'none';
-            document.getElementById('feedbackForm').style.display = 'block';
-            updateFeedbackContext();
-            document.getElementById('feedbackText').focus();
-        }
-
-        function closeFeedback() {
-            document.getElementById('feedbackModal').style.display = 'none';
-            document.getElementById('feedbackForm').reset();
-            selectedFeedbackType = 'bug';
-            updateFeedbackTypeButtons();
-        }
-
-        function selectFeedbackType(type) {
-            selectedFeedbackType = type;
-            updateFeedbackTypeButtons();
-        }
-
-        function updateFeedbackTypeButtons() {
-            document.querySelectorAll('.feedback-type-btn').forEach(btn => {
-                if (btn.dataset.type === selectedFeedbackType) {
-                    btn.style.background = '#3498db';
-                    btn.style.color = 'white';
-                    btn.style.borderColor = '#3498db';
-                } else {
-                    btn.style.background = 'white';
-                    btn.style.color = '#333';
-                    btn.style.borderColor = '#e9ecef';
-                }
-            });
-        }
-
-        function updateFeedbackContext() {
-            const context = {
-                currentSection: appState.currentSection,
-                currentDay: appState.currentDay,
-                isLoggedIn: !!window.currentUser,
-                userAgent: navigator.userAgent,
-                timestamp: new Date().toISOString(),
-                url: window.location.href,
-                timerRunning: appState.timer.isRunning,
-                workoutActive: appState.workout.active,
-                activeExercises: Object.keys(appState.workout.exercises).length
-            };
-            
-            document.getElementById('contextInfo').innerHTML = `
-                Current Section: ${context.currentSection}<br>
-                Current Day: ${context.currentDay}<br>
-                Logged In: ${context.isLoggedIn ? 'Yes' : 'No'}<br>
-                Device: ${context.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'}<br>
-                Workout Active: ${context.workoutActive ? 'Yes' : 'No'}<br>
-                Timer Running: ${context.timerRunning ? 'Yes' : 'No'}
-            `;
-        }
-
         async function handleFeedback(event) {
             event.preventDefault();
             
@@ -2336,7 +1804,7 @@ function updateFeedbackContext() {
             submitBtn.textContent = '📤 Sending...';
             
             const feedbackData = {
-                type: selectedFeedbackType,
+                type: window.selectedFeedbackType,
                 message: feedbackText,
                 userId: window.currentUser?.uid || 'anonymous',
                 userEmail: window.currentUser?.email || 'anonymous',
@@ -2396,7 +1864,9 @@ function updateFeedbackContext() {
             updateTimerDisplay();
             
             // Update drawer user section
-            updateDrawerUserSection();
+            if (window.updateDrawerUserSection) {
+                window.updateDrawerUserSection();
+            }
             
             // Set up form event listeners
             document.getElementById('authForm').addEventListener('submit', handleAuth);
@@ -2410,24 +1880,6 @@ function updateFeedbackContext() {
             }, 60000); // Save every minute during workouts
             
             console.log('App initialized', stateRestored ? 'with restored state' : 'with fresh state');
-        }
-
-        // Settings placeholder
-        function openSettings() {
-            alert('Settings panel coming in Phase 2! Will include:\n• Training frequency configuration\n• Weight tracking setup\n• Exercise customization\n• Goal setting');
-        }
-
-        // Modal click-outside-to-close functionality
-        window.onclick = function(event) {
-            const authModal = document.getElementById('authModal');
-            const feedbackModal = document.getElementById('feedbackModal');
-            
-            if (event.target === authModal) {
-                closeAuthModal();
-            }
-            if (event.target === feedbackModal) {
-                closeFeedback();
-            }
         }
 
         // Start app when page loads
@@ -2446,6 +1898,332 @@ function updateFeedbackContext() {
                 saveState();
             }
         });
+    </script>
+
+    <!-- Global Functions Script - These functions need to be accessible to HTML onclick handlers -->
+    <script>
+        // Navigation drawer functionality
+        function toggleDrawer() {
+            const drawer = document.getElementById('navDrawer');
+            const isOpen = drawer.classList.contains('open');
+            
+            if (isOpen) {
+                closeDrawer();
+            } else {
+                openDrawer();
+            }
+        }
+
+        function openDrawer() {
+            const drawer = document.getElementById('navDrawer');
+            const overlay = document.getElementById('navDrawerOverlay');
+            const menuIcon = document.getElementById('menuIcon');
+            
+            // Add the 'open' class to trigger CSS animations
+            drawer.classList.add('open');
+            overlay.classList.add('open');
+            
+            // Change hamburger to X
+            menuIcon.textContent = '✕';
+            menuIcon.classList.add('open');
+            
+            // Prevent scrolling the page behind the drawer
+            document.body.style.overflow = 'hidden';
+            
+            // Update user info in the drawer
+            if (window.updateDrawerUserSection) {
+                window.updateDrawerUserSection();
+            }
+        }
+
+        function closeDrawer() {
+            const drawer = document.getElementById('navDrawer');
+            const overlay = document.getElementById('navDrawerOverlay');
+            const menuIcon = document.getElementById('menuIcon');
+            
+            // Remove the 'open' class to trigger close animation
+            drawer.classList.remove('open');
+            overlay.classList.remove('open');
+            
+            // Change X back to hamburger
+            menuIcon.textContent = '☰';
+            menuIcon.classList.remove('open');
+            
+            // Restore page scrolling
+            document.body.style.overflow = '';
+        }
+
+        function navigateToSection(sectionName) {
+            // Remove active highlighting from all navigation items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Highlight the clicked navigation item
+            const clickedItem = document.querySelector(`[data-section="${sectionName}"]`);
+            if (clickedItem) {
+                clickedItem.classList.add('active');
+            }
+            
+            // Close the drawer after selection
+            closeDrawer();
+            
+            // Navigate to the selected section
+            if (window.showSection) {
+                window.showSection(sectionName);
+            }
+        }
+
+        // Workout section navigation and content loading
+        function showSection(sectionName) {
+            console.log('Switching to section:', sectionName);
+            
+            // Hide all sections first
+            document.querySelectorAll('.home-container, .workout-container').forEach(section => {
+                section.style.display = 'none';
+                if (section.classList) {
+                    section.classList.remove('active');
+                }
+            });
+            
+            // Update the app state to track which section we're in
+            if (window.appState) {
+                window.appState.currentSection = sectionName;
+            }
+            
+            // Show the correct section based on what was selected
+            if (sectionName === 'home') {
+                const homeSection = document.getElementById('homeSection');
+                if (homeSection) {
+                    homeSection.style.display = 'block';
+                    homeSection.classList.add('active');
+                }
+                // Load fresh statistics when returning to home
+                if (window.loadUserData) {
+                    window.loadUserData();
+                }
+            } else if (sectionName.startsWith('day')) {
+                // Handle workout day sections (dayA, dayB, dayC)
+                const day = sectionName.replace('day', ''); // Extract 'A', 'B', or 'C'
+                const daySection = document.getElementById(`day${day}Section`);
+                
+                if (daySection) {
+                    daySection.style.display = 'block';
+                    console.log(`Showing ${sectionName} section`);
+                } else {
+                    console.error(`Could not find section element: day${day}Section`);
+                }
+                
+                // Update app state to track current workout day
+                if (window.appState) {
+                    window.appState.currentDay = day;
+                }
+                
+                // Load the exercises for this specific day
+                if (window.loadExercises) {
+                    window.loadExercises(day);
+                } else {
+                    console.error('loadExercises function not available');
+                }
+            } else if (sectionName === 'settings') {
+                openSettings();
+                return; // Don't continue with section switching for modal
+            } else if (sectionName === 'feedback') {
+                openFeedback();
+                return; // Don't continue with section switching for modal
+            }
+            
+            // Update the timer display for the current section
+            if (window.updateTimerDisplay) {
+                window.updateTimerDisplay();
+            }
+            
+            // Save the current state so it persists across browser sessions
+            if (window.saveState) {
+                window.saveState();
+            }
+        }
+
+        // Quick workout starter from home page buttons
+        function startQuickWorkout() {
+            console.log('Starting quick workout');
+            
+            // For now, default to Day A - in Phase 2 this could be smarter
+            showSection('dayA');
+            
+            // Auto-start the timer to begin the workout session
+            if (window.startTimer) {
+                window.startTimer();
+            } else {
+                console.error('startTimer function not available');
+            }
+        }
+
+        // Authentication modal functions
+        function showAuthModal(mode) {
+            window.authMode = mode;
+            const modal = document.getElementById('authModal');
+            const title = document.getElementById('authModalTitle');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const confirmGroup = document.getElementById('confirmPasswordGroup');
+            const nameGroup = document.getElementById('displayNameGroup');
+            const switchText = document.getElementById('authSwitchText');
+            const switchBtn = document.getElementById('authSwitchBtn');
+            
+            // Configure the modal based on login vs signup
+            if (mode === 'login') {
+                title.textContent = '🔐 Login';
+                submitBtn.textContent = 'Login';
+                confirmGroup.style.display = 'none';
+                nameGroup.style.display = 'none';
+                switchText.textContent = "Don't have an account?";
+                switchBtn.textContent = 'Sign Up';
+            } else {
+                title.textContent = '📝 Sign Up';
+                submitBtn.textContent = 'Create Account';
+                confirmGroup.style.display = 'block';
+                nameGroup.style.display = 'block';
+                switchText.textContent = 'Already have an account?';
+                switchBtn.textContent = 'Login';
+            }
+            
+            // Clear any previous errors and show the modal
+            clearAuthError();
+            document.getElementById('authForm').reset();
+            modal.style.display = 'block';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function switchAuthMode() {
+            const newMode = window.authMode === 'login' ? 'signup' : 'login';
+            showAuthModal(newMode);
+        }
+
+        function clearAuthError() {
+            const errorDiv = document.getElementById('authError');
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+            }
+        }
+
+        // Sign out function
+        async function signOut() {
+            try {
+                await window.firebase.signOut(window.firebase.auth);
+                
+                // Clear local state on sign out
+                localStorage.removeItem('workoutAppState');
+                
+                // Reset app state if available
+                if (window.appState) {
+                    window.appState.workout.exercises = {};
+                    window.appState.timer.elapsed = 0;
+                    window.appState.timer.isRunning = false;
+                    window.appState.workout.active = false;
+                }
+                
+                // Show sign out confirmation
+                if (window.updateStateIndicator) {
+                    window.updateStateIndicator('signed-out');
+                }
+                
+                // Refresh to home page
+                showSection('home');
+                
+                console.log('User signed out successfully');
+                
+            } catch (error) {
+                console.error('Sign out error:', error);
+                if (window.updateStateIndicator) {
+                    window.updateStateIndicator('error');
+                }
+            }
+        }
+
+        // Settings placeholder function
+        function openSettings() {
+            alert('Settings panel coming in Phase 2! Will include:\n• Training frequency configuration\n• Weight tracking setup\n• Exercise customization\n• Goal setting');
+        }
+
+        // Feedback system functions
+        function openFeedback() {
+            document.getElementById('feedbackModal').style.display = 'block';
+            document.getElementById('feedbackSuccess').style.display = 'none';
+            document.getElementById('feedbackForm').style.display = 'block';
+            updateFeedbackContext();
+            document.getElementById('feedbackText').focus();
+        }
+
+        function closeFeedback() {
+            document.getElementById('feedbackModal').style.display = 'none';
+            document.getElementById('feedbackForm').reset();
+            window.selectedFeedbackType = 'bug';
+            updateFeedbackTypeButtons();
+        }
+
+        function selectFeedbackType(type) {
+            window.selectedFeedbackType = type;
+            updateFeedbackTypeButtons();
+        }
+
+        function updateFeedbackTypeButtons() {
+            document.querySelectorAll('.feedback-type-btn').forEach(btn => {
+                if (btn.dataset.type === window.selectedFeedbackType) {
+                    btn.style.background = '#3498db';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#3498db';
+                } else {
+                    btn.style.background = 'white';
+                    btn.style.color = '#333';
+                    btn.style.borderColor = '#e9ecef';
+                }
+            });
+        }
+
+        function updateFeedbackContext() {
+            const context = {
+                currentSection: window.appState?.currentSection || 'unknown',
+                currentDay: window.appState?.currentDay || 'unknown',
+                isLoggedIn: !!window.currentUser,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                timerRunning: window.appState?.timer?.isRunning || false,
+                workoutActive: window.appState?.workout?.active || false
+            };
+            
+            const contextInfo = document.getElementById('contextInfo');
+            if (contextInfo) {
+                contextInfo.innerHTML = `
+                    Current Section: ${context.currentSection}<br>
+                    Current Day: ${context.currentDay}<br>
+                    Logged In: ${context.isLoggedIn ? 'Yes' : 'No'}<br>
+                    Device: ${context.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'}<br>
+                    Workout Active: ${context.workoutActive ? 'Yes' : 'No'}<br>
+                    Timer Running: ${context.timerRunning ? 'Yes' : 'No'}
+                `;
+            }
+        }
+
+        // Make these functions globally accessible so HTML can call them
+        window.showSection = showSection;
+        window.startQuickWorkout = startQuickWorkout;
+
+        // Modal click-outside-to-close functionality
+        window.onclick = function(event) {
+            const authModal = document.getElementById('authModal');
+            const feedbackModal = document.getElementById('feedbackModal');
+            
+            if (event.target === authModal) {
+                closeAuthModal();
+            }
+            if (event.target === feedbackModal) {
+                closeFeedback();
+            }
+        }
     </script>
 </body>
 </html>
