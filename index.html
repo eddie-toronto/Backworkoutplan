@@ -326,11 +326,6 @@
             color: white;
         }
         
-        /* Remove old navigation menu */
-        .nav-menu {
-            display: none;
-        }
-        
         /* Main Content Area */
         .main-content {
             margin-top: 70px;
@@ -340,49 +335,83 @@
             margin-right: auto;
         }
         
-        /* Day Banner - Context for current day */
+        /* Day Banner - Progressive Disclosure Implementation */
         .day-banner {
+            position: sticky;
+            top: 70px;
             background: white;
-            border-radius: 15px;
+            border-radius: 0 0 15px 15px;
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             border-left: 4px solid #3498db;
+            z-index: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        .day-banner.minimized {
+            padding: 12px 20px;
+            border-radius: 0;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
         }
         
         .day-banner-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .day-banner.minimized .day-banner-header {
+            margin-bottom: 0;
+            align-items: center;
+        }
+        
+        .day-info {
+            flex: 1;
         }
         
         .day-title {
             font-size: 1.3em;
             font-weight: 600;
             color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+        
+        .day-banner.minimized .day-title {
+            font-size: 1em;
         }
         
         .day-subtitle {
             color: #7f8c8d;
             font-size: 0.9em;
             margin-top: 5px;
+            transition: all 0.3s ease;
+            opacity: 1;
+            max-height: 20px;
+            overflow: hidden;
         }
         
-        /* Workout Timer Section */
-        .timer-section {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
+        .day-banner.minimized .day-subtitle {
+            opacity: 0;
+            max-height: 0;
+            margin-top: 0;
         }
         
-        .timer-display {
-            font-size: 3em;
-            font-weight: bold;
-            color: #2c3e50;
+        /* Timer Controls Section - Above timer as requested */
+        .timer-controls-section {
             margin-bottom: 15px;
-            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            opacity: 1;
+            max-height: 60px;
+            overflow: hidden;
+        }
+        
+        .day-banner.minimized .timer-controls-section {
+            opacity: 0;
+            max-height: 0;
+            margin-bottom: 0;
         }
         
         .timer-controls {
@@ -427,6 +456,45 @@
         
         .stop-btn:hover {
             background: #c0392b;
+        }
+        
+        /* Timer Display Section */
+        .timer-display-section {
+            text-align: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .day-banner.minimized .timer-display-section {
+            text-align: right;
+        }
+        
+        .timer-display {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            margin-bottom: 5px;
+        }
+        
+        .day-banner.minimized .timer-display {
+            font-size: 1.2em;
+            margin-bottom: 0;
+        }
+        
+        .timer-status {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            transition: all 0.3s ease;
+            opacity: 1;
+            max-height: 20px;
+            overflow: hidden;
+        }
+        
+        .day-banner.minimized .timer-status {
+            opacity: 0;
+            max-height: 0;
         }
         
         /* Workout Banner - Individual exercises */
@@ -667,7 +735,7 @@
             background: #7f8c8d;
         }
         
-        /* Settings and Feedback styles remain the same as before */
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -766,7 +834,11 @@
             }
             
             .timer-display {
-                font-size: 2.5em;
+                font-size: 2em;
+            }
+            
+            .day-banner.minimized .timer-display {
+                font-size: 1em;
             }
             
             .timer-controls {
@@ -899,16 +971,19 @@
 
         <!-- Day A Section -->
         <div id="dayASection" class="workout-container">
-            <div class="day-banner">
+            <div class="day-banner" id="dayABanner">
                 <div class="day-banner-header">
-                    <div>
+                    <div class="day-info">
                         <h2 class="day-title">Day A: Vertical Pull Focus</h2>
                         <p class="day-subtitle">Building pull-up strength and lat development</p>
                     </div>
+                    <div class="timer-display-section">
+                        <div class="timer-display" id="timerDisplay">00:00</div>
+                        <div class="timer-status" id="timerStatus">Ready to start</div>
+                    </div>
                 </div>
                 
-                <div class="timer-section">
-                    <div class="timer-display" id="timerDisplay">00:00</div>
+                <div class="timer-controls-section">
                     <div class="timer-controls">
                         <button class="timer-btn start-btn" onclick="startTimer()">Start</button>
                         <button class="timer-btn pause-btn" onclick="pauseTimer()">Pause</button>
@@ -924,16 +999,19 @@
 
         <!-- Day B Section -->
         <div id="dayBSection" class="workout-container" style="display: none;">
-            <div class="day-banner">
+            <div class="day-banner" id="dayBBanner">
                 <div class="day-banner-header">
-                    <div>
+                    <div class="day-info">
                         <h2 class="day-title">Day B: Horizontal Pull & Barbell</h2>
                         <p class="day-subtitle">Building back thickness and strength</p>
                     </div>
+                    <div class="timer-display-section">
+                        <div class="timer-display" id="timerDisplayB">00:00</div>
+                        <div class="timer-status" id="timerStatusB">Ready to start</div>
+                    </div>
                 </div>
                 
-                <div class="timer-section">
-                    <div class="timer-display" id="timerDisplayB">00:00</div>
+                <div class="timer-controls-section">
                     <div class="timer-controls">
                         <button class="timer-btn start-btn" onclick="startTimer()">Start</button>
                         <button class="timer-btn pause-btn" onclick="pauseTimer()">Pause</button>
@@ -949,16 +1027,19 @@
 
         <!-- Day C Section -->
         <div id="dayCSection" class="workout-container" style="display: none;">
-            <div class="day-banner">
+            <div class="day-banner" id="dayCBanner">
                 <div class="day-banner-header">
-                    <div>
+                    <div class="day-info">
                         <h2 class="day-title">Day C: Power & Mixed Patterns</h2>
                         <p class="day-subtitle">Building explosive power and overall strength</p>
                     </div>
+                    <div class="timer-display-section">
+                        <div class="timer-display" id="timerDisplayC">00:00</div>
+                        <div class="timer-status" id="timerStatusC">Ready to start</div>
+                    </div>
                 </div>
                 
-                <div class="timer-section">
-                    <div class="timer-display" id="timerDisplayC">00:00</div>
+                <div class="timer-controls-section">
                     <div class="timer-controls">
                         <button class="timer-btn start-btn" onclick="startTimer()">Start</button>
                         <button class="timer-btn pause-btn" onclick="pauseTimer()">Pause</button>
@@ -1107,65 +1188,8 @@
             signOut: firebaseSignOut
         };
 
-        // Global variables that need to be accessible from HTML
-        window.authMode = 'login';
-        window.selectedFeedbackType = 'bug';
-        window.currentUser = null;
-
-        // Make updateAuthUI function globally accessible
-        window.updateAuthUI = function(user) {
-            const authInfo = document.getElementById('authInfo');
-            
-            if (user) {
-                authInfo.innerHTML = `
-                    <span style="color: white; font-size: 0.8em; margin-right: 10px;">
-                        ${user.displayName || user.email || 'User'}
-                    </span>
-                    <button class="auth-btn" onclick="signOut()">Sign Out</button>
-                `;
-            } else {
-                authInfo.innerHTML = `
-                    <button class="auth-btn" onclick="showAuthModal('login')">Login</button>
-                `;
-            }
-            
-            // Update the navigation drawer user section
-            if (window.updateDrawerUserSection) {
-                window.updateDrawerUserSection();
-            }
-        };
-
-        // Make the drawer user section updater globally accessible
-        window.updateDrawerUserSection = function() {
-            const navUserSection = document.getElementById('navUserSection');
-            const user = window.currentUser;
-            
-            if (user) {
-                const initials = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
-                navUserSection.innerHTML = `
-                    <div class="nav-user-info">
-                        <div class="nav-user-avatar">${initials}</div>
-                        <div class="nav-user-details">
-                            <div class="nav-user-name">${user.displayName || 'User'}</div>
-                            <div class="nav-user-email">${user.email}</div>
-                        </div>
-                    </div>
-                    <div class="nav-auth-buttons">
-                        <button class="nav-auth-btn" onclick="signOut()">Sign Out</button>
-                    </div>
-                `;
-            } else {
-                navUserSection.innerHTML = `
-                    <div class="nav-auth-buttons">
-                        <button class="nav-auth-btn primary" onclick="showAuthModal('signup')">Sign Up</button>
-                        <button class="nav-auth-btn" onclick="showAuthModal('login')">Login</button>
-                    </div>
-                `;
-            }
-        };
-
         // Enhanced workout data with predefined sets
-        let workoutData = {
+        const workoutData = {
             A: [
                 { 
                     name: 'Pull-ups (Progressive)', 
@@ -1298,7 +1322,7 @@
                         if (appState.timer.isRunning) {
                             const elapsedSinceLastSave = Math.floor((Date.now() - parsedState.timestamp) / 1000);
                             appState.timer.elapsed += elapsedSinceLastSave;
-                            startTimer();
+                            window.startTimer();
                         }
                         
                         updateStateIndicator('restored');
@@ -1348,7 +1372,7 @@
             }
         }
 
-        // Timer functions with persistent state
+        // Enhanced timer functions with status updates - SINGLE DEFINITION
         function updateTimerDisplay() {
             const minutes = Math.floor(appState.timer.elapsed / 60);
             const seconds = appState.timer.elapsed % 60;
@@ -1358,12 +1382,32 @@
             document.querySelectorAll('[id^="timerDisplay"]').forEach(display => {
                 display.textContent = timeString;
             });
+            
+            // Update status based on timer state
+            if (appState.timer.isRunning) {
+                updateTimerStatus('Running');
+            } else if (appState.timer.elapsed > 0) {
+                updateTimerStatus('Paused');
+            } else {
+                updateTimerStatus('Ready to start');
+            }
         }
 
-        // Exercise loading and management
+        function updateTimerStatus(status) {
+            document.querySelectorAll('[id^="timerStatus"]').forEach(statusElement => {
+                statusElement.textContent = status;
+            });
+        }
+
+        // Exercise loading function - SINGLE DEFINITION
         function loadExercises(day) {
             const container = document.getElementById(`day${day}Exercises`);
             const exercises = workoutData[day];
+            
+            if (!container || !exercises) {
+                console.error(`Cannot load exercises for day ${day}:`, { container: !!container, exercises: !!exercises });
+                return;
+            }
             
             container.innerHTML = exercises.map((exercise, exerciseIndex) => {
                 const exerciseKey = `${day}-${exerciseIndex}`;
@@ -1447,8 +1491,190 @@
             return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
         }
 
+        // Scroll-based banner minimization system
+        function setupScrollHandling() {
+            let lastScrollY = 0;
+            let ticking = false;
+            
+            function updateBannerState() {
+                const currentSection = appState.currentSection;
+                if (!currentSection || !currentSection.startsWith('day')) {
+                    return;
+                }
+                
+                const banner = document.getElementById(`${currentSection}Banner`);
+                if (!banner) return;
+                
+                const scrollY = window.scrollY;
+                const bannerHeight = banner.offsetHeight;
+                const appBannerHeight = 70; // Height of fixed app banner
+                
+                // Minimize when scrolled past the banner's natural position
+                const shouldMinimize = scrollY > (bannerHeight + appBannerHeight - 20);
+                
+                if (shouldMinimize && !banner.classList.contains('minimized')) {
+                    banner.classList.add('minimized');
+                    console.log('Banner minimized');
+                } else if (!shouldMinimize && banner.classList.contains('minimized')) {
+                    banner.classList.remove('minimized');
+                    console.log('Banner expanded');
+                }
+                
+                lastScrollY = scrollY;
+                ticking = false;
+            }
+            
+            function onScroll() {
+                if (!ticking) {
+                    requestAnimationFrame(updateBannerState);
+                    ticking = true;
+                }
+            }
+            
+            // Remove any existing scroll listeners
+            window.removeEventListener('scroll', onScroll);
+            
+            // Add scroll listener
+            window.addEventListener('scroll', onScroll);
+            
+            // Initial state check
+            updateBannerState();
+        }
+
+        // Make essential functions globally accessible
+        window.appState = appState;
+        window.currentUser = null;
+        window.authMode = 'login';
+        window.selectedFeedbackType = 'bug';
+        window.saveState = saveState;
+        window.loadExercises = loadExercises;
+        window.updateTimerDisplay = updateTimerDisplay;
+        window.setupScrollHandling = setupScrollHandling;
+        
+        // Enhanced timer functions
+        window.startTimer = function() {
+            if (!appState.timer.isRunning) {
+                appState.timer.isRunning = true;
+                appState.workout.active = true;
+                
+                if (!appState.workout.startTime) {
+                    appState.workout.startTime = Date.now();
+                }
+                
+                appState.timer.interval = setInterval(() => {
+                    appState.timer.elapsed++;
+                    updateTimerDisplay();
+                    
+                    // Save state every 30 seconds during workout
+                    if (appState.timer.elapsed % 30 === 0) {
+                        saveState();
+                    }
+                }, 1000);
+                
+                saveState();
+            }
+        };
+
+        window.pauseTimer = function() {
+            if (appState.timer.isRunning) {
+                appState.timer.isRunning = false;
+                clearInterval(appState.timer.interval);
+                saveState();
+            }
+        };
+
+        window.stopTimer = function() {
+            appState.timer.isRunning = false;
+            clearInterval(appState.timer.interval);
+            
+            // Save workout if there was progress
+            if (appState.workout.active && Object.keys(appState.workout.exercises).length > 0) {
+                saveWorkoutSession();
+            }
+            
+            // Reset timer
+            appState.timer.elapsed = 0;
+            appState.workout.active = false;
+            appState.workout.startTime = null;
+            appState.workout.exercises = {};
+            
+            updateTimerDisplay();
+            saveState();
+            
+            // Refresh home page stats
+            loadUserData();
+        };
+
+        // Exercise management functions
+        window.adjustReps = function(exerciseKey, setIndex, change) {
+            if (!appState.workout.exercises[exerciseKey]) return;
+            
+            const currentReps = appState.workout.exercises[exerciseKey].sets[setIndex].reps;
+            const newReps = Math.max(0, currentReps + change);
+            
+            appState.workout.exercises[exerciseKey].sets[setIndex].reps = newReps;
+            
+            // Update display
+            const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
+            if (setElement) {
+                setElement.querySelector('.rep-count').textContent = newReps;
+            }
+            
+            saveState();
+        };
+
+        window.completeSet = function(exerciseKey, setIndex) {
+            if (!appState.workout.exercises[exerciseKey]) return;
+            
+            const exerciseState = appState.workout.exercises[exerciseKey];
+            const set = exerciseState.sets[setIndex];
+            
+            if (set.reps === 0) {
+                alert('Please enter the number of reps you completed before marking the set as complete.');
+                return;
+            }
+            
+            // Mark set as completed
+            set.completed = true;
+            
+            // Move to next incomplete set
+            const nextIncompleteSet = exerciseState.sets.findIndex((s, index) => 
+                index > setIndex && !s.completed
+            );
+            
+            if (nextIncompleteSet !== -1) {
+                exerciseState.currentSet = nextIncompleteSet;
+                
+                // Add new set if this was the last predefined set
+                if (nextIncompleteSet === exerciseState.sets.length - 1) {
+                    exerciseState.sets.push({ reps: 0, completed: false });
+                }
+            }
+            
+            // Update display
+            const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
+            if (setElement) {
+                setElement.classList.add('completed');
+                setElement.classList.remove('active');
+                
+                const button = setElement.querySelector('.complete-set-btn');
+                button.textContent = '✅ Done';
+                button.disabled = true;
+            }
+            
+            // Activate next set
+            if (nextIncompleteSet !== -1) {
+                const nextSetElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${nextIncompleteSet}"]`);
+                if (nextSetElement) {
+                    nextSetElement.classList.add('active');
+                }
+            }
+            
+            saveState();
+        };
+
         // Data functions
-        async function saveWorkoutSession() {
+                async function saveWorkoutSession() {
             if (!window.firebase || !window.currentUser) return;
             
             try {
@@ -1557,148 +1783,79 @@
             return streak;
         }
 
-        // Make essential functions globally accessible for workout management
-        window.adjustReps = function(exerciseKey, setIndex, change) {
-            if (!appState.workout.exercises[exerciseKey]) return;
+        // Authentication functions
+        window.updateAuthUI = function(user) {
+            const authInfo = document.getElementById('authInfo');
             
-            const currentReps = appState.workout.exercises[exerciseKey].sets[setIndex].reps;
-            const newReps = Math.max(0, currentReps + change);
-            
-            appState.workout.exercises[exerciseKey].sets[setIndex].reps = newReps;
-            
-            // Update display
-            const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
-            if (setElement) {
-                setElement.querySelector('.rep-count').textContent = newReps;
-            }
-            
-            saveState();
-        };
-
-        window.completeSet = function(exerciseKey, setIndex) {
-            if (!appState.workout.exercises[exerciseKey]) return;
-            
-            const exerciseState = appState.workout.exercises[exerciseKey];
-            const set = exerciseState.sets[setIndex];
-            
-            if (set.reps === 0) {
-                alert('Please enter the number of reps you completed before marking the set as complete.');
-                return;
-            }
-            
-            // Mark set as completed
-            set.completed = true;
-            
-            // Move to next incomplete set
-            const nextIncompleteSet = exerciseState.sets.findIndex((s, index) => 
-                index > setIndex && !s.completed
-            );
-            
-            if (nextIncompleteSet !== -1) {
-                exerciseState.currentSet = nextIncompleteSet;
-                
-                // Add new set if this was the last predefined set
-                if (nextIncompleteSet === exerciseState.sets.length - 1) {
-                    exerciseState.sets.push({ reps: 0, completed: false });
-                }
-            }
-            
-            // Update display
-            const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
-            if (setElement) {
-                setElement.classList.add('completed');
-                setElement.classList.remove('active');
-                
-                const button = setElement.querySelector('.complete-set-btn');
-                button.textContent = '✅ Done';
-                button.disabled = true;
-            }
-            
-            // Activate next set
-            if (nextIncompleteSet !== -1) {
-                const nextSetElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${nextIncompleteSet}"]`);
-                if (nextSetElement) {
-                    nextSetElement.classList.add('active');
-                }
-            }
-            
-            saveState();
-        };
-
-        window.startTimer = function() {
-            if (!appState.timer.isRunning) {
-                appState.timer.isRunning = true;
-                appState.workout.active = true;
-                
-                if (!appState.workout.startTime) {
-                    appState.workout.startTime = Date.now();
-                }
-                
-                appState.timer.interval = setInterval(() => {
-                    appState.timer.elapsed++;
-                    updateTimerDisplay();
-                    
-                    // Save state every 30 seconds during workout
-                    if (appState.timer.elapsed % 30 === 0) {
-                        saveState();
-                    }
-                }, 1000);
-                
-                saveState();
-            }
-        };
-
-        window.pauseTimer = function() {
-            if (appState.timer.isRunning) {
-                appState.timer.isRunning = false;
-                clearInterval(appState.timer.interval);
-                saveState();
-            }
-        };
-
-        window.stopTimer = function() {
-            appState.timer.isRunning = false;
-            clearInterval(appState.timer.interval);
-            
-            // Save workout if there was progress
-            if (appState.workout.active && Object.keys(appState.workout.exercises).length > 0) {
-                saveWorkoutSession();
-            }
-            
-            // Reset timer
-            appState.timer.elapsed = 0;
-            appState.workout.active = false;
-            appState.workout.startTime = null;
-            appState.workout.exercises = {};
-            
-            updateTimerDisplay();
-            saveState();
-            
-            // Refresh home page stats
-            loadUserData();
-        };
-
-        // Make state and exercise functions globally accessible
-        window.saveState = saveState;
-        window.loadUserData = loadUserData;
-        window.updateTimerDisplay = updateTimerDisplay;
-        window.loadExercises = loadExercises;
-        window.appState = appState;
-
-        // Enhanced auth state listener that uses our global functions
-        onAuthStateChanged(auth, (user) => {
-            console.log('Auth state changed:', user);
             if (user) {
-                console.log('User details:', { uid: user.uid, email: user.email, displayName: user.displayName });
-                window.currentUser = user;
-                window.updateAuthUI(user);
-                loadUserData();
+                authInfo.innerHTML = `
+                    <span style="color: white; font-size: 0.8em; margin-right: 10px;">
+                        ${user.displayName || user.email || 'User'}
+                    </span>
+                    <button class="auth-btn" onclick="signOut()">Sign Out</button>
+                `;
             } else {
-                console.log('No user signed in');
-                window.currentUser = null;
-                window.updateAuthUI(null);
+                authInfo.innerHTML = `
+                    <button class="auth-btn" onclick="showAuthModal('login')">Login</button>
+                `;
             }
-        });
+            
+            // Update the navigation drawer user section
+            updateDrawerUserSection();
+        };
+
+        window.updateDrawerUserSection = function() {
+            const navUserSection = document.getElementById('navUserSection');
+            const user = window.currentUser;
+            
+            if (user) {
+                const initials = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
+                navUserSection.innerHTML = `
+                    <div class="nav-user-info">
+                        <div class="nav-user-avatar">${initials}</div>
+                        <div class="nav-user-details">
+                            <div class="nav-user-name">${user.displayName || 'User'}</div>
+                            <div class="nav-user-email">${user.email}</div>
+                        </div>
+                    </div>
+                    <div class="nav-auth-buttons">
+                        <button class="nav-auth-btn" onclick="signOut()">Sign Out</button>
+                    </div>
+                `;
+            } else {
+                navUserSection.innerHTML = `
+                    <div class="nav-auth-buttons">
+                        <button class="nav-auth-btn primary" onclick="showAuthModal('signup')">Sign Up</button>
+                        <button class="nav-auth-btn" onclick="showAuthModal('login')">Login</button>
+                    </div>
+                `;
+            }
+        };
+
+        // Sign out function
+        window.signOut = async function() {
+            try {
+                await window.firebase.signOut(window.firebase.auth);
+                
+                // Clear local state on sign out
+                localStorage.removeItem('workoutAppState');
+                
+                // Reset app state
+                appState.workout.exercises = {};
+                appState.timer.elapsed = 0;
+                appState.timer.isRunning = false;
+                appState.workout.active = false;
+                
+                // Show sign out confirmation
+                updateStateIndicator('signed-out');
+                
+                console.log('User signed out successfully');
+                
+            } catch (error) {
+                console.error('Sign out error:', error);
+                updateStateIndicator('error');
+            }
+        };
 
         // Authentication functions
         function showAuthError(message) {
@@ -1864,9 +2021,7 @@
             updateTimerDisplay();
             
             // Update drawer user section
-            if (window.updateDrawerUserSection) {
-                window.updateDrawerUserSection();
-            }
+            window.updateDrawerUserSection();
             
             // Set up form event listeners
             document.getElementById('authForm').addEventListener('submit', handleAuth);
@@ -1881,6 +2036,21 @@
             
             console.log('App initialized', stateRestored ? 'with restored state' : 'with fresh state');
         }
+
+        // Auth state listener
+        onAuthStateChanged(auth, (user) => {
+            console.log('Auth state changed:', user);
+            if (user) {
+                console.log('User details:', { uid: user.uid, email: user.email, displayName: user.displayName });
+                window.currentUser = user;
+                window.updateAuthUI(user);
+                loadUserData();
+            } else {
+                console.log('No user signed in');
+                window.currentUser = null;
+                window.updateAuthUI(null);
+            }
+        });
 
         // Start app when page loads
         document.addEventListener('DOMContentLoaded', initApp);
@@ -1900,10 +2070,8 @@
         });
     </script>
 
-    <!-- Essential Global Functions - Must be available immediately -->
+    <!-- Essential Global Functions -->
     <script>
-        // CRITICAL: These functions must be defined first and be immediately available
-        
         // Core navigation functions
         function showSection(sectionName) {
             console.log('Switching to section:', sectionName);
@@ -1914,6 +2082,11 @@
                 if (section.classList) {
                     section.classList.remove('active');
                 }
+            });
+            
+            // Reset all banners to expanded state
+            document.querySelectorAll('.day-banner').forEach(banner => {
+                banner.classList.remove('minimized');
             });
             
             // Update the app state to track which section we're in
@@ -1940,6 +2113,13 @@
                 if (daySection) {
                     daySection.style.display = 'block';
                     console.log(`Showing ${sectionName} section`);
+                    
+                    // Setup scroll handling for this section
+                    setTimeout(() => {
+                        if (window.setupScrollHandling) {
+                            window.setupScrollHandling();
+                        }
+                    }, 100);
                 } else {
                     console.error(`Could not find section element: day${day}Section`);
                 }
@@ -1991,18 +2171,12 @@
             const overlay = document.getElementById('navDrawerOverlay');
             const menuIcon = document.getElementById('menuIcon');
             
-            // Add the 'open' class to trigger CSS animations
             drawer.classList.add('open');
             overlay.classList.add('open');
-            
-            // Change hamburger to X
             menuIcon.textContent = '✕';
             menuIcon.classList.add('open');
-            
-            // Prevent scrolling the page behind the drawer
             document.body.style.overflow = 'hidden';
             
-            // Update user info in the drawer
             if (window.updateDrawerUserSection) {
                 window.updateDrawerUserSection();
             }
@@ -2013,34 +2187,24 @@
             const overlay = document.getElementById('navDrawerOverlay');
             const menuIcon = document.getElementById('menuIcon');
             
-            // Remove the 'open' class to trigger close animation
             drawer.classList.remove('open');
             overlay.classList.remove('open');
-            
-            // Change X back to hamburger
             menuIcon.textContent = '☰';
             menuIcon.classList.remove('open');
-            
-            // Restore page scrolling
             document.body.style.overflow = '';
         }
 
         function navigateToSection(sectionName) {
-            // Remove active highlighting from all navigation items
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             
-            // Highlight the clicked navigation item
             const clickedItem = document.querySelector(`[data-section="${sectionName}"]`);
             if (clickedItem) {
                 clickedItem.classList.add('active');
             }
             
-            // Close the drawer after selection
             closeDrawer();
-            
-            // Navigate to the selected section
             showSection(sectionName);
         }
 
@@ -2055,7 +2219,6 @@
             const switchText = document.getElementById('authSwitchText');
             const switchBtn = document.getElementById('authSwitchBtn');
             
-            // Configure the modal based on login vs signup
             if (mode === 'login') {
                 title.textContent = '🔐 Login';
                 submitBtn.textContent = 'Login';
@@ -2072,7 +2235,6 @@
                 switchBtn.textContent = 'Login';
             }
             
-            // Clear any previous errors and show the modal
             clearAuthError();
             document.getElementById('authForm').reset();
             modal.style.display = 'block';
@@ -2094,38 +2256,7 @@
             }
         }
 
-        // Sign out function
-        async function signOut() {
-            try {
-                await window.firebase.signOut(window.firebase.auth);
-                
-                // Clear local state on sign out
-                localStorage.removeItem('workoutAppState');
-                
-                // Reset app state if available
-                if (window.appState) {
-                    window.appState.workout.exercises = {};
-                    window.appState.timer.elapsed = 0;
-                    window.appState.timer.isRunning = false;
-                    window.appState.workout.active = false;
-                }
-                
-                // Show sign out confirmation
-                if (window.updateStateIndicator) {
-                    window.updateStateIndicator('signed-out');
-                }
-                
-                console.log('User signed out successfully');
-                
-            } catch (error) {
-                console.error('Sign out error:', error);
-                if (window.updateStateIndicator) {
-                    window.updateStateIndicator('error');
-                }
-            }
-        }
-
-        // Timer functions - basic versions that work with or without enhanced functions
+        // Timer functions - delegates to module functions when available
         function startTimer() {
             if (window.startTimer && window.startTimer !== startTimer) {
                 window.startTimer();
@@ -2162,9 +2293,7 @@
             document.getElementById('feedbackModal').style.display = 'block';
             document.getElementById('feedbackSuccess').style.display = 'none';
             document.getElementById('feedbackForm').style.display = 'block';
-            if (window.updateFeedbackContext) {
-                window.updateFeedbackContext();
-            }
+            updateFeedbackContext();
             document.getElementById('feedbackText').focus();
         }
 
@@ -2172,16 +2301,12 @@
             document.getElementById('feedbackModal').style.display = 'none';
             document.getElementById('feedbackForm').reset();
             window.selectedFeedbackType = 'bug';
-            if (window.updateFeedbackTypeButtons) {
-                window.updateFeedbackTypeButtons();
-            }
+            updateFeedbackTypeButtons();
         }
 
         function selectFeedbackType(type) {
             window.selectedFeedbackType = type;
-            if (window.updateFeedbackTypeButtons) {
-                window.updateFeedbackTypeButtons();
-            }
+            updateFeedbackTypeButtons();
         }
 
         function updateFeedbackTypeButtons() {
@@ -2222,10 +2347,6 @@
                 `;
             }
         }
-
-        // Make these globally accessible
-        window.updateFeedbackTypeButtons = updateFeedbackTypeButtons;
-        window.updateFeedbackContext = updateFeedbackContext;
 
         // Modal click-outside-to-close functionality
         window.onclick = function(event) {
