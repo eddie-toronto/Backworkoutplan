@@ -1107,7 +1107,7 @@
             signOut: firebaseSignOut  // Make signOut available
         };
 
-        // Make auth functions globally available
+        // Make all auth and navigation functions globally available
         window.showAuthModal = function(mode) {
             authMode = mode;
             const modal = document.getElementById('authModal');
@@ -1146,6 +1146,30 @@
         window.switchAuthMode = function() {
             const newMode = authMode === 'login' ? 'signup' : 'login';
             showAuthModal(newMode);
+        };
+
+        window.openFeedback = function() {
+            document.getElementById('feedbackModal').style.display = 'block';
+            document.getElementById('feedbackSuccess').style.display = 'none';
+            document.getElementById('feedbackForm').style.display = 'block';
+            updateFeedbackContext();
+            document.getElementById('feedbackText').focus();
+        };
+
+        window.closeFeedback = function() {
+            document.getElementById('feedbackModal').style.display = 'none';
+            document.getElementById('feedbackForm').reset();
+            selectedFeedbackType = 'bug';
+            updateFeedbackTypeButtons();
+        };
+
+        window.selectFeedbackType = function(type) {
+            selectedFeedbackType = type;
+            updateFeedbackTypeButtons();
+        };
+
+        window.openSettings = function() {
+            alert('Settings panel coming in Phase 2! Will include:\n• Training frequency configuration\n• Weight tracking setup\n• Exercise customization\n• Goal setting');
         };
         // Make signOut function globally available
         window.signOut = async function() {
@@ -1492,59 +1516,6 @@
         }
 
         // Timer functions with persistent state
-        function startTimer() {
-            if (!appState.timer.isRunning) {
-                appState.timer.isRunning = true;
-                appState.workout.active = true;
-                
-                if (!appState.workout.startTime) {
-                    appState.workout.startTime = Date.now();
-                }
-                
-                appState.timer.interval = setInterval(() => {
-                    appState.timer.elapsed++;
-                    updateTimerDisplay();
-                    
-                    // Save state every 30 seconds during workout
-                    if (appState.timer.elapsed % 30 === 0) {
-                        saveState();
-                    }
-                }, 1000);
-                
-                saveState();
-            }
-        }
-
-        function pauseTimer() {
-            if (appState.timer.isRunning) {
-                appState.timer.isRunning = false;
-                clearInterval(appState.timer.interval);
-                saveState();
-            }
-        }
-
-        function stopTimer() {
-            appState.timer.isRunning = false;
-            clearInterval(appState.timer.interval);
-            
-            // Save workout if there was progress
-            if (appState.workout.active && Object.keys(appState.workout.exercises).length > 0) {
-                saveWorkoutSession();
-            }
-            
-            // Reset timer
-            appState.timer.elapsed = 0;
-            appState.workout.active = false;
-            appState.workout.startTime = null;
-            appState.workout.exercises = {};
-            
-            updateTimerDisplay();
-            saveState();
-            
-            // Refresh home page stats
-            loadUserData();
-        }
-
         function updateTimerDisplay() {
             const minutes = Math.floor(appState.timer.elapsed / 60);
             const seconds = appState.timer.elapsed % 60;
@@ -1624,73 +1595,7 @@
             });
         }
 
-        // Set management functions
-        function adjustReps(exerciseKey, setIndex, change) {
-            if (!appState.workout.exercises[exerciseKey]) return;
-            
-            const currentReps = appState.workout.exercises[exerciseKey].sets[setIndex].reps;
-            const newReps = Math.max(0, currentReps + change);
-            
-            appState.workout.exercises[exerciseKey].sets[setIndex].reps = newReps;
-            
-            // Update display
-            const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
-            if (setElement) {
-                setElement.querySelector('.rep-count').textContent = newReps;
-            }
-            
-            saveState();
-        }
-
-        function completeSet(exerciseKey, setIndex) {
-            if (!appState.workout.exercises[exerciseKey]) return;
-            
-            const exerciseState = appState.workout.exercises[exerciseKey];
-            const set = exerciseState.sets[setIndex];
-            
-            if (set.reps === 0) {
-                alert('Please enter the number of reps you completed before marking the set as complete.');
-                return;
-            }
-            
-            // Mark set as completed
-            set.completed = true;
-            
-            // Move to next incomplete set
-            const nextIncompleteSet = exerciseState.sets.findIndex((s, index) => 
-                index > setIndex && !s.completed
-            );
-            
-            if (nextIncompleteSet !== -1) {
-                exerciseState.currentSet = nextIncompleteSet;
-                
-                // Add new set if this was the last predefined set
-                if (nextIncompleteSet === exerciseState.sets.length - 1) {
-                    exerciseState.sets.push({ reps: 0, completed: false });
-                }
-            }
-            
-            // Update display
-            const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
-            if (setElement) {
-                setElement.classList.add('completed');
-                setElement.classList.remove('active');
-                
-                const button = setElement.querySelector('.complete-set-btn');
-                button.textContent = '✅ Done';
-                button.disabled = true;
-            }
-            
-            // Activate next set
-            if (nextIncompleteSet !== -1) {
-                const nextSetElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${nextIncompleteSet}"]`);
-                if (nextSetElement) {
-                    nextSetElement.classList.add('active');
-                }
-            }
-            
-            saveState();
-        }
+        // Set management functions - removed duplicates, now only window.adjustReps and window.completeSet exist above
 
         // Utility functions
         function convertToEmbedUrl(url) {
@@ -1855,12 +1760,132 @@
             return streak;
         }
 
-        // Quick start function
-        function startQuickWorkout() {
+        // Make other essential functions globally available
+        window.startQuickWorkout = function() {
             // Determine next workout day based on recent history
             showSection('dayA'); // Default to Day A for now
             startTimer();
-        }
+        };
+
+        window.adjustReps = function(exerciseKey, setIndex, change) {
+            if (!appState.workout.exercises[exerciseKey]) return;
+            
+            const currentReps = appState.workout.exercises[exerciseKey].sets[setIndex].reps;
+            const newReps = Math.max(0, currentReps + change);
+            
+            appState.workout.exercises[exerciseKey].sets[setIndex].reps = newReps;
+            
+            // Update display
+            const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
+            if (setElement) {
+                setElement.querySelector('.rep-count').textContent = newReps;
+            }
+            
+            saveState();
+        };
+
+        window.completeSet = function(exerciseKey, setIndex) {
+            if (!appState.workout.exercises[exerciseKey]) return;
+            
+            const exerciseState = appState.workout.exercises[exerciseKey];
+            const set = exerciseState.sets[setIndex];
+            
+            if (set.reps === 0) {
+                alert('Please enter the number of reps you completed before marking the set as complete.');
+                return;
+            }
+            
+            // Mark set as completed
+            set.completed = true;
+            
+            // Move to next incomplete set
+            const nextIncompleteSet = exerciseState.sets.findIndex((s, index) => 
+                index > setIndex && !s.completed
+            );
+            
+            if (nextIncompleteSet !== -1) {
+                exerciseState.currentSet = nextIncompleteSet;
+                
+                // Add new set if this was the last predefined set
+                if (nextIncompleteSet === exerciseState.sets.length - 1) {
+                    exerciseState.sets.push({ reps: 0, completed: false });
+                }
+            }
+            
+            // Update display
+            const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
+            if (setElement) {
+                setElement.classList.add('completed');
+                setElement.classList.remove('active');
+                
+                const button = setElement.querySelector('.complete-set-btn');
+                button.textContent = '✅ Done';
+                button.disabled = true;
+            }
+            
+            // Activate next set
+            if (nextIncompleteSet !== -1) {
+                const nextSetElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${nextIncompleteSet}"]`);
+                if (nextSetElement) {
+                    nextSetElement.classList.add('active');
+                }
+            }
+            
+            saveState();
+        };
+
+        window.startTimer = function() {
+            if (!appState.timer.isRunning) {
+                appState.timer.isRunning = true;
+                appState.workout.active = true;
+                
+                if (!appState.workout.startTime) {
+                    appState.workout.startTime = Date.now();
+                }
+                
+                appState.timer.interval = setInterval(() => {
+                    appState.timer.elapsed++;
+                    updateTimerDisplay();
+                    
+                    // Save state every 30 seconds during workout
+                    if (appState.timer.elapsed % 30 === 0) {
+                        saveState();
+                    }
+                }, 1000);
+                
+                saveState();
+            }
+        };
+
+        window.pauseTimer = function() {
+            if (appState.timer.isRunning) {
+                appState.timer.isRunning = false;
+                clearInterval(appState.timer.interval);
+                saveState();
+            }
+        };
+
+        window.stopTimer = function() {
+            appState.timer.isRunning = false;
+            clearInterval(appState.timer.interval);
+            
+            // Save workout if there was progress
+            if (appState.workout.active && Object.keys(appState.workout.exercises).length > 0) {
+                saveWorkoutSession();
+            }
+            
+            // Reset timer
+            appState.timer.elapsed = 0;
+            appState.workout.active = false;
+            appState.workout.startTime = null;
+            appState.workout.exercises = {};
+            
+            updateTimerDisplay();
+            saveState();
+            
+            // Refresh home page stats
+            loadUserData();
+        };
 
         // Global variables for auth and feedback
         let authMode = 'login';
