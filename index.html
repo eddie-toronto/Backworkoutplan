@@ -65,6 +65,40 @@
             backdrop-filter: blur(10px);
         }
         
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .menu-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+        
+        .menu-button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .menu-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .menu-icon.open {
+            transform: rotate(90deg);
+        }
+        
         .auth-info {
             display: flex;
             align-items: center;
@@ -87,53 +121,220 @@
             background: rgba(255,255,255,0.3);
         }
         
-        /* Navigation Menu */
-        .nav-menu {
+        /* Navigation Drawer */
+        .nav-drawer {
             position: fixed;
-            top: 70px;
-            left: 0;
-            right: 0;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100vh;
             background: white;
-            z-index: 900;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .nav-tabs {
+            box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+            z-index: 1500;
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
             display: flex;
-            max-width: 600px;
-            margin: 0 auto;
-            overflow-x: auto;
+            flex-direction: column;
         }
         
-        .nav-tab {
-            flex: 1;
-            min-width: 80px;
-            padding: 12px 15px;
-            text-align: center;
-            background: transparent;
+        .nav-drawer.open {
+            transform: translateX(-320px);
+        }
+        
+        .nav-drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 1400;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-drawer-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .nav-drawer-header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 70px;
+        }
+        
+        .nav-drawer-title {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        
+        .nav-close-btn {
+            background: none;
             border: none;
+            color: white;
+            font-size: 1.5em;
             cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-close-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .nav-drawer-content {
+            flex: 1;
+            padding: 0;
+            overflow-y: auto;
+        }
+        
+        .nav-section {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .nav-section-title {
+            padding: 15px 20px 10px;
+            font-size: 0.9em;
             font-weight: 600;
             color: #7f8c8d;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        .nav-tab.active {
-            color: #3498db;
-            border-bottom-color: #3498db;
-            background: #f8f9fa;
-        }
-        
-        .nav-tab:hover {
-            background: #f8f9fa;
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 1em;
             color: #2c3e50;
+        }
+        
+        .nav-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .nav-item.active {
+            background: #e3f2fd;
+            color: #3498db;
+            border-right: 3px solid #3498db;
+        }
+        
+        .nav-item-icon {
+            font-size: 1.2em;
+            margin-right: 15px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .nav-item-text {
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .nav-item-badge {
+            background: #e74c3c;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .nav-user-section {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .nav-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .nav-user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        
+        .nav-user-details {
+            flex: 1;
+        }
+        
+        .nav-user-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+        
+        .nav-user-email {
+            color: #7f8c8d;
+            font-size: 0.8em;
+        }
+        
+        .nav-auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .nav-auth-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #3498db;
+            background: white;
+            color: #3498db;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-auth-btn.primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .nav-auth-btn:hover {
+            background: #3498db;
+            color: white;
+        }
+        
+        /* Remove old navigation menu */
+        .nav-menu {
+            display: none;
         }
         
         /* Main Content Area */
         .main-content {
-            margin-top: 130px;
-            padding: 0 20px 100px;
+            margin-top: 70px;
+            padding: 20px 20px 100px;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
@@ -560,8 +761,8 @@
             }
             
             .main-content {
-                padding: 0 15px 80px;
-                margin-top: 120px;
+                padding: 15px 15px 80px;
+                margin-top: 70px;
             }
             
             .timer-display {
@@ -595,28 +796,68 @@
                 <span>💪</span>
                 <h1>Back Workout Tracker</h1>
             </div>
-            <div class="app-stats">
+            <div class="header-controls">
                 <div class="streak-display">
                     🔥 <span id="streakCount">0</span>
                 </div>
                 <div class="auth-info" id="authInfo">
                     <button class="auth-btn" onclick="showAuthModal('login')">Login</button>
                 </div>
+                <button class="menu-button" onclick="toggleDrawer()">
+                    <span class="menu-icon" id="menuIcon">☰</span>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Navigation Menu -->
-    <div class="nav-menu">
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showSection('home')">🏠 Home</button>
-            <button class="nav-tab" onclick="showSection('dayA')">Day A</button>
-            <button class="nav-tab" onclick="showSection('dayB')">Day B</button>
-            <button class="nav-tab" onclick="showSection('dayC')">Day C</button>
-            <button class="nav-tab" onclick="showSection('settings')">⚙️</button>
-            <button class="nav-tab" onclick="showSection('feedback')">💬</button>
+    <!-- Navigation Drawer -->
+    <div class="nav-drawer" id="navDrawer">
+        <div class="nav-drawer-header">
+            <div class="nav-drawer-title">Navigation</div>
+            <button class="nav-close-btn" onclick="closeDrawer()">✕</button>
+        </div>
+        
+        <div class="nav-drawer-content">
+            <div class="nav-section">
+                <div class="nav-section-title">Workouts</div>
+                <button class="nav-item active" onclick="navigateToSection('home')" data-section="home">
+                    <span class="nav-item-icon">🏠</span>
+                    <span class="nav-item-text">Home</span>
+                </button>
+                <button class="nav-item" onclick="navigateToSection('dayA')" data-section="dayA">
+                    <span class="nav-item-icon">💪</span>
+                    <span class="nav-item-text">Day A - Vertical Pull</span>
+                </button>
+                <button class="nav-item" onclick="navigateToSection('dayB')" data-section="dayB">
+                    <span class="nav-item-icon">🏋️</span>
+                    <span class="nav-item-text">Day B - Horizontal Pull</span>
+                </button>
+                <button class="nav-item" onclick="navigateToSection('dayC')" data-section="dayC">
+                    <span class="nav-item-icon">⚡</span>
+                    <span class="nav-item-text">Day C - Power & Mixed</span>
+                </button>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Tools</div>
+                <button class="nav-item" onclick="navigateToSection('settings')">
+                    <span class="nav-item-icon">⚙️</span>
+                    <span class="nav-item-text">Settings</span>
+                </button>
+                <button class="nav-item" onclick="navigateToSection('feedback')">
+                    <span class="nav-item-icon">💬</span>
+                    <span class="nav-item-text">Feedback</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="nav-user-section" id="navUserSection">
+            <!-- User info will be populated here -->
         </div>
     </div>
+    
+    <!-- Navigation Drawer Overlay -->
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="closeDrawer()"></div>
 
     <!-- Main Content Area -->
     <div class="main-content">
@@ -1135,8 +1376,69 @@
             }
         }
 
-        // Navigation functions
-        function showSection(sectionName) {
+        // Make navigation drawer functions globally available
+        window.toggleDrawer = function() {
+            const drawer = document.getElementById('navDrawer');
+            const overlay = document.getElementById('navDrawerOverlay');
+            const menuIcon = document.getElementById('menuIcon');
+            
+            const isOpen = drawer.classList.contains('open');
+            
+            if (isOpen) {
+                closeDrawer();
+            } else {
+                openDrawer();
+            }
+        };
+        
+        window.openDrawer = function() {
+            const drawer = document.getElementById('navDrawer');
+            const overlay = document.getElementById('navDrawerOverlay');
+            const menuIcon = document.getElementById('menuIcon');
+            
+            drawer.classList.add('open');
+            overlay.classList.add('open');
+            menuIcon.textContent = '✕';
+            menuIcon.classList.add('open');
+            
+            // Prevent body scroll when drawer is open
+            document.body.style.overflow = 'hidden';
+            
+            // Update drawer user section
+            updateDrawerUserSection();
+        };
+        
+        window.closeDrawer = function() {
+            const drawer = document.getElementById('navDrawer');
+            const overlay = document.getElementById('navDrawerOverlay');
+            const menuIcon = document.getElementById('menuIcon');
+            
+            drawer.classList.remove('open');
+            overlay.classList.remove('open');
+            menuIcon.textContent = '☰';
+            menuIcon.classList.remove('open');
+            
+            // Restore body scroll
+            document.body.style.overflow = '';
+        };
+        
+        window.navigateToSection = function(sectionName) {
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const clickedItem = document.querySelector(`[data-section="${sectionName}"]`);
+            if (clickedItem) {
+                clickedItem.classList.add('active');
+            }
+            
+            // Close drawer
+            closeDrawer();
+            
+            // Navigate to section
+            showSection(sectionName);
+        };
             // Hide all sections
             document.querySelectorAll('.home-container, .workout-container').forEach(section => {
                 section.style.display = 'none';
@@ -1823,6 +2125,9 @@
             
             // Update timer display
             updateTimerDisplay();
+            
+            // Update drawer user section
+            updateDrawerUserSection();
             
             // Set up form event listeners
             document.getElementById('authForm').addEventListener('submit', handleAuth);
