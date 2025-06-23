@@ -399,15 +399,13 @@
             margin-top: 0;
         }
         
-        /* Timer Controls Section - Progressive Disclosure Compatible */
+        /* Timer Controls Section - Above timer as requested */
         .timer-controls-section {
             margin-bottom: 15px;
             transition: all 0.3s ease;
             opacity: 1;
-            max-height: 200px; /* Increased to accommodate mobile stacking */
+            max-height: 60px;
             overflow: hidden;
-            width: 100%;
-            box-sizing: border-box;
         }
         
         .day-banner.minimized .timer-controls-section {
@@ -420,8 +418,6 @@
             display: flex;
             gap: 10px;
             justify-content: center;
-            width: 100%;
-            box-sizing: border-box;
         }
         
         .timer-btn {
@@ -433,8 +429,6 @@
             font-size: 0.9em;
             transition: all 0.3s ease;
             min-width: 80px;
-            flex: 1;
-            max-width: 120px;
         }
         
         .start-btn {
@@ -820,41 +814,7 @@
             background: #e74c3c;
         }
         
-        /* Mobile Responsiveness - Enhanced for timer button fix */
-        @media (max-width: 768px) {
-            /* Timer controls mobile fix */
-            .timer-controls {
-                flex-direction: column;
-                gap: 8px;
-                width: 100%;
-                padding: 0;
-            }
-            
-            .timer-btn {
-                width: 100%;
-                flex: none;
-                max-width: none;
-                min-width: unset;
-                padding: 14px 20px;
-                font-size: 1em;
-                margin: 0;
-            }
-            
-            .timer-controls-section {
-                max-height: 200px; /* Increase for stacked buttons */
-                padding: 0;
-                margin-bottom: 15px;
-            }
-            
-            .day-banner {
-                padding: 15px;
-                margin-left: 15px;
-                margin-right: 15px;
-                width: calc(100% - 30px);
-                box-sizing: border-box;
-            }
-        }
-        
+        /* Mobile Responsiveness */
         @media (max-width: 480px) {
             .app-banner {
                 padding: 12px 15px;
@@ -869,7 +829,7 @@
             }
             
             .main-content {
-                padding: 15px 10px 80px;
+                padding: 15px 15px 80px;
                 margin-top: 70px;
             }
             
@@ -881,49 +841,35 @@
                 font-size: 1em;
             }
             
-            /* Stronger mobile timer controls */
+            /* Fixed: Timer controls mobile layout */
             .timer-controls {
-                flex-direction: column !important;
-                gap: 8px !important;
-                width: 100% !important;
-                padding: 0 !important;
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
             }
             
             .timer-btn {
-                width: 100% !important;
-                flex: none !important;
-                max-width: none !important;
-                min-width: unset !important;
-                padding: 14px 20px !important;
-                font-size: 1em !important;
-                margin: 0 !important;
-                box-sizing: border-box;
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 1em;
+                min-width: unset;
             }
             
+            /* Ensure timer controls section has proper spacing */
             .timer-controls-section {
-                max-height: 200px; /* Allow for stacked buttons */
-                padding: 0;
                 margin-bottom: 15px;
+                padding: 0 5px; /* Add slight padding to prevent edge cutoff */
             }
             
-            /* Preserve minimized state behavior on mobile */
-            .day-banner.minimized .timer-controls-section {
-                opacity: 0 !important;
-                max-height: 0 !important;
-                margin-bottom: 0 !important;
-            }
-            
-            /* Day banner mobile fixes */
+            /* Day banner responsive adjustments */
             .day-banner {
-                margin-left: 10px;
-                margin-right: 10px;
-                width: calc(100% - 20px);
-                padding: 12px;
-                box-sizing: border-box;
+                margin-bottom: 15px;
+                padding: 15px;
+                border-radius: 0 0 12px 12px;
             }
             
             .day-banner.minimized {
-                padding: 8px 12px;
+                padding: 10px 15px;
             }
             
             /* Timer display responsive */
@@ -998,15 +944,16 @@
         /* Enhanced mobile layout for very small screens */
         @media (max-width: 360px) {
             .day-banner {
-                margin-left: 5px;
-                margin-right: 5px;
-                width: calc(100% - 10px);
-                padding: 10px;
+                padding: 12px;
             }
             
             .timer-btn {
-                padding: 12px 16px !important;
-                font-size: 0.9em !important;
+                padding: 12px 16px;
+                font-size: 0.9em;
+            }
+            
+            .timer-controls-section {
+                padding: 0 8px;
             }
             
             .app-banner {
@@ -1014,7 +961,7 @@
             }
             
             .main-content {
-                padding: 12px 5px 80px;
+                padding: 12px 12px 80px;
             }
         }
     </style>
@@ -1665,13 +1612,10 @@
                 if (!banner) return;
                 
                 const scrollY = window.scrollY;
-                const bannerHeight = banner.offsetHeight;
-                const appBannerHeight = 70; // Height of fixed app banner
                 
-                // Minimize when scrolled past the banner's natural position
-                // Adjusted threshold for mobile compatibility
-                const threshold = window.innerWidth <= 768 ? 50 : 20;
-                const shouldMinimize = scrollY > (bannerHeight + appBannerHeight - threshold);
+                // Minimize after just 50px of scrolling (about 2-3 lines)
+                // This ensures the first exercise card is immediately visible
+                const shouldMinimize = scrollY > 50;
                 
                 if (shouldMinimize && !banner.classList.contains('minimized')) {
                     banner.classList.add('minimized');
@@ -1699,7 +1643,7 @@
             window.addEventListener('scroll', onScroll);
             
             // Initial state check
-            setTimeout(updateBannerState, 100);
+            updateBannerState();
         }
 
         // Make essential functions globally accessible
