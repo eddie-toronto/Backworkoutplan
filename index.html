@@ -841,13 +841,70 @@
                 font-size: 1em;
             }
             
+            /* Fixed: Timer controls mobile layout */
             .timer-controls {
                 flex-direction: column;
                 gap: 8px;
+                width: 100%;
             }
             
             .timer-btn {
                 width: 100%;
+                padding: 14px 20px;
+                font-size: 1em;
+                min-width: unset;
+            }
+            
+            /* Ensure timer controls section has proper spacing */
+            .timer-controls-section {
+                margin-bottom: 15px;
+                padding: 0 5px; /* Add slight padding to prevent edge cutoff */
+            }
+            
+            /* Day banner responsive adjustments */
+            .day-banner {
+                margin-bottom: 15px;
+                padding: 15px;
+                border-radius: 0 0 12px 12px;
+            }
+            
+            .day-banner.minimized {
+                padding: 10px 15px;
+            }
+            
+            /* Timer display responsive */
+            .day-banner-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .day-banner.minimized .day-banner-header {
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 0;
+            }
+            
+            .timer-display-section {
+                text-align: center;
+                order: 2;
+            }
+            
+            .day-banner.minimized .timer-display-section {
+                text-align: right;
+                order: 1;
+                flex-shrink: 0;
+            }
+            
+            .day-info {
+                order: 1;
+            }
+            
+            .day-banner.minimized .day-info {
+                order: 2;
+                flex: 1;
             }
             
             .stats-grid {
@@ -856,6 +913,55 @@
             
             .quick-actions {
                 flex-direction: column;
+            }
+            
+            /* Exercise cards mobile optimization */
+            .exercise-content {
+                padding: 15px;
+            }
+            
+            .set-item {
+                padding: 10px 12px;
+                margin: 6px 0;
+            }
+            
+            .rep-controls {
+                gap: 8px;
+            }
+            
+            .rep-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9em;
+            }
+            
+            .complete-set-btn {
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
+        }
+        
+        /* Enhanced mobile layout for very small screens */
+        @media (max-width: 360px) {
+            .day-banner {
+                padding: 12px;
+            }
+            
+            .timer-btn {
+                padding: 12px 16px;
+                font-size: 0.9em;
+            }
+            
+            .timer-controls-section {
+                padding: 0 8px;
+            }
+            
+            .app-banner {
+                padding: 10px 12px;
+            }
+            
+            .main-content {
+                padding: 12px 12px 80px;
             }
         }
     </style>
