@@ -1,4 +1,1527 @@
-<!DOCTYPE html>
+<button class="nav-item" onclick="WorkoutApp.navigateToSection('dayC')" data-section="dayC">
+                    <span class="nav-item-icon">⚡</span>
+                    <span class="nav-item-text">Day C - Power & Mixed</span>
+                </button>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Tools</div>
+                <button class="nav-item" onclick="WorkoutApp.openSettings()">
+                    <span class="nav-item-icon">⚙️</span>
+                    <span class="nav-item-text">Settings</span>
+                </button>
+                <button class="nav-item" onclick="WorkoutApp.openFeedback()">
+                    <span class="nav-item-icon">💬</span>
+                    <span class="nav-item-text">Feedback</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="nav-user-section" id="navUserSection">
+            <!-- User info will be populated here -->
+        </div>
+    </div>
+    
+    <!-- Navigation Drawer Overlay -->
+    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="WorkoutApp.closeDrawer()"></div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Home Section -->
+        <div id="homeSection" class="home-container active">
+            <div class="welcome-section">
+                <h2 class="welcome-title">Welcome Back!</h2>
+                <p class="welcome-subtitle">Ready to build that V-back?</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalWorkouts">0</div>
+                        <div class="stat-label">Total Workouts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalPullUps">0</div>
+                        <div class="stat-label">Pull-ups</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avgDuration">0</div>
+                        <div class="stat-label">Avg Duration</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="thisWeek">0</div>
+                        <div class="stat-label">This Week</div>
+                    </div>
+                </div>
+                
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="WorkoutApp.startQuickWorkout()">
+                        🚀 Start Next Workout
+                    </button>
+                    <button class="action-btn secondary" onclick="WorkoutApp.showSection('dayA')">
+                        📋 View Workouts
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day A Section -->
+        <div id="dayASection" class="workout-container">
+            <div class="day-banner" id="dayABanner">
+                <div class="day-banner-header">
+                    <div class="day-info">
+                        <h2 class="day-title">Day A: Vertical Pull Focus</h2>
+                        <p class="day-subtitle">Building pull-up strength and lat development</p>
+                    </div>
+                    <div class="timer-display-section">
+                        <div class="timer-display" id="timerDisplay">00:00</div>
+                        <div class="timer-status" id="timerStatus">Ready to start</div>
+                    </div>
+                </div>
+                
+                <div class="timer-controls-section">
+                    <div class="timer-controls">
+                        <button class="timer-btn start-btn" onclick="WorkoutApp.startTimer()">Start</button>
+                        <button class="timer-btn pause-btn" onclick="WorkoutApp.pauseTimer()">Pause</button>
+                        <button class="timer-btn stop-btn" onclick="WorkoutApp.stopTimer()">Complete</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="dayAExercises">
+                <!-- Exercises will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Day B Section -->
+        <div id="dayBSection" class="workout-container" style="display: none;">
+            <div class="day-banner" id="dayBBanner">
+                <div class="day-banner-header">
+                    <div class="day-info">
+                        <h2 class="day-title">Day B: Horizontal Pull & Barbell</h2>
+                        <p class="day-subtitle">Building back thickness and strength</p>
+                    </div>
+                    <div class="timer-display-section">
+                        <div class="timer-display" id="timerDisplayB">00:00</div>
+                        <div class="timer-status" id="timerStatusB">Ready to start</div>
+                    </div>
+                </div>
+                
+                <div class="timer-controls-section">
+                    <div class="timer-controls">
+                        <button class="timer-btn start-btn" onclick="WorkoutApp.startTimer()">Start</button>
+                        <button class="timer-btn pause-btn" onclick="WorkoutApp.pauseTimer()">Pause</button>
+                        <button class="timer-btn stop-btn" onclick="WorkoutApp.stopTimer()">Complete</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="dayBExercises">
+                <!-- Exercises will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Day C Section -->
+        <div id="dayCSection" class="workout-container" style="display: none;">
+            <div class="day-banner" id="dayCBanner">
+                <div class="day-banner-header">
+                    <div class="day-info">
+                        <h2 class="day-title">Day C: Power & Mixed Patterns</h2>
+                        <p class="day-subtitle">Building explosive power and overall strength</p>
+                    </div>
+                    <div class="timer-display-section">
+                        <div class="timer-display" id="timerDisplayC">00:00</div>
+                        <div class="timer-status" id="timerStatusC">Ready to start</div>
+                    </div>
+                </div>
+                
+                <div class="timer-controls-section">
+                    <div class="timer-controls">
+                        <button class="timer-btn start-btn" onclick="WorkoutApp.startTimer()">Start</button>
+                        <button class="timer-btn pause-btn" onclick="WorkoutApp.pauseTimer()">Pause</button>
+                        <button class="timer-btn stop-btn" onclick="WorkoutApp.stopTimer()">Complete</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="dayCExercises">
+                <!-- Exercises will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="authModalTitle">🔐 Login</h2>
+                <span class="close" onclick="WorkoutApp.closeAuthModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="auth-error" id="authError" style="display: none; background: #e74c3c; color: white; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9em;"></div>
+                
+                <form class="auth-form" id="authForm">
+                    <div class="form-group">
+                        <label for="authEmail" style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Email</label>
+                        <input type="email" id="authEmail" required placeholder="your@email.com" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="authPassword" style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Password</label>
+                        <input type="password" id="authPassword" required placeholder="Enter password" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px;">
+                    </div>
+                    
+                    <div class="form-group" id="confirmPasswordGroup" style="display: none; margin-bottom: 15px;">
+                        <label for="authConfirmPassword" style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Confirm Password</label>
+                        <input type="password" id="authConfirmPassword" placeholder="Confirm password" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px;">
+                    </div>
+                    
+                    <div class="form-group" id="displayNameGroup" style="display: none; margin-bottom: 15px;">
+                        <label for="authDisplayName" style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Display Name</label>
+                        <input type="text" id="authDisplayName" placeholder="Your name for the app" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px;">
+                    </div>
+                    
+                    <button type="submit" class="auth-submit-btn" id="authSubmitBtn" style="background: #3498db; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.3s ease;">Login</button>
+                </form>
+                
+                <div style="text-align: center; margin-top: 15px; color: #7f8c8d;">
+                    <span id="authSwitchText">Don't have an account?</span>
+                    <button type="button" id="authSwitchBtn" onclick="WorkoutApp.switchAuthMode()" style="background: none; border: none; color: #3498db; cursor: pointer; text-decoration: underline;">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💬 Send Feedback</h2>
+                <span class="close" onclick="WorkoutApp.closeFeedback()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="feedbackSuccess" style="background: #2ecc71; color: white; padding: 15px; border-radius: 8px; text-align: center; font-weight: 600; display: none; margin-bottom: 15px;">
+                    ✅ Thank you! Your feedback has been submitted successfully.
+                </div>
+                
+                <form id="feedbackForm">
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: 600; color: #2c3e50; margin-bottom: 10px; display: block;">
+                            What type of feedback is this?
+                        </label>
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <button type="button" class="feedback-type-btn active" data-type="bug" onclick="WorkoutApp.selectFeedbackType('bug')" style="flex: 1; padding: 10px; border: 2px solid #3498db; background: #3498db; color: white; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; font-size: 0.9em;">
+                                🐛 Bug Report
+                            </button>
+                            <button type="button" class="feedback-type-btn" data-type="feature" onclick="WorkoutApp.selectFeedbackType('feature')" style="flex: 1; padding: 10px; border: 2px solid #e9ecef; background: white; color: #333; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; font-size: 0.9em;">
+                                💡 Feature Request
+                            </button>
+                            <button type="button" class="feedback-type-btn" data-type="improvement" onclick="WorkoutApp.selectFeedbackType('improvement')" style="flex: 1; padding: 10px; border: 2px solid #e9ecef; background: white; color: #333; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; font-size: 0.9em;">
+                                ⚡ Improvement
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label for="feedbackText" style="font-weight: 600; color: #2c3e50; margin-bottom: 5px; display: block;">
+                            Your Feedback
+                        </label>
+                        <textarea 
+                            id="feedbackText" 
+                            placeholder="Please describe your feedback in detail. What happened? What did you expect? How can we improve?"
+                            required
+                            style="width: 100%; min-height: 120px; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; resize: vertical; font-family: inherit; font-size: 14px;"
+                        ></textarea>
+                    </div>
+                    
+                    <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; font-size: 0.8em; color: #6c757d; margin-bottom: 15px;">
+                        <strong>Context Info:</strong><br>
+                        <span id="contextInfo">Loading context...</span>
+                    </div>
+                    
+                    <button type="submit" style="background: #2ecc71; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.3s ease;">
+                        🚀 Submit Feedback
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Persistent State Indicator -->
+    <div class="state-indicator" id="stateIndicator">
+        ✅ Ready
+    </div>
+
+    <!-- Core Application Architecture - Clean Separation -->
+    <script>
+        // ===================================================================
+        // CORE WORKOUT APPLICATION - SINGLE NAMESPACE ARCHITECTURE
+        // ===================================================================
+        
+        const WorkoutApp = (function() {
+            'use strict';
+            
+            // ===================================================================
+            // APPLICATION STATE - CENTRALIZED MANAGEMENT
+            // ===================================================================
+            
+            const state = {
+                currentSection: 'home',
+                currentDay: 'A',
+                authMode: 'login',
+                selectedFeedbackType: 'bug',
+                currentUser: null,
+                timer: {
+                    elapsed: 0,
+                    isRunning: false,
+                    interval: null
+                },
+                workout: {
+                    active: false,
+                    startTime: null,
+                    exercises: {}
+                },
+                scrollHandler: null
+            };
+            
+            // ===================================================================
+            // WORKOUT DATA CONFIGURATION
+            // ===================================================================
+            
+            const workoutData = {
+                A: [
+                    { 
+                        name: 'Pull-ups (Progressive)', 
+                        details: 'Start with full pull-ups, finish with negatives',
+                        sets: 3, 
+                        targetReps: 5, 
+                        videoUrl: 'https://www.youtube.com/watch?v=eGo4IYlbE5g',
+                        type: 'bodyweight'
+                    },
+                    { 
+                        name: 'Inverted Rows', 
+                        details: 'Control the movement, focus on squeezing shoulder blades',
+                        sets: 2, 
+                        targetReps: 10, 
+                        videoUrl: 'https://youtu.be/qOux_HZ0XHo',
+                        type: 'bodyweight'
+                    },
+                    { 
+                        name: 'KB High Pulls', 
+                        details: 'Explosive movement from hips',
+                        sets: 2, 
+                        targetReps: 10, 
+                        videoUrl: 'https://youtu.be/mP1BHxBeAEM',
+                        type: 'kettlebell'
+                    }
+                ],
+                B: [
+                    { 
+                        name: 'Bent-Over Barbell Rows', 
+                        details: 'Keep core tight, pull to lower chest',
+                        sets: 3, 
+                        targetReps: 9, 
+                        videoUrl: 'https://youtube.com/shorts/UL8ZcK64KxA?si=m55OceQmrXIPifb8',
+                        type: 'barbell'
+                    },
+                    { 
+                        name: 'Inverted Rows', 
+                        details: 'Control the movement, focus on squeezing shoulder blades',
+                        sets: 2, 
+                        targetReps: 10, 
+                        videoUrl: 'https://youtu.be/qOux_HZ0XHo',
+                        type: 'bodyweight'
+                    },
+                    { 
+                        name: 'Single-Arm KB Deadlifts', 
+                        details: 'Maintain neutral spine, drive through heels',
+                        sets: 2, 
+                        targetReps: 8, 
+                        videoUrl: 'https://youtu.be/4SFg7GaKI0A',
+                        type: 'kettlebell'
+                    }
+                ],
+                C: [
+                    { 
+                        name: 'KB Swings', 
+                        details: 'Power from hips, not arms',
+                        sets: 3, 
+                        targetReps: 20, 
+                        videoUrl: 'https://youtu.be/YSxHifyI6s8',
+                        type: 'kettlebell'
+                    },
+                    { 
+                        name: 'Barbell Deadlifts', 
+                        details: 'Keep bar close to body, drive through heels',
+                        sets: 3, 
+                        targetReps: 7, 
+                        videoUrl: 'https://youtu.be/r4MzxtBKyNE',
+                        type: 'barbell'
+                    },
+                    { 
+                        name: 'Face Pulls', 
+                        details: 'Pull to face level, squeeze rear delts',
+                        sets: 2, 
+                        targetReps: 13, 
+                        videoUrl: 'https://youtu.be/Jbyoxer58j4',
+                        type: 'cable'
+                    }
+                ]
+            };
+            
+            // ===================================================================
+            // UTILITY FUNCTIONS
+            // ===================================================================
+            
+            function convertToEmbedUrl(url) {
+                if (!url) return '';
+                
+                let videoId = '';
+                
+                if (url.includes('youtube.com/watch')) {
+                    videoId = url.split('v=')[1]?.split('&')[0];
+                } else if (url.includes('youtu.be/')) {
+                    videoId = url.split('youtu.be/')[1]?.split('?')[0];
+                } else if (url.includes('youtube.com/shorts/')) {
+                    videoId = url.split('shorts/')[1]?.split('?')[0];
+                } else if (url.includes('youtube.com/embed/')) {
+                    return url;
+                }
+                
+                return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+            }
+            
+            function updateStateIndicator(status) {
+                const indicator = document.getElementById('stateIndicator');
+                if (!indicator) return;
+                
+                indicator.className = 'state-indicator';
+                
+                switch (status) {
+                    case 'saved':
+                        indicator.textContent = '✅ Saved';
+                        break;
+                    case 'saving':
+                        indicator.textContent = '💾 Saving...';
+                        indicator.classList.add('saving');
+                        break;
+                    case 'error':
+                        indicator.textContent = '❌ Error';
+                        indicator.classList.add('error');
+                        break;
+                    case 'restored':
+                        indicator.textContent = '🔄 Restored';
+                        break;
+                    case 'signed-out':
+                        indicator.textContent = '👋 Signed Out';
+                        break;
+                    default:
+                        indicator.textContent = '✅ Ready';
+                }
+                
+                // Auto-hide non-error indicators after 3 seconds
+                if (status !== 'error') {
+                    setTimeout(() => {
+                        if (indicator.textContent !== '❌ Error') {
+                            indicator.textContent = '✅ Ready';
+                            indicator.className = 'state-indicator';
+                        }
+                    }, 3000);
+                }
+            }
+            
+            // ===================================================================
+            // STATE MANAGEMENT FUNCTIONS
+            // ===================================================================
+            
+            function saveState() {
+                try {
+                    const stateToSave = {
+                        currentSection: state.currentSection,
+                        currentDay: state.currentDay,
+                        timer: state.timer,
+                        workout: state.workout,
+                        timestamp: Date.now()
+                    };
+                    localStorage.setItem('workoutAppState', JSON.stringify(stateToSave));
+                    updateStateIndicator('saved');
+                    
+                    // Also save to Firebase if user is logged in and workout is active
+                    if (state.currentUser && state.workout.active && window.FirebaseService) {
+                        window.FirebaseService.saveWorkoutSession(state);
+                    }
+                } catch (error) {
+                    console.error('Error saving state:', error);
+                    updateStateIndicator('error');
+                }
+            }
+            
+            function loadState() {
+                try {
+                    const savedState = localStorage.getItem('workoutAppState');
+                    if (savedState) {
+                        const parsedState = JSON.parse(savedState);
+                        
+                        // Only restore if saved recently (within 6 hours)
+                        const sixHours = 6 * 60 * 60 * 1000;
+                        if (Date.now() - parsedState.timestamp < sixHours) {
+                            state.currentSection = parsedState.currentSection || 'home';
+                            state.currentDay = parsedState.currentDay || 'A';
+                            state.timer = { ...state.timer, ...parsedState.timer };
+                            state.workout = { ...state.workout, ...parsedState.workout };
+                            
+                            // Restore timer if it was running
+                            if (state.timer.isRunning) {
+                                const elapsedSinceLastSave = Math.floor((Date.now() - parsedState.timestamp) / 1000);
+                                state.timer.elapsed += elapsedSinceLastSave;
+                                startTimer();
+                            }
+                            
+                            updateStateIndicator('restored');
+                            return true;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading state:', error);
+                }
+                return false;
+            }
+            
+            // ===================================================================
+            // TIMER FUNCTIONS
+            // ===================================================================
+            
+            function updateTimerDisplay() {
+                const minutes = Math.floor(state.timer.elapsed / 60);
+                const seconds = state.timer.elapsed % 60;
+                const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Update all timer displays
+                document.querySelectorAll('[id^="timerDisplay"]').forEach(display => {
+                    display.textContent = timeString;
+                });
+                
+                // Update status based on timer state
+                let status = 'Ready to start';
+                if (state.timer.isRunning) {
+                    status = 'Running';
+                } else if (state.timer.elapsed > 0) {
+                    status = 'Paused';
+                }
+                
+                document.querySelectorAll('[id^="timerStatus"]').forEach(statusElement => {
+                    statusElement.textContent = status;
+                });
+            }
+            
+            function startTimer() {
+                if (!state.timer.isRunning) {
+                    state.timer.isRunning = true;
+                    state.workout.active = true;
+                    
+                    if (!state.workout.startTime) {
+                        state.workout.startTime = Date.now();
+                    }
+                    
+                    state.timer.interval = setInterval(() => {
+                        state.timer.elapsed++;
+                        updateTimerDisplay();
+                        
+                        // Save state every 30 seconds during workout
+                        if (state.timer.elapsed % 30 === 0) {
+                            saveState();
+                        }
+                    }, 1000);
+                    
+                    saveState();
+                }
+            }
+            
+            function pauseTimer() {
+                if (state.timer.isRunning) {
+                    state.timer.isRunning = false;
+                    clearInterval(state.timer.interval);
+                    saveState();
+                }
+            }
+            
+            function stopTimer() {
+                state.timer.isRunning = false;
+                clearInterval(state.timer.interval);
+                
+                // Save workout if there was progress
+                if (state.workout.active && Object.keys(state.workout.exercises).length > 0) {
+                    if (window.FirebaseService) {
+                        window.FirebaseService.saveWorkoutSession(state);
+                    }
+                }
+                
+                // Reset timer
+                state.timer.elapsed = 0;
+                state.workout.active = false;
+                state.workout.startTime = null;
+                state.workout.exercises = {};
+                
+                updateTimerDisplay();
+                saveState();
+                
+                // Refresh home page stats
+                if (window.FirebaseService) {
+                    window.FirebaseService.loadUserData();
+                }
+            }
+            
+            // ===================================================================
+            // EXERCISE MANAGEMENT FUNCTIONS
+            // ===================================================================
+            
+            function loadExercises(day) {
+                const container = document.getElementById(`day${day}Exercises`);
+                const exercises = workoutData[day];
+                
+                if (!container || !exercises) {
+                    console.error(`Cannot load exercises for day ${day}:`, { container: !!container, exercises: !!exercises });
+                    return;
+                }
+                
+                container.innerHTML = exercises.map((exercise, exerciseIndex) => {
+                    const exerciseKey = `${day}-${exerciseIndex}`;
+                    const exerciseState = state.workout.exercises[exerciseKey] || {
+                        sets: Array(exercise.sets).fill().map(() => ({ reps: 0, completed: false })),
+                        currentSet: 0
+                    };
+                    
+                    return `
+                        <div class="workout-banner">
+                            <div class="exercise-header">
+                                <div class="exercise-info">
+                                    <h3>${exercise.name}</h3>
+                                    <p>${exercise.details}</p>
+                                </div>
+                                <div class="exercise-number">${exerciseIndex + 1}</div>
+                            </div>
+                            
+                            <div class="exercise-content">
+                                <div class="sets-container">
+                                    ${exerciseState.sets.map((set, setIndex) => `
+                                        <div class="set-item ${set.completed ? 'completed' : ''} ${setIndex === exerciseState.currentSet ? 'active' : ''}" 
+                                             data-exercise="${exerciseKey}" data-set="${setIndex}">
+                                            <div class="set-info">
+                                                <div class="set-label">Set ${setIndex + 1}</div>
+                                                <div class="rep-controls">
+                                                    <button class="rep-btn" onclick="WorkoutApp.adjustReps('${exerciseKey}', ${setIndex}, -1)">-</button>
+                                                    <div class="rep-count">${set.reps}</div>
+                                                    <button class="rep-btn" onclick="WorkoutApp.adjustReps('${exerciseKey}', ${setIndex}, 1)">+</button>
+                                                </div>
+                                            </div>
+                                            <button class="complete-set-btn" 
+                                                    onclick="WorkoutApp.completeSet('${exerciseKey}', ${setIndex})"
+                                                    ${set.completed ? 'disabled' : ''}>
+                                                ${set.completed ? '✅ Done' : 'Complete Set'}
+                                            </button>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                
+                                ${exercise.videoUrl ? `
+                                    <div class="video-section">
+                                        <div class="video-container">
+                                            <iframe src="${convertToEmbedUrl(exercise.videoUrl)}" allowfullscreen></iframe>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Save initial exercise state if not exists
+                exercises.forEach((exercise, exerciseIndex) => {
+                    const exerciseKey = `${day}-${exerciseIndex}`;
+                    if (!state.workout.exercises[exerciseKey]) {
+                        state.workout.exercises[exerciseKey] = {
+                            sets: Array(exercise.sets).fill().map(() => ({ reps: 0, completed: false })),
+                            currentSet: 0
+                        };
+                    }
+                });
+            }
+            
+            function adjustReps(exerciseKey, setIndex, change) {
+                if (!state.workout.exercises[exerciseKey]) return;
+                
+                const currentReps = state.workout.exercises[exerciseKey].sets[setIndex].reps;
+                const newReps = Math.max(0, currentReps + change);
+                
+                state.workout.exercises[exerciseKey].sets[setIndex].reps = newReps;
+                
+                // Update display
+                const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
+                if (setElement) {
+                    setElement.querySelector('.rep-count').textContent = newReps;
+                }
+                
+                saveState();
+            }
+            
+            function completeSet(exerciseKey, setIndex) {
+                if (!state.workout.exercises[exerciseKey]) return;
+                
+                const exerciseState = state.workout.exercises[exerciseKey];
+                const set = exerciseState.sets[setIndex];
+                
+                if (set.reps === 0) {
+                    alert('Please enter the number of reps you completed before marking the set as complete.');
+                    return;
+                }
+                
+                // Mark set as completed
+                set.completed = true;
+                
+                // Move to next incomplete set
+                const nextIncompleteSet = exerciseState.sets.findIndex((s, index) => 
+                    index > setIndex && !s.completed
+                );
+                
+                if (nextIncompleteSet !== -1) {
+                    exerciseState.currentSet = nextIncompleteSet;
+                    
+                    // Add new set if this was the last predefined set
+                    if (nextIncompleteSet === exerciseState.sets.length - 1) {
+                        exerciseState.sets.push({ reps: 0, completed: false });
+                    }
+                }
+                
+                // Update display
+                const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
+                if (setElement) {
+                    setElement.classList.add('completed');
+                    setElement.classList.remove('active');
+                    
+                    const button = setElement.querySelector('.complete-set-btn');
+                    button.textContent = '✅ Done';
+                    button.disabled = true;
+                }
+                
+                // Activate next set
+                if (nextIncompleteSet !== -1) {
+                    const nextSetElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${nextIncompleteSet}"]`);
+                    if (nextSetElement) {
+                        nextSetElement.classList.add('active');
+                    }
+                }
+                
+                saveState();
+            }
+            
+            // ===================================================================
+            // SCROLL HANDLING - CLEAN IMPLEMENTATION
+            // ===================================================================
+            
+            function setupScrollHandling() {
+                // Clean up any existing scroll handler
+                if (state.scrollHandler) {
+                    window.removeEventListener('scroll', state.scrollHandler);
+                    state.scrollHandler = null;
+                }
+                
+                let ticking = false;
+                
+                function updateBannerState() {
+                    const currentSection = state.currentSection;
+                    if (!currentSection || !currentSection.startsWith('day')) {
+                        return;
+                    }
+                    
+                    const banner = document.getElementById(`${currentSection}Banner`);
+                    if (!banner) return;
+                    
+                    const scrollY = window.scrollY;
+                    
+                    // Minimize after just 50px of scrolling (about 2-3 lines)
+                    const shouldMinimize = scrollY > 50;
+                    
+                    if (shouldMinimize && !banner.classList.contains('minimized')) {
+                        banner.classList.add('minimized');
+                    } else if (!shouldMinimize && banner.classList.contains('minimized')) {
+                        banner.classList.remove('minimized');
+                    }
+                    
+                    ticking = false;
+                }
+                
+                function onScroll() {
+                    if (!ticking) {
+                        requestAnimationFrame(updateBannerState);
+                        ticking = true;
+                    }
+                }
+                
+                // Store reference for cleanup
+                state.scrollHandler = onScroll;
+                window.addEventListener('scroll', onScroll);
+                
+                // Initial state check
+                updateBannerState();
+            }
+            
+            // ===================================================================
+            // NAVIGATION FUNCTIONS
+            // ===================================================================
+            
+            function showSection(sectionName) {
+                console.log('Switching to section:', sectionName);
+                
+                // Clean up scroll handler for previous section
+                if (state.scrollHandler) {
+                    window.removeEventListener('scroll', state.scrollHandler);
+                    state.scrollHandler = null;
+                }
+                
+                // Hide all sections first
+                document.querySelectorAll('.home-container, .workout-container').forEach(section => {
+                    section.style.display = 'none';
+                    section.classList.remove('active');
+                });
+                
+                // Reset all banners to expanded state
+                document.querySelectorAll('.day-banner').forEach(banner => {
+                    banner.classList.remove('minimized');
+                });
+                
+                // Update state
+                state.currentSection = sectionName;
+                
+                // Show the correct section
+                if (sectionName === 'home') {
+                    const homeSection = document.getElementById('homeSection');
+                    if (homeSection) {
+                        homeSection.style.display = 'block';
+                        homeSection.classList.add('active');
+                    }
+                    // Load fresh statistics when returning to home
+                    if (window.FirebaseService) {
+                        window.FirebaseService.loadUserData();
+                    }
+                } else if (sectionName.startsWith('day')) {
+                    const day = sectionName.replace('day', '');
+                    const daySection = document.getElementById(`day${day}Section`);
+                    
+                    if (daySection) {
+                        daySection.style.display = 'block';
+                        console.log(`Showing ${sectionName} section`);
+                        
+                        // Setup scroll handling for this section
+                        setTimeout(() => {
+                            setupScrollHandling();
+                        }, 100);
+                    } else {
+                        console.error(`Could not find section element: day${day}Section`);
+                    }
+                    
+                    // Update current day
+                    state.currentDay = day;
+                    
+                    // Load exercises
+                    setTimeout(() => {
+                        loadExercises(day);
+                    }, 50);
+                } else if (sectionName === 'settings') {
+                    openSettings();
+                    return;
+                } else if (sectionName === 'feedback') {
+                    openFeedback();
+                    return;
+                }
+                
+                // Update timer display
+                updateTimerDisplay();
+                
+                // Save state
+                saveState();
+            }
+            
+            function navigateToSection(sectionName) {
+                // Update nav item states
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                const clickedItem = document.querySelector(`[data-section="${sectionName}"]`);
+                if (clickedItem) {
+                    clickedItem.classList.add('active');
+                }
+                
+                // Close drawer
+                closeDrawer();
+                
+                // Navigate
+                showSection(sectionName);
+            }
+            
+            function toggleDrawer() {
+                const drawer = document.getElementById('navDrawer');
+                const isOpen = drawer.classList.contains('open');
+                
+                if (isOpen) {
+                    closeDrawer();
+                } else {
+                    openDrawer();
+                }
+            }
+            
+            function openDrawer() {
+                const drawer = document.getElementById('navDrawer');
+                const overlay = document.getElementById('navDrawerOverlay');
+                const menuIcon = document.getElementById('menuIcon');
+                
+                drawer.classList.add('open');
+                overlay.classList.add('open');
+                menuIcon.textContent = '✕';
+                menuIcon.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                
+                updateDrawerUserSection();
+            }
+            
+            function closeDrawer() {
+                const drawer = document.getElementById('navDrawer');
+                const overlay = document.getElementById('navDrawerOverlay');
+                const menuIcon = document.getElementById('menuIcon');
+                
+                drawer.classList.remove('open');
+                overlay.classList.remove('open');
+                menuIcon.textContent = '☰';
+                menuIcon.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+            
+            // ===================================================================
+            // AUTHENTICATION FUNCTIONS
+            // ===================================================================
+            
+            function showAuthModal(mode) {
+                state.authMode = mode;
+                const modal = document.getElementById('authModal');
+                const title = document.getElementById('authModalTitle');
+                const submitBtn = document.getElementById('authSubmitBtn');
+                const confirmGroup = document.getElementById('confirmPasswordGroup');
+                const nameGroup = document.getElementById('displayNameGroup');
+                const switchText = document.getElementById('authSwitchText');
+                const switchBtn = document.getElementById('authSwitchBtn');
+                
+                if (mode === 'login') {
+                    title.textContent = '🔐 Login';
+                    submitBtn.textContent = 'Login';
+                    confirmGroup.style.display = 'none';
+                    nameGroup.style.display = 'none';
+                    switchText.textContent = "Don't have an account?";
+                    switchBtn.textContent = 'Sign Up';
+                } else {
+                    title.textContent = '📝 Sign Up';
+                    submitBtn.textContent = 'Create Account';
+                    confirmGroup.style.display = 'block';
+                    nameGroup.style.display = 'block';
+                    switchText.textContent = 'Already have an account?';
+                    switchBtn.textContent = 'Login';
+                }
+                
+                clearAuthError();
+                document.getElementById('authForm').reset();
+                modal.style.display = 'block';
+            }
+            
+            function closeAuthModal() {
+                document.getElementById('authModal').style.display = 'none';
+            }
+            
+            function switchAuthMode() {
+                const newMode = state.authMode === 'login' ? 'signup' : 'login';
+                showAuthModal(newMode);
+            }
+            
+            function clearAuthError() {
+                const errorDiv = document.getElementById('authError');
+                if (errorDiv) {
+                    errorDiv.style.display = 'none';
+                }
+            }
+            
+            function updateAuthUI(user) {
+                const authInfo = document.getElementById('authInfo');
+                
+                if (user) {
+                    authInfo.innerHTML = `
+                        <span style="color: white; font-size: 0.8em; margin-right: 10px;">
+                            ${user.displayName || user.email || 'User'}
+                        </span>
+                        <button class="auth-btn" onclick="WorkoutApp.signOut()">Sign Out</button>
+                    `;
+                } else {
+                    authInfo.innerHTML = `
+                        <button class="auth-btn" onclick="WorkoutApp.showAuthModal('login')">Login</button>
+                    `;
+                }
+                
+                updateDrawerUserSection();
+            }
+            
+            function updateDrawerUserSection() {
+                const navUserSection = document.getElementById('navUserSection');
+                const user = state.currentUser;
+                
+                if (user) {
+                    const initials = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
+                    navUserSection.innerHTML = `
+                        <div class="nav-user-info">
+                            <div class="nav-user-avatar">${initials}</div>
+                            <div class="nav-user-details">
+                                <div class="nav-user-name">${user.displayName || 'User'}</div>
+                                <div class="nav-user-email">${user.email}</div>
+                            </div>
+                        </div>
+                        <div class="nav-auth-buttons">
+                            <button class="nav-auth-btn" onclick="WorkoutApp.signOut()">Sign Out</button>
+                        </div>
+                    `;
+                } else {
+                    navUserSection.innerHTML = `
+                        <div class="nav-auth-buttons">
+                            <button class="nav-auth-btn primary" onclick="WorkoutApp.showAuthModal('signup')">Sign Up</button>
+                            <button class="nav-auth-btn" onclick="WorkoutApp.showAuthModal('login')">Login</button>
+                        </div>
+                    `;
+                }
+            }
+            
+            function signOut() {
+                if (window.FirebaseService) {
+                    window.FirebaseService.signOut();
+                }
+                
+                // Clear local state
+                localStorage.removeItem('workoutAppState');
+                state.workout.exercises = {};
+                state.timer.elapsed = 0;
+                state.timer.isRunning = false;
+                state.workout.active = false;
+                state.currentUser = null;
+                
+                updateStateIndicator('signed-out');
+                console.log('User signed out successfully');
+            }
+            
+            // ===================================================================
+            // FEEDBACK FUNCTIONS
+            // ===================================================================
+            
+            function openFeedback() {
+                document.getElementById('feedbackModal').style.display = 'block';
+                document.getElementById('feedbackSuccess').style.display = 'none';
+                document.getElementById('feedbackForm').style.display = 'block';
+                updateFeedbackContext();
+                document.getElementById('feedbackText').focus();
+            }
+            
+            function closeFeedback() {
+                document.getElementById('feedbackModal').style.display = 'none';
+                document.getElementById('feedbackForm').reset();
+                state.selectedFeedbackType = 'bug';
+                updateFeedbackTypeButtons();
+            }
+            
+            function selectFeedbackType(type) {
+                state.selectedFeedbackType = type;
+                updateFeedbackTypeButtons();
+            }
+            
+            function updateFeedbackTypeButtons() {
+                document.querySelectorAll('.feedback-type-btn').forEach(btn => {
+                    if (btn.dataset.type === state.selectedFeedbackType) {
+                        btn.style.background = '#3498db';
+                        btn.style.color = 'white';
+                        btn.style.borderColor = '#3498db';
+                    } else {
+                        btn.style.background = 'white';
+                        btn.style.color = '#333';
+                        btn.style.borderColor = '#e9ecef';
+                    }
+                });
+            }
+            
+            function updateFeedbackContext() {
+                const context = {
+                    currentSection: state.currentSection,
+                    currentDay: state.currentDay,
+                    isLoggedIn: !!state.currentUser,
+                    userAgent: navigator.userAgent,
+                    timestamp: new Date().toISOString(),
+                    url: window.location.href,
+                    timerRunning: state.timer.isRunning,
+                    workoutActive: state.workout.active
+                };
+                
+                const contextInfo = document.getElementById('contextInfo');
+                if (contextInfo) {
+                    contextInfo.innerHTML = `
+                        Current Section: ${context.currentSection}<br>
+                        Current Day: ${context.currentDay}<br>
+                        Logged In: ${context.isLoggedIn ? 'Yes' : 'No'}<br>
+                        Device: ${context.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'}<br>
+                        Workout Active: ${context.workoutActive ? 'Yes' : 'No'}<br>
+                        Timer Running: ${context.timerRunning ? 'Yes' : 'No'}
+                    `;
+                }
+            }
+            
+            // ===================================================================
+            // UTILITY FUNCTIONS
+            // ===================================================================
+            
+            function openSettings() {
+                alert('Settings panel coming in Phase 2! Will include:\n• Training frequency configuration\n• Weight tracking setup\n• Exercise customization\n• Goal setting');
+            }
+            
+            function startQuickWorkout() {
+                console.log('Starting quick workout');
+                showSection('dayA');
+                setTimeout(() => {
+                    startTimer();
+                }, 200);
+            }
+            
+            // ===================================================================
+            // INITIALIZATION
+            // ===================================================================
+            
+            function initialize() {
+                console.log('Initializing WorkoutApp...');
+                
+                // Load saved state first
+                const stateRestored = loadState();
+                
+                // Initialize current section
+                if (state.currentSection === 'home') {
+                    showSection('home');
+                } else if (state.currentSection.startsWith('day')) {
+                    showSection(state.currentSection);
+                } else {
+                    showSection('home');
+                }
+                
+                // Update timer display
+                updateTimerDisplay();
+                
+                // Update drawer user section
+                updateDrawerUserSection();
+                
+                // Set up form event listeners
+                const authForm = document.getElementById('authForm');
+                const feedbackForm = document.getElementById('feedbackForm');
+                
+                if (authForm) {
+                    authForm.addEventListener('submit', function(event) {
+                        if (window.FirebaseService) {
+                            window.FirebaseService.handleAuth(event, state);
+                        }
+                    });
+                }
+                
+                if (feedbackForm) {
+                    feedbackForm.addEventListener('submit', function(event) {
+                        if (window.FirebaseService) {
+                            window.FirebaseService.handleFeedback(event, state);
+                        }
+                    });
+                }
+                
+                // Set up periodic state saving during workouts
+                setInterval(() => {
+                    if (state.workout.active) {
+                        saveState();
+                    }
+                }, 60000); // Save every minute during workouts
+                
+                // Modal click-outside-to-close
+                window.addEventListener('click', function(event) {
+                    const authModal = document.getElementById('authModal');
+                    const feedbackModal = document.getElementById('feedbackModal');
+                    
+                    if (event.target === authModal) {
+                        closeAuthModal();
+                    }
+                    if (event.target === feedbackModal) {
+                        closeFeedback();
+                    }
+                });
+                
+                // Save state before page unload
+                window.addEventListener('beforeunload', () => {
+                    if (state.workout.active) {
+                        saveState();
+                    }
+                });
+                
+                // Handle visibility change (tab switching, app backgrounding)
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden && state.workout.active) {
+                        saveState();
+                    }
+                });
+                
+                console.log('WorkoutApp initialized', stateRestored ? 'with restored state' : 'with fresh state');
+            }
+            
+            // ===================================================================
+            // PUBLIC API - CLEAN INTERFACE
+            // ===================================================================
+            
+            return {
+                // Navigation
+                showSection,
+                navigateToSection,
+                toggleDrawer,
+                openDrawer,
+                closeDrawer,
+                
+                // Timer
+                startTimer,
+                pauseTimer,
+                stopTimer,
+                updateTimerDisplay,
+                
+                // Exercises
+                loadExercises,
+                adjustReps,
+                completeSet,
+                
+                // Authentication
+                showAuthModal,
+                closeAuthModal,
+                switchAuthMode,
+                signOut,
+                updateAuthUI,
+                
+                // Feedback
+                openFeedback,
+                closeFeedback,
+                selectFeedbackType,
+                
+                // Utilities
+                openSettings,
+                startQuickWorkout,
+                
+                // State access (for Firebase integration)
+                getState: () => state,
+                setState: (newState) => Object.assign(state, newState),
+                
+                // Initialization
+                initialize
+            };
+        })();
+        
+        // ===================================================================
+        // FIREBASE SERVICE MODULE - SEPARATE NAMESPACE
+        // ===================================================================
+        
+        // Firebase module will be loaded separately to maintain clean separation
+        // This prevents scope pollution while allowing controlled interaction
+        
+        // Auto-initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', WorkoutApp.initialize);
+    </script>
+
+    <!-- Firebase SDK - Clean Module Loading -->
+    <script type="module">
+        // ===================================================================
+        // FIREBASE SERVICE - ISOLATED MODULE
+        // ===================================================================
+        
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { getAuth, signInAnonymously, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        
+        // Import Firebase config from external file
+        import { firebaseConfig } from './firebase-config.js';
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        // Firebase Service - Clean interface with WorkoutApp
+        const FirebaseService = {
+            async saveWorkoutSession(appState) {
+                if (!appState.currentUser) return;
+                
+                try {
+                    const workoutSummary = {
+                        userId: appState.currentUser.uid,
+                        day: appState.currentDay,
+                        date: new Date().toISOString(),
+                        duration: appState.timer.elapsed,
+                        exercises: appState.workout.exercises,
+                        startTime: appState.workout.startTime
+                    };
+                    
+                    await addDoc(collection(db, 'workouts'), workoutSummary);
+                    console.log('Workout session saved successfully');
+                } catch (error) {
+                    console.error('Error saving workout:', error);
+                }
+            },
+            
+            async loadUserData() {
+                const appState = WorkoutApp.getState();
+                
+                if (!appState.currentUser) {
+                    // Set default values for non-authenticated users
+                    document.getElementById('totalWorkouts').textContent = '0';
+                    document.getElementById('totalPullUps').textContent = '0';
+                    document.getElementById('avgDuration').textContent = '0';
+                    document.getElementById('thisWeek').textContent = '0';
+                    document.getElementById('streakCount').textContent = '0';
+                    return;
+                }
+                
+                try {
+                    const q = query(
+                        collection(db, 'workouts'),
+                        orderBy('date', 'desc'),
+                        limit(50)
+                    );
+                    
+                    const querySnapshot = await getDocs(q);
+                    const workouts = [];
+                    querySnapshot.forEach((doc) => {
+                        workouts.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    this.updateStatsDisplay(workouts);
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                }
+            },
+            
+            updateStatsDisplay(workouts) {
+                const totalWorkouts = workouts.length;
+                
+                const totalPullUps = workouts.reduce((sum, workout) => {
+                    const dayAExercises = workout.exercises || {};
+                    const pullUpKey = Object.keys(dayAExercises).find(key => key.startsWith('A-0'));
+                    if (pullUpKey && dayAExercises[pullUpKey]) {
+                        return sum + dayAExercises[pullUpKey].sets.reduce((setSum, set) => setSum + (set.reps || 0), 0);
+                    }
+                    return sum;
+                }, 0);
+                
+                const avgDuration = workouts.length > 0 ? 
+                    Math.round(workouts.reduce((sum, w) => sum + (w.duration || 0), 0) / workouts.length / 60) : 0;
+                
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                const thisWeek = workouts.filter(w => new Date(w.date) > oneWeekAgo).length;
+                
+                const streak = this.calculateStreak(workouts);
+                
+                document.getElementById('totalWorkouts').textContent = totalWorkouts;
+                document.getElementById('totalPullUps').textContent = totalPullUps;
+                document.getElementById('avgDuration').textContent = avgDuration;
+                document.getElementById('thisWeek').textContent = thisWeek;
+                document.getElementById('streakCount').textContent = streak;
+            },
+            
+            calculateStreak(workouts) {
+                if (workouts.length === 0) return 0;
+                
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                let streak = 0;
+                let currentDate = new Date(today);
+                
+                for (let workout of workouts) {
+                    const workoutDate = new Date(workout.date);
+                    workoutDate.setHours(0, 0, 0, 0);
+                    
+                    if (workoutDate.getTime() === currentDate.getTime()) {
+                        streak++;
+                        currentDate.setDate(currentDate.getDate() - 2); // Every other day
+                    } else if (workoutDate.getTime() < currentDate.getTime()) {
+                        break;
+                    }
+                }
+                
+                return streak;
+            },
+            
+            async handleAuth(event, appState) {
+                event.preventDefault();
+                
+                const email = document.getElementById('authEmail').value;
+                const password = document.getElementById('authPassword').value;
+                const confirmPassword = document.getElementById('authConfirmPassword').value;
+                const displayName = document.getElementById('authDisplayName').value;
+                const submitBtn = document.getElementById('authSubmitBtn');
+                
+                this.clearAuthError();
+                submitBtn.disabled = true;
+                submitBtn.textContent = appState.authMode === 'login' ? 'Logging in...' : 'Creating account...';
+                
+                try {
+                    if (appState.authMode === 'signup') {
+                        if (password !== confirmPassword) {
+                            throw new Error('Passwords do not match');
+                        }
+                        
+                        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                        
+                        if (displayName) {
+                            await updateProfile(userCredential.user, {
+                                displayName: displayName
+                            });
+                        }
+                        
+                        this.showAuthSuccess(`Welcome ${displayName || email}! Your account has been created successfully.`);
+                        
+                        setTimeout(() => {
+                            WorkoutApp.closeAuthModal();
+                        }, 2000);
+                        
+                    } else {
+                        await signInWithEmailAndPassword(auth, email, password);
+                        
+                        this.showAuthSuccess('Successfully logged in!');
+                        
+                        setTimeout(() => {
+                            WorkoutApp.closeAuthModal();
+                        }, 1500);
+                    }
+                } catch (error) {
+                    console.error('Auth error:', error);
+                    let errorMessage = 'An error occurred. Please try again.';
+                    
+                    switch (error.code) {
+                        case 'auth/user-not-found':
+                            errorMessage = 'No account found with this email address.';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMessage = 'Incorrect password.';
+                            break;
+                        case 'auth/email-already-in-use':
+                            errorMessage = 'An account with this email already exists.';
+                            break;
+                        case 'auth/weak-password':
+                            errorMessage = 'Password should be at least 6 characters.';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = 'Please enter a valid email address.';
+                            break;
+                        default:
+                            errorMessage = error.message;
+                    }
+                    
+                    this.showAuthError(errorMessage);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = appState.authMode === 'login' ? 'Login' : 'Create Account';
+                }
+            },
+            
+            showAuthError(message) {
+                const errorDiv = document.getElementById('authError');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                errorDiv.style.background = '#e74c3c';
+            },
+            
+            clearAuthError() {
+                const errorDiv = document.getElementById('authError');
+                if (errorDiv) {
+                    errorDiv.style.display = 'none';
+                }
+            },
+            
+            showAuthSuccess(message) {
+                const errorDiv = document.getElementById('authError');
+                errorDiv.textContent = message;
+                errorDiv.style.background = '#2ecc71';
+                errorDiv.style.display = 'block';
+            },
+            
+            async handleFeedback(event, appState) {
+                event.preventDefault();
+                
+                const feedbackText = document.getElementById('feedbackText').value;
+                const submitBtn = event.target.querySelector('button[type="submit"]');
+                
+                submitBtn.disabled = true;
+                submitBtn.textContent = '📤 Sending...';
+                
+                const feedbackData = {
+                    type: appState.selectedFeedbackType,
+                    message: feedbackText,
+                    userId: appState.currentUser?.uid || 'anonymous',
+                    userEmail: appState.currentUser?.email || 'anonymous',
+                    context: {
+                        currentSection: appState.currentSection,
+                        currentDay: appState.currentDay,
+                        userAgent: navigator.userAgent,
+                        timestamp: new Date().toISOString(),
+                        url: window.location.href,
+                        timerRunning: appState.timer.isRunning,
+                        workoutActive: appState.workout.active
+                    }
+                };
+                
+                try {
+                    await addDoc(collection(db, 'feedback'), feedbackData);
+                    
+                    document.getElementById('feedbackForm').style.display = 'none';
+                    document.getElementById('feedbackSuccess').style.display = 'block';
+                    
+                    setTimeout(() => {
+                        WorkoutApp.closeFeedback();
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.error('Error submitting feedback:', error);
+                    alert('There was an error submitting your feedback. Please try again.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '🚀 Submit Feedback';
+                }
+            },
+            
+            async signOut() {
+                try {
+                    await firebaseSignOut(auth);
+                    console.log('Firebase sign out successful');
+                } catch (error) {
+                    console.error('Firebase sign out error:', error);
+                }
+            }
+        };
+        
+        // Make Firebase service available globally
+        window.FirebaseService = FirebaseService;
+        
+        // Auth state listener
+        onAuthStateChanged(auth, (user) => {
+            console.log('Auth state changed:', user ? 'User signed in' : 'User signed out');
+            
+            if (user) {
+                WorkoutApp.setState({ currentUser: user });
+                WorkoutApp.updateAuthUI(user);
+                FirebaseService.loadUserData();
+            } else {
+                WorkoutApp.setState({ currentUser: null });
+                WorkoutApp.updateAuthUI(null);
+            }
+        });
+        
+        console.log('Firebase service initialized');
+    </script>
+</body>
+</html><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -347,6 +1870,9 @@
             border-left: 4px solid #3498db;
             z-index: 500;
             transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
         
         .day-banner.minimized {
@@ -406,6 +1932,9 @@
             opacity: 1;
             max-height: 60px;
             overflow: hidden;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0 10px;
         }
         
         .day-banner.minimized .timer-controls-section {
@@ -418,6 +1947,8 @@
             display: flex;
             gap: 10px;
             justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .timer-btn {
@@ -429,6 +1960,7 @@
             font-size: 0.9em;
             transition: all 0.3s ease;
             min-width: 80px;
+            box-sizing: border-box;
         }
         
         .start-btn {
@@ -814,7 +2346,7 @@
             background: #e74c3c;
         }
         
-        /* Mobile Responsiveness */
+        /* Mobile Responsiveness - Clean and Consistent */
         @media (max-width: 480px) {
             .app-banner {
                 padding: 12px 15px;
@@ -841,7 +2373,7 @@
                 font-size: 1em;
             }
             
-            /* Fixed: Timer controls mobile layout - Enhanced */
+            /* Mobile Timer Controls - Clean Implementation */
             .timer-controls {
                 flex-direction: column;
                 gap: 8px;
@@ -850,7 +2382,7 @@
             }
             
             .timer-btn {
-                width: 100% !important;
+                width: 100%;
                 padding: 14px 20px;
                 font-size: 1em;
                 min-width: unset;
@@ -862,7 +2394,6 @@
                 transition: all 0.3s ease;
             }
             
-            /* Ensure timer controls section has proper spacing and no overflow */
             .timer-controls-section {
                 margin-bottom: 15px;
                 padding: 0 10px;
@@ -871,23 +2402,23 @@
                 overflow: hidden;
             }
             
-            /* Force proper button colors on mobile */
+            /* Explicit button styling for mobile */
             .timer-btn.start-btn {
-                background: #2ecc71 !important;
-                color: white !important;
+                background: #2ecc71;
+                color: white;
             }
             
             .timer-btn.pause-btn {
-                background: #f39c12 !important;
-                color: white !important;
+                background: #f39c12;
+                color: white;
             }
             
             .timer-btn.stop-btn {
-                background: #e74c3c !important;
-                color: white !important;
+                background: #e74c3c;
+                color: white;
             }
             
-            /* Day banner responsive adjustments - Enhanced */
+            /* Day banner responsive adjustments */
             .day-banner {
                 margin-bottom: 15px;
                 padding: 15px;
@@ -1008,9 +2539,9 @@
                     🔥 <span id="streakCount">0</span>
                 </div>
                 <div class="auth-info" id="authInfo">
-                    <button class="auth-btn" onclick="showAuthModal('login')">Login</button>
+                    <button class="auth-btn" onclick="WorkoutApp.showAuthModal('login')">Login</button>
                 </div>
-                <button class="menu-button" onclick="toggleDrawer()">
+                <button class="menu-button" onclick="WorkoutApp.toggleDrawer()">
                     <span class="menu-icon" id="menuIcon">☰</span>
                 </button>
             </div>
@@ -1021,1490 +2552,22 @@
     <div class="nav-drawer" id="navDrawer">
         <div class="nav-drawer-header">
             <div class="nav-drawer-title">Navigation</div>
-            <button class="nav-close-btn" onclick="closeDrawer()">✕</button>
+            <button class="nav-close-btn" onclick="WorkoutApp.closeDrawer()">✕</button>
         </div>
         
         <div class="nav-drawer-content">
             <div class="nav-section">
                 <div class="nav-section-title">Workouts</div>
-                <button class="nav-item active" onclick="navigateToSection('home')" data-section="home">
+                <button class="nav-item active" onclick="WorkoutApp.navigateToSection('home')" data-section="home">
                     <span class="nav-item-icon">🏠</span>
                     <span class="nav-item-text">Home</span>
                 </button>
-                <button class="nav-item" onclick="navigateToSection('dayA')" data-section="dayA">
+                <button class="nav-item" onclick="WorkoutApp.navigateToSection('dayA')" data-section="dayA">
                     <span class="nav-item-icon">💪</span>
                     <span class="nav-item-text">Day A - Vertical Pull</span>
                 </button>
-                <button class="nav-item" onclick="navigateToSection('dayB')" data-section="dayB">
+                <button class="nav-item" onclick="WorkoutApp.navigateToSection('dayB')" data-section="dayB">
                     <span class="nav-item-icon">🏋️</span>
                     <span class="nav-item-text">Day B - Horizontal Pull</span>
                 </button>
-                <button class="nav-item" onclick="navigateToSection('dayC')" data-section="dayC">
-                    <span class="nav-item-icon">⚡</span>
-                    <span class="nav-item-text">Day C - Power & Mixed</span>
-                </button>
-            </div>
-            
-            <div class="nav-section">
-                <div class="nav-section-title">Tools</div>
-                <button class="nav-item" onclick="navigateToSection('settings')">
-                    <span class="nav-item-icon">⚙️</span>
-                    <span class="nav-item-text">Settings</span>
-                </button>
-                <button class="nav-item" onclick="navigateToSection('feedback')">
-                    <span class="nav-item-icon">💬</span>
-                    <span class="nav-item-text">Feedback</span>
-                </button>
-            </div>
-        </div>
-        
-        <div class="nav-user-section" id="navUserSection">
-            <!-- User info will be populated here -->
-        </div>
-    </div>
-    
-    <!-- Navigation Drawer Overlay -->
-    <div class="nav-drawer-overlay" id="navDrawerOverlay" onclick="closeDrawer()"></div>
-
-    <!-- Main Content Area -->
-    <div class="main-content">
-        <!-- Home Section -->
-        <div id="homeSection" class="home-container active">
-            <div class="welcome-section">
-                <h2 class="welcome-title">Welcome Back!</h2>
-                <p class="welcome-subtitle">Ready to build that V-back?</p>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="totalWorkouts">0</div>
-                        <div class="stat-label">Total Workouts</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="totalPullUps">0</div>
-                        <div class="stat-label">Pull-ups</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="avgDuration">0</div>
-                        <div class="stat-label">Avg Duration</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="thisWeek">0</div>
-                        <div class="stat-label">This Week</div>
-                    </div>
-                </div>
-                
-                <div class="quick-actions">
-                    <button class="action-btn" onclick="startQuickWorkout()">
-                        🚀 Start Next Workout
-                    </button>
-                    <button class="action-btn secondary" onclick="showSection('dayA')">
-                        📋 View Workouts
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Day A Section -->
-        <div id="dayASection" class="workout-container">
-            <div class="day-banner" id="dayABanner">
-                <div class="day-banner-header">
-                    <div class="day-info">
-                        <h2 class="day-title">Day A: Vertical Pull Focus</h2>
-                        <p class="day-subtitle">Building pull-up strength and lat development</p>
-                    </div>
-                    <div class="timer-display-section">
-                        <div class="timer-display" id="timerDisplay">00:00</div>
-                        <div class="timer-status" id="timerStatus">Ready to start</div>
-                    </div>
-                </div>
-                
-                <div class="timer-controls-section">
-                    <div class="timer-controls">
-                        <button class="timer-btn start-btn" onclick="startTimer()">Start</button>
-                        <button class="timer-btn pause-btn" onclick="pauseTimer()">Pause</button>
-                        <button class="timer-btn stop-btn" onclick="stopTimer()">Complete</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="dayAExercises">
-                <!-- Exercises will be loaded here -->
-            </div>
-        </div>
-
-        <!-- Day B Section -->
-        <div id="dayBSection" class="workout-container" style="display: none;">
-            <div class="day-banner" id="dayBBanner">
-                <div class="day-banner-header">
-                    <div class="day-info">
-                        <h2 class="day-title">Day B: Horizontal Pull & Barbell</h2>
-                        <p class="day-subtitle">Building back thickness and strength</p>
-                    </div>
-                    <div class="timer-display-section">
-                        <div class="timer-display" id="timerDisplayB">00:00</div>
-                        <div class="timer-status" id="timerStatusB">Ready to start</div>
-                    </div>
-                </div>
-                
-                <div class="timer-controls-section">
-                    <div class="timer-controls">
-                        <button class="timer-btn start-btn" onclick="startTimer()">Start</button>
-                        <button class="timer-btn pause-btn" onclick="pauseTimer()">Pause</button>
-                        <button class="timer-btn stop-btn" onclick="stopTimer()">Complete</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="dayBExercises">
-                <!-- Exercises will be loaded here -->
-            </div>
-        </div>
-
-        <!-- Day C Section -->
-        <div id="dayCSection" class="workout-container" style="display: none;">
-            <div class="day-banner" id="dayCBanner">
-                <div class="day-banner-header">
-                    <div class="day-info">
-                        <h2 class="day-title">Day C: Power & Mixed Patterns</h2>
-                        <p class="day-subtitle">Building explosive power and overall strength</p>
-                    </div>
-                    <div class="timer-display-section">
-                        <div class="timer-display" id="timerDisplayC">00:00</div>
-                        <div class="timer-status" id="timerStatusC">Ready to start</div>
-                    </div>
-                </div>
-                
-                <div class="timer-controls-section">
-                    <div class="timer-controls">
-                        <button class="timer-btn start-btn" onclick="startTimer()">Start</button>
-                        <button class="timer-btn pause-btn" onclick="pauseTimer()">Pause</button>
-                        <button class="timer-btn stop-btn" onclick="stopTimer()">Complete</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="dayCExercises">
-                <!-- Exercises will be loaded here -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Authentication Modal -->
-    <div id="authModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="authModalTitle">🔐 Login</h2>
-                <span class="close" onclick="closeAuthModal()">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="auth-error" id="authError" style="display: none; background: #e74c3c; color: white; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9em;"></div>
-                
-                <form class="auth-form" id="authForm">
-                    <div class="form-group">
-                        <label for="authEmail" style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Email</label>
-                        <input type="email" id="authEmail" required placeholder="your@email.com" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px;">
-                    </div>
-                    
-                    <div class="form-group" style="margin-bottom: 15px;">
-                        <label for="authPassword" style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Password</label>
-                        <input type="password" id="authPassword" required placeholder="Enter password" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px;">
-                    </div>
-                    
-                    <div class="form-group" id="confirmPasswordGroup" style="display: none; margin-bottom: 15px;">
-                        <label for="authConfirmPassword" style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Confirm Password</label>
-                        <input type="password" id="authConfirmPassword" placeholder="Confirm password" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px;">
-                    </div>
-                    
-                    <div class="form-group" id="displayNameGroup" style="display: none; margin-bottom: 15px;">
-                        <label for="authDisplayName" style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Display Name</label>
-                        <input type="text" id="authDisplayName" placeholder="Your name for the app" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px;">
-                    </div>
-                    
-                    <button type="submit" class="auth-submit-btn" id="authSubmitBtn" style="background: #3498db; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.3s ease;">Login</button>
-                </form>
-                
-                <div style="text-align: center; margin-top: 15px; color: #7f8c8d;">
-                    <span id="authSwitchText">Don't have an account?</span>
-                    <button type="button" id="authSwitchBtn" onclick="switchAuthMode()" style="background: none; border: none; color: #3498db; cursor: pointer; text-decoration: underline;">Sign Up</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Feedback Modal -->
-    <div id="feedbackModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>💬 Send Feedback</h2>
-                <span class="close" onclick="closeFeedback()">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div id="feedbackSuccess" style="background: #2ecc71; color: white; padding: 15px; border-radius: 8px; text-align: center; font-weight: 600; display: none; margin-bottom: 15px;">
-                    ✅ Thank you! Your feedback has been submitted successfully.
-                </div>
-                
-                <form id="feedbackForm">
-                    <div style="margin-bottom: 15px;">
-                        <label style="font-weight: 600; color: #2c3e50; margin-bottom: 10px; display: block;">
-                            What type of feedback is this?
-                        </label>
-                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                            <button type="button" class="feedback-type-btn active" data-type="bug" onclick="selectFeedbackType('bug')" style="flex: 1; padding: 10px; border: 2px solid #3498db; background: #3498db; color: white; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; font-size: 0.9em;">
-                                🐛 Bug Report
-                            </button>
-                            <button type="button" class="feedback-type-btn" data-type="feature" onclick="selectFeedbackType('feature')" style="flex: 1; padding: 10px; border: 2px solid #e9ecef; background: white; color: #333; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; font-size: 0.9em;">
-                                💡 Feature Request
-                            </button>
-                            <button type="button" class="feedback-type-btn" data-type="improvement" onclick="selectFeedbackType('improvement')" style="flex: 1; padding: 10px; border: 2px solid #e9ecef; background: white; color: #333; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; font-size: 0.9em;">
-                                ⚡ Improvement
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <label for="feedbackText" style="font-weight: 600; color: #2c3e50; margin-bottom: 5px; display: block;">
-                            Your Feedback
-                        </label>
-                        <textarea 
-                            id="feedbackText" 
-                            placeholder="Please describe your feedback in detail. What happened? What did you expect? How can we improve?"
-                            required
-                            style="width: 100%; min-height: 120px; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; resize: vertical; font-family: inherit; font-size: 14px;"
-                        ></textarea>
-                    </div>
-                    
-                    <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; font-size: 0.8em; color: #6c757d; margin-bottom: 15px;">
-                        <strong>Context Info:</strong><br>
-                        <span id="contextInfo">Loading context...</span>
-                    </div>
-                    
-                    <button type="submit" style="background: #2ecc71; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.3s ease;">
-                        🚀 Submit Feedback
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Persistent State Indicator -->
-    <div class="state-indicator" id="stateIndicator">
-        ✅ Saved
-    </div>
-
-    <!-- Firebase SDK -->
-    <script type="module">
-        // Import Firebase functions
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-        import { getAuth, signInAnonymously, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-        
-        // Import Firebase config from external file
-        import { firebaseConfig } from './firebase-config.js';
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        
-        // Make Firebase available globally
-        window.firebase = { 
-            db, 
-            auth, 
-            addDoc, 
-            collection, 
-            getDocs, 
-            query, 
-            orderBy, 
-            limit, 
-            onSnapshot, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            updateProfile,
-            signOut: firebaseSignOut
-        };
-
-        // Enhanced workout data with predefined sets
-        const workoutData = {
-            A: [
-                { 
-                    name: 'Pull-ups (Progressive)', 
-                    details: 'Start with full pull-ups, finish with negatives',
-                    sets: 3, 
-                    targetReps: 5, 
-                    videoUrl: 'https://www.youtube.com/watch?v=eGo4IYlbE5g',
-                    type: 'bodyweight'
-                },
-                { 
-                    name: 'Inverted Rows', 
-                    details: 'Control the movement, focus on squeezing shoulder blades',
-                    sets: 2, 
-                    targetReps: 10, 
-                    videoUrl: 'https://youtu.be/qOux_HZ0XHo',
-                    type: 'bodyweight'
-                },
-                { 
-                    name: 'KB High Pulls', 
-                    details: 'Explosive movement from hips',
-                    sets: 2, 
-                    targetReps: 10, 
-                    videoUrl: 'https://youtu.be/mP1BHxBeAEM',
-                    type: 'kettlebell'
-                }
-            ],
-            B: [
-                { 
-                    name: 'Bent-Over Barbell Rows', 
-                    details: 'Keep core tight, pull to lower chest',
-                    sets: 3, 
-                    targetReps: 9, 
-                    videoUrl: 'https://youtube.com/shorts/UL8ZcK64KxA?si=m55OceQmrXIPifb8',
-                    type: 'barbell'
-                },
-                { 
-                    name: 'Inverted Rows', 
-                    details: 'Control the movement, focus on squeezing shoulder blades',
-                    sets: 2, 
-                    targetReps: 10, 
-                    videoUrl: 'https://youtu.be/qOux_HZ0XHo',
-                    type: 'bodyweight'
-                },
-                { 
-                    name: 'Single-Arm KB Deadlifts', 
-                    details: 'Maintain neutral spine, drive through heels',
-                    sets: 2, 
-                    targetReps: 8, 
-                    videoUrl: 'https://youtu.be/4SFg7GaKI0A',
-                    type: 'kettlebell'
-                }
-            ],
-            C: [
-                { 
-                    name: 'KB Swings', 
-                    details: 'Power from hips, not arms',
-                    sets: 3, 
-                    targetReps: 20, 
-                    videoUrl: 'https://youtu.be/YSxHifyI6s8',
-                    type: 'kettlebell'
-                },
-                { 
-                    name: 'Barbell Deadlifts', 
-                    details: 'Keep bar close to body, drive through heels',
-                    sets: 3, 
-                    targetReps: 7, 
-                    videoUrl: 'https://youtu.be/r4MzxtBKyNE',
-                    type: 'barbell'
-                },
-                { 
-                    name: 'Face Pulls', 
-                    details: 'Pull to face level, squeeze rear delts',
-                    sets: 2, 
-                    targetReps: 13, 
-                    videoUrl: 'https://youtu.be/Jbyoxer58j4',
-                    type: 'cable'
-                }
-            ]
-        };
-
-        // Enhanced state management
-        let appState = {
-            currentSection: 'home',
-            currentDay: 'A',
-            timer: {
-                elapsed: 0,
-                isRunning: false,
-                interval: null
-            },
-            workout: {
-                active: false,
-                startTime: null,
-                exercises: {}
-            },
-            user: null
-        };
-
-        // Persistent state management
-        function saveState() {
-            try {
-                const stateToSave = {
-                    ...appState,
-                    timestamp: Date.now()
-                };
-                localStorage.setItem('workoutAppState', JSON.stringify(stateToSave));
-                updateStateIndicator('saved');
-                
-                // Also save to Firebase if user is logged in
-                if (window.currentUser && appState.workout.active) {
-                    saveWorkoutSession();
-                }
-            } catch (error) {
-                console.error('Error saving state:', error);
-                updateStateIndicator('error');
-            }
-        }
-
-        function loadState() {
-            try {
-                const savedState = localStorage.getItem('workoutAppState');
-                if (savedState) {
-                    const parsedState = JSON.parse(savedState);
-                    
-                    // Only restore if saved recently (within 6 hours)
-                    const sixHours = 6 * 60 * 60 * 1000;
-                    if (Date.now() - parsedState.timestamp < sixHours) {
-                        appState = { ...appState, ...parsedState };
-                        
-                        // Restore timer if it was running
-                        if (appState.timer.isRunning) {
-                            const elapsedSinceLastSave = Math.floor((Date.now() - parsedState.timestamp) / 1000);
-                            appState.timer.elapsed += elapsedSinceLastSave;
-                            window.startTimer();
-                        }
-                        
-                        updateStateIndicator('restored');
-                        return true;
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading state:', error);
-            }
-            return false;
-        }
-
-        function updateStateIndicator(status) {
-            const indicator = document.getElementById('stateIndicator');
-            indicator.className = 'state-indicator';
-            
-            switch (status) {
-                case 'saved':
-                    indicator.textContent = '✅ Saved';
-                    break;
-                case 'saving':
-                    indicator.textContent = '💾 Saving...';
-                    indicator.classList.add('saving');
-                    break;
-                case 'error':
-                    indicator.textContent = '❌ Error';
-                    indicator.classList.add('error');
-                    break;
-                case 'restored':
-                    indicator.textContent = '🔄 Restored';
-                    break;
-                case 'signed-out':
-                    indicator.textContent = '👋 Signed Out';
-                    break;
-                default:
-                    indicator.textContent = '✅ Ready';
-            }
-            
-            // Auto-hide non-error indicators after 3 seconds
-            if (status !== 'error') {
-                setTimeout(() => {
-                    if (indicator.textContent !== '❌ Error') {
-                        indicator.textContent = '✅ Ready';
-                        indicator.className = 'state-indicator';
-                    }
-                }, 3000);
-            }
-        }
-
-        // Enhanced timer functions with status updates - SINGLE DEFINITION
-        function updateTimerDisplay() {
-            const minutes = Math.floor(appState.timer.elapsed / 60);
-            const seconds = appState.timer.elapsed % 60;
-            const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            // Update all timer displays
-            document.querySelectorAll('[id^="timerDisplay"]').forEach(display => {
-                display.textContent = timeString;
-            });
-            
-            // Update status based on timer state
-            if (appState.timer.isRunning) {
-                updateTimerStatus('Running');
-            } else if (appState.timer.elapsed > 0) {
-                updateTimerStatus('Paused');
-            } else {
-                updateTimerStatus('Ready to start');
-            }
-        }
-
-        function updateTimerStatus(status) {
-            document.querySelectorAll('[id^="timerStatus"]').forEach(statusElement => {
-                statusElement.textContent = status;
-            });
-        }
-
-        // Exercise loading function - SINGLE DEFINITION
-        function loadExercises(day) {
-            const container = document.getElementById(`day${day}Exercises`);
-            const exercises = workoutData[day];
-            
-            if (!container || !exercises) {
-                console.error(`Cannot load exercises for day ${day}:`, { container: !!container, exercises: !!exercises });
-                return;
-            }
-            
-            container.innerHTML = exercises.map((exercise, exerciseIndex) => {
-                const exerciseKey = `${day}-${exerciseIndex}`;
-                const exerciseState = appState.workout.exercises[exerciseKey] || {
-                    sets: Array(exercise.sets).fill().map(() => ({ reps: 0, completed: false })),
-                    currentSet: 0
-                };
-                
-                return `
-                    <div class="workout-banner">
-                        <div class="exercise-header">
-                            <div class="exercise-info">
-                                <h3>${exercise.name}</h3>
-                                <p>${exercise.details}</p>
-                            </div>
-                            <div class="exercise-number">${exerciseIndex + 1}</div>
-                        </div>
-                        
-                        <div class="exercise-content">
-                            <div class="sets-container">
-                                ${exerciseState.sets.map((set, setIndex) => `
-                                    <div class="set-item ${set.completed ? 'completed' : ''} ${setIndex === exerciseState.currentSet ? 'active' : ''}" 
-                                         data-exercise="${exerciseKey}" data-set="${setIndex}">
-                                        <div class="set-info">
-                                            <div class="set-label">Set ${setIndex + 1}</div>
-                                            <div class="rep-controls">
-                                                <button class="rep-btn" onclick="adjustReps('${exerciseKey}', ${setIndex}, -1)">-</button>
-                                                <div class="rep-count">${set.reps}</div>
-                                                <button class="rep-btn" onclick="adjustReps('${exerciseKey}', ${setIndex}, 1)">+</button>
-                                            </div>
-                                        </div>
-                                        <button class="complete-set-btn" 
-                                                onclick="completeSet('${exerciseKey}', ${setIndex})"
-                                                ${set.completed ? 'disabled' : ''}>
-                                            ${set.completed ? '✅ Done' : 'Complete Set'}
-                                        </button>
-                                    </div>
-                                `).join('')}
-                            </div>
-                            
-                            ${exercise.videoUrl ? `
-                                <div class="video-section">
-                                    <div class="video-container">
-                                        <iframe src="${convertToEmbedUrl(exercise.videoUrl)}" allowfullscreen></iframe>
-                                    </div>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            // Save initial exercise state if not exists
-            exercises.forEach((exercise, exerciseIndex) => {
-                const exerciseKey = `${day}-${exerciseIndex}`;
-                if (!appState.workout.exercises[exerciseKey]) {
-                    appState.workout.exercises[exerciseKey] = {
-                        sets: Array(exercise.sets).fill().map(() => ({ reps: 0, completed: false })),
-                        currentSet: 0
-                    };
-                }
-            });
-        }
-
-        // Utility functions
-        function convertToEmbedUrl(url) {
-            if (!url) return '';
-            
-            let videoId = '';
-            
-            if (url.includes('youtube.com/watch')) {
-                videoId = url.split('v=')[1]?.split('&')[0];
-            } else if (url.includes('youtu.be/')) {
-                videoId = url.split('youtu.be/')[1]?.split('?')[0];
-            } else if (url.includes('youtube.com/shorts/')) {
-                videoId = url.split('shorts/')[1]?.split('?')[0];
-            } else if (url.includes('youtube.com/embed/')) {
-                return url;
-            }
-            
-            return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
-        }
-
-        // Scroll-based banner minimization system
-        function setupScrollHandling() {
-            let lastScrollY = 0;
-            let ticking = false;
-            
-            function updateBannerState() {
-                const currentSection = appState.currentSection;
-                if (!currentSection || !currentSection.startsWith('day')) {
-                    return;
-                }
-                
-                const banner = document.getElementById(`${currentSection}Banner`);
-                if (!banner) return;
-                
-                const scrollY = window.scrollY;
-                
-                // Minimize after just 50px of scrolling (about 2-3 lines)
-                // This ensures the first exercise card is immediately visible
-                const shouldMinimize = scrollY > 50;
-                
-                if (shouldMinimize && !banner.classList.contains('minimized')) {
-                    banner.classList.add('minimized');
-                    console.log('Banner minimized at scroll:', scrollY);
-                } else if (!shouldMinimize && banner.classList.contains('minimized')) {
-                    banner.classList.remove('minimized');
-                    console.log('Banner expanded at scroll:', scrollY);
-                }
-                
-                lastScrollY = scrollY;
-                ticking = false;
-            }
-            
-            function onScroll() {
-                if (!ticking) {
-                    requestAnimationFrame(updateBannerState);
-                    ticking = true;
-                }
-            }
-            
-            // Remove any existing scroll listeners
-            window.removeEventListener('scroll', onScroll);
-            
-            // Add scroll listener
-            window.addEventListener('scroll', onScroll);
-            
-            // Initial state check
-            updateBannerState();
-        }
-
-        // Make essential functions globally accessible
-        window.appState = appState;
-        window.currentUser = null;
-        window.authMode = 'login';
-        window.selectedFeedbackType = 'bug';
-        window.saveState = saveState;
-        window.loadExercises = loadExercises;
-        window.updateTimerDisplay = updateTimerDisplay;
-        window.setupScrollHandling = setupScrollHandling;
-        window.loadUserData = loadUserData;
-        
-        // Enhanced timer functions
-        window.startTimer = function() {
-            if (!appState.timer.isRunning) {
-                appState.timer.isRunning = true;
-                appState.workout.active = true;
-                
-                if (!appState.workout.startTime) {
-                    appState.workout.startTime = Date.now();
-                }
-                
-                appState.timer.interval = setInterval(() => {
-                    appState.timer.elapsed++;
-                    updateTimerDisplay();
-                    
-                    // Save state every 30 seconds during workout
-                    if (appState.timer.elapsed % 30 === 0) {
-                        saveState();
-                    }
-                }, 1000);
-                
-                saveState();
-            }
-        };
-
-        window.pauseTimer = function() {
-            if (appState.timer.isRunning) {
-                appState.timer.isRunning = false;
-                clearInterval(appState.timer.interval);
-                saveState();
-            }
-        };
-
-        window.stopTimer = function() {
-            appState.timer.isRunning = false;
-            clearInterval(appState.timer.interval);
-            
-            // Save workout if there was progress
-            if (appState.workout.active && Object.keys(appState.workout.exercises).length > 0) {
-                saveWorkoutSession();
-            }
-            
-            // Reset timer
-            appState.timer.elapsed = 0;
-            appState.workout.active = false;
-            appState.workout.startTime = null;
-            appState.workout.exercises = {};
-            
-            updateTimerDisplay();
-            saveState();
-            
-            // Refresh home page stats
-            loadUserData();
-        };
-
-        // Exercise management functions
-        window.adjustReps = function(exerciseKey, setIndex, change) {
-            if (!appState.workout.exercises[exerciseKey]) return;
-            
-            const currentReps = appState.workout.exercises[exerciseKey].sets[setIndex].reps;
-            const newReps = Math.max(0, currentReps + change);
-            
-            appState.workout.exercises[exerciseKey].sets[setIndex].reps = newReps;
-            
-            // Update display
-            const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
-            if (setElement) {
-                setElement.querySelector('.rep-count').textContent = newReps;
-            }
-            
-            saveState();
-        };
-
-        window.completeSet = function(exerciseKey, setIndex) {
-            if (!appState.workout.exercises[exerciseKey]) return;
-            
-            const exerciseState = appState.workout.exercises[exerciseKey];
-            const set = exerciseState.sets[setIndex];
-            
-            if (set.reps === 0) {
-                alert('Please enter the number of reps you completed before marking the set as complete.');
-                return;
-            }
-            
-            // Mark set as completed
-            set.completed = true;
-            
-            // Move to next incomplete set
-            const nextIncompleteSet = exerciseState.sets.findIndex((s, index) => 
-                index > setIndex && !s.completed
-            );
-            
-            if (nextIncompleteSet !== -1) {
-                exerciseState.currentSet = nextIncompleteSet;
-                
-                // Add new set if this was the last predefined set
-                if (nextIncompleteSet === exerciseState.sets.length - 1) {
-                    exerciseState.sets.push({ reps: 0, completed: false });
-                }
-            }
-            
-            // Update display
-            const setElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${setIndex}"]`);
-            if (setElement) {
-                setElement.classList.add('completed');
-                setElement.classList.remove('active');
-                
-                const button = setElement.querySelector('.complete-set-btn');
-                button.textContent = '✅ Done';
-                button.disabled = true;
-            }
-            
-            // Activate next set
-            if (nextIncompleteSet !== -1) {
-                const nextSetElement = document.querySelector(`[data-exercise="${exerciseKey}"][data-set="${nextIncompleteSet}"]`);
-                if (nextSetElement) {
-                    nextSetElement.classList.add('active');
-                }
-            }
-            
-            saveState();
-        };
-
-        // Data functions
-                async function saveWorkoutSession() {
-            if (!window.firebase || !window.currentUser) return;
-            
-            try {
-                updateStateIndicator('saving');
-                
-                const workoutSummary = {
-                    userId: window.currentUser.uid,
-                    day: appState.currentDay,
-                    date: new Date().toISOString(),
-                    duration: appState.timer.elapsed,
-                    exercises: appState.workout.exercises,
-                    startTime: appState.workout.startTime
-                };
-                
-                await window.firebase.addDoc(
-                    window.firebase.collection(window.firebase.db, 'workouts'), 
-                    workoutSummary
-                );
-                
-                updateStateIndicator('saved');
-            } catch (error) {
-                console.error('Error saving workout:', error);
-                updateStateIndicator('error');
-            }
-        }
-
-        async function loadUserData() {
-            if (!window.firebase || !window.currentUser) {
-                // Set default values for non-authenticated users
-                document.getElementById('totalWorkouts').textContent = '0';
-                document.getElementById('totalPullUps').textContent = '0';
-                document.getElementById('avgDuration').textContent = '0';
-                document.getElementById('thisWeek').textContent = '0';
-                document.getElementById('streakCount').textContent = '0';
-                return;
-            }
-            
-            try {
-                const q = window.firebase.query(
-                    window.firebase.collection(window.firebase.db, 'workouts'),
-                    window.firebase.orderBy('date', 'desc'),
-                    window.firebase.limit(50)
-                );
-                
-                const querySnapshot = await window.firebase.getDocs(q);
-                const workouts = [];
-                querySnapshot.forEach((doc) => {
-                    workouts.push({ id: doc.id, ...doc.data() });
-                });
-                
-                updateStatsDisplay(workouts);
-            } catch (error) {
-                console.error('Error loading user data:', error);
-            }
-        }
-
-        function updateStatsDisplay(workouts) {
-            const totalWorkouts = workouts.length;
-            
-            const totalPullUps = workouts.reduce((sum, workout) => {
-                const dayAExercises = workout.exercises || {};
-                const pullUpKey = Object.keys(dayAExercises).find(key => key.startsWith('A-0'));
-                if (pullUpKey && dayAExercises[pullUpKey]) {
-                    return sum + dayAExercises[pullUpKey].sets.reduce((setSum, set) => setSum + (set.reps || 0), 0);
-                }
-                return sum;
-            }, 0);
-            
-            const avgDuration = workouts.length > 0 ? 
-                Math.round(workouts.reduce((sum, w) => sum + (w.duration || 0), 0) / workouts.length / 60) : 0;
-            
-            const oneWeekAgo = new Date();
-            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-            const thisWeek = workouts.filter(w => new Date(w.date) > oneWeekAgo).length;
-            
-            const streak = calculateStreak(workouts);
-            
-            document.getElementById('totalWorkouts').textContent = totalWorkouts;
-            document.getElementById('totalPullUps').textContent = totalPullUps;
-            document.getElementById('avgDuration').textContent = avgDuration;
-            document.getElementById('thisWeek').textContent = thisWeek;
-            document.getElementById('streakCount').textContent = streak;
-        }
-
-        function calculateStreak(workouts) {
-            if (workouts.length === 0) return 0;
-            
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            let streak = 0;
-            let currentDate = new Date(today);
-            
-            for (let workout of workouts) {
-                const workoutDate = new Date(workout.date);
-                workoutDate.setHours(0, 0, 0, 0);
-                
-                if (workoutDate.getTime() === currentDate.getTime()) {
-                    streak++;
-                    currentDate.setDate(currentDate.getDate() - 2); // Every other day
-                } else if (workoutDate.getTime() < currentDate.getTime()) {
-                    break;
-                }
-            }
-            
-            return streak;
-        }
-
-        // Authentication functions
-        window.updateAuthUI = function(user) {
-            const authInfo = document.getElementById('authInfo');
-            
-            if (user) {
-                authInfo.innerHTML = `
-                    <span style="color: white; font-size: 0.8em; margin-right: 10px;">
-                        ${user.displayName || user.email || 'User'}
-                    </span>
-                    <button class="auth-btn" onclick="signOut()">Sign Out</button>
-                `;
-            } else {
-                authInfo.innerHTML = `
-                    <button class="auth-btn" onclick="showAuthModal('login')">Login</button>
-                `;
-            }
-            
-            // Update the navigation drawer user section
-            updateDrawerUserSection();
-        };
-
-        window.updateDrawerUserSection = function() {
-            const navUserSection = document.getElementById('navUserSection');
-            const user = window.currentUser;
-            
-            if (user) {
-                const initials = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
-                navUserSection.innerHTML = `
-                    <div class="nav-user-info">
-                        <div class="nav-user-avatar">${initials}</div>
-                        <div class="nav-user-details">
-                            <div class="nav-user-name">${user.displayName || 'User'}</div>
-                            <div class="nav-user-email">${user.email}</div>
-                        </div>
-                    </div>
-                    <div class="nav-auth-buttons">
-                        <button class="nav-auth-btn" onclick="signOut()">Sign Out</button>
-                    </div>
-                `;
-            } else {
-                navUserSection.innerHTML = `
-                    <div class="nav-auth-buttons">
-                        <button class="nav-auth-btn primary" onclick="showAuthModal('signup')">Sign Up</button>
-                        <button class="nav-auth-btn" onclick="showAuthModal('login')">Login</button>
-                    </div>
-                `;
-            }
-        };
-
-        // Sign out function
-        window.signOut = async function() {
-            try {
-                await window.firebase.signOut(window.firebase.auth);
-                
-                // Clear local state on sign out
-                localStorage.removeItem('workoutAppState');
-                
-                // Reset app state
-                appState.workout.exercises = {};
-                appState.timer.elapsed = 0;
-                appState.timer.isRunning = false;
-                appState.workout.active = false;
-                
-                // Show sign out confirmation
-                updateStateIndicator('signed-out');
-                
-                console.log('User signed out successfully');
-                
-            } catch (error) {
-                console.error('Sign out error:', error);
-                updateStateIndicator('error');
-            }
-        };
-
-        // Authentication functions
-        function showAuthError(message) {
-            const errorDiv = document.getElementById('authError');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        function clearAuthError() {
-            document.getElementById('authError').style.display = 'none';
-        }
-
-        async function handleAuth(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            const confirmPassword = document.getElementById('authConfirmPassword').value;
-            const displayName = document.getElementById('authDisplayName').value;
-            const submitBtn = document.getElementById('authSubmitBtn');
-            
-            clearAuthError();
-            submitBtn.disabled = true;
-            submitBtn.textContent = window.authMode === 'login' ? 'Logging in...' : 'Creating account...';
-            
-            try {
-                if (window.authMode === 'signup') {
-                    if (password !== confirmPassword) {
-                        throw new Error('Passwords do not match');
-                    }
-                    
-                    const userCredential = await window.firebase.createUserWithEmailAndPassword(window.firebase.auth, email, password);
-                    
-                    if (displayName) {
-                        await window.firebase.updateProfile(userCredential.user, {
-                            displayName: displayName
-                        });
-                    }
-                    
-                    // Show success message for account creation
-                    showAuthSuccess(`Welcome ${displayName || email}! Your account has been created successfully.`);
-                    
-                    setTimeout(() => {
-                        closeAuthModal();
-                    }, 2000);
-                    
-                } else {
-                    await window.firebase.signInWithEmailAndPassword(window.firebase.auth, email, password);
-                    
-                    // Show success message for login
-                    showAuthSuccess('Successfully logged in!');
-                    
-                    setTimeout(() => {
-                        closeAuthModal();
-                    }, 1500);
-                }
-            } catch (error) {
-                console.error('Auth error:', error);
-                let errorMessage = 'An error occurred. Please try again.';
-                
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                        errorMessage = 'No account found with this email address.';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage = 'Incorrect password.';
-                        break;
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'An account with this email already exists.';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'Password should be at least 6 characters.';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'Please enter a valid email address.';
-                        break;
-                    default:
-                        errorMessage = error.message;
-                }
-                
-                showAuthError(errorMessage);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = window.authMode === 'login' ? 'Login' : 'Create Account';
-            }
-        }
-
-        function showAuthSuccess(message) {
-            const errorDiv = document.getElementById('authError');
-            errorDiv.textContent = message;
-            errorDiv.style.background = '#2ecc71';
-            errorDiv.style.display = 'block';
-        }
-
-        // Feedback functions
-        async function handleFeedback(event) {
-            event.preventDefault();
-            
-            const feedbackText = document.getElementById('feedbackText').value;
-            const submitBtn = event.target.querySelector('button[type="submit"]');
-            
-            submitBtn.disabled = true;
-            submitBtn.textContent = '📤 Sending...';
-            
-            const feedbackData = {
-                type: window.selectedFeedbackType,
-                message: feedbackText,
-                userId: window.currentUser?.uid || 'anonymous',
-                userEmail: window.currentUser?.email || 'anonymous',
-                context: {
-                    currentSection: appState.currentSection,
-                    currentDay: appState.currentDay,
-                    userAgent: navigator.userAgent,
-                    timestamp: new Date().toISOString(),
-                    url: window.location.href,
-                    timerRunning: appState.timer.isRunning,
-                    workoutActive: appState.workout.active
-                }
-            };
-            
-            try {
-                if (window.firebase && window.firebase.db) {
-                    await window.firebase.addDoc(window.firebase.collection(window.firebase.db, 'feedback'), feedbackData);
-                } else {
-                    // Fallback for when Firebase is not available
-                    console.log('Feedback submitted (offline):', feedbackData);
-                }
-                
-                document.getElementById('feedbackForm').style.display = 'none';
-                document.getElementById('feedbackSuccess').style.display = 'block';
-                
-                setTimeout(() => {
-                    closeFeedback();
-                }, 2000);
-                
-            } catch (error) {
-                console.error('Error submitting feedback:', error);
-                alert('There was an error submitting your feedback. Please try again.');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = '🚀 Submit Feedback';
-            }
-        }
-
-        // Initialize app
-        function initApp() {
-            // Load saved state first
-            const stateRestored = loadState();
-            
-            // Load user data
-            loadUserData();
-            
-            // Initialize current section
-            if (appState.currentSection === 'home') {
-                showSection('home');
-            } else if (appState.currentSection.startsWith('day')) {
-                showSection(appState.currentSection);
-            } else {
-                showSection('home');
-            }
-            
-            // Update timer display
-            updateTimerDisplay();
-            
-            // Update drawer user section
-            window.updateDrawerUserSection();
-            
-            // Set up form event listeners
-            document.getElementById('authForm').addEventListener('submit', handleAuth);
-            document.getElementById('feedbackForm').addEventListener('submit', handleFeedback);
-            
-            // Set up periodic state saving during workouts
-            setInterval(() => {
-                if (appState.workout.active) {
-                    saveState();
-                }
-            }, 60000); // Save every minute during workouts
-            
-            console.log('App initialized', stateRestored ? 'with restored state' : 'with fresh state');
-        }
-
-        // Auth state listener
-        onAuthStateChanged(auth, (user) => {
-            console.log('Auth state changed:', user);
-            if (user) {
-                console.log('User details:', { uid: user.uid, email: user.email, displayName: user.displayName });
-                window.currentUser = user;
-                window.updateAuthUI(user);
-                loadUserData();
-            } else {
-                console.log('No user signed in');
-                window.currentUser = null;
-                window.updateAuthUI(null);
-            }
-        });
-
-        // Start app when page loads
-        document.addEventListener('DOMContentLoaded', initApp);
-
-        // Save state before page unload
-        window.addEventListener('beforeunload', () => {
-            if (appState.workout.active) {
-                saveState();
-            }
-        });
-
-        // Handle visibility change (tab switching, app backgrounding)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && appState.workout.active) {
-                saveState();
-            }
-        });
-    </script>
-
-    <!-- Essential Global Functions -->
-    <script>
-        // Core navigation functions
-        function showSection(sectionName) {
-            console.log('Switching to section:', sectionName);
-            
-            // Hide all sections first
-            document.querySelectorAll('.home-container, .workout-container').forEach(section => {
-                section.style.display = 'none';
-                if (section.classList) {
-                    section.classList.remove('active');
-                }
-            });
-            
-            // Reset all banners to expanded state
-            document.querySelectorAll('.day-banner').forEach(banner => {
-                banner.classList.remove('minimized');
-            });
-            
-            // Update the app state to track which section we're in
-            if (window.appState) {
-                window.appState.currentSection = sectionName;
-            }
-            
-            // Show the correct section based on what was selected
-            if (sectionName === 'home') {
-                const homeSection = document.getElementById('homeSection');
-                if (homeSection) {
-                    homeSection.style.display = 'block';
-                    homeSection.classList.add('active');
-                }
-                // Load fresh statistics when returning to home
-                if (window.loadUserData) {
-                    window.loadUserData();
-                }
-            } else if (sectionName.startsWith('day')) {
-                // Handle workout day sections (dayA, dayB, dayC)
-                const day = sectionName.replace('day', ''); // Extract 'A', 'B', or 'C'
-                const daySection = document.getElementById(`day${day}Section`);
-                
-                if (daySection) {
-                    daySection.style.display = 'block';
-                    console.log(`Showing ${sectionName} section`);
-                    
-                    // Setup scroll handling for this section
-                    setTimeout(() => {
-                        if (window.setupScrollHandling) {
-                            window.setupScrollHandling();
-                        }
-                    }, 100);
-                } else {
-                    console.error(`Could not find section element: day${day}Section`);
-                }
-                
-                // Update app state to track current workout day
-                if (window.appState) {
-                    window.appState.currentDay = day;
-                }
-                
-                // Load the exercises for this specific day
-                setTimeout(() => {
-                    if (window.loadExercises) {
-                        window.loadExercises(day);
-                    } else {
-                        console.error('loadExercises function not available, retrying...');
-                        // Retry after a short delay to allow Firebase module to load
-                        setTimeout(() => {
-                            if (window.loadExercises) {
-                                window.loadExercises(day);
-                            } else {
-                                console.error('loadExercises still not available after retry');
-                            }
-                        }, 100);
-                    }
-                }, 50);
-            } else if (sectionName === 'settings') {
-                openSettings();
-                return; // Don't continue with section switching for modal
-            } else if (sectionName === 'feedback') {
-                openFeedback();
-                return; // Don't continue with section switching for modal
-            }
-            
-            // Update the timer display for the current section
-            if (window.updateTimerDisplay) {
-                window.updateTimerDisplay();
-            }
-            
-            // Save the current state so it persists across browser sessions
-            if (window.saveState) {
-                window.saveState();
-            }
-        }
-
-        // Navigation drawer functions
-        function toggleDrawer() {
-            const drawer = document.getElementById('navDrawer');
-            const isOpen = drawer.classList.contains('open');
-            
-            if (isOpen) {
-                closeDrawer();
-            } else {
-                openDrawer();
-            }
-        }
-
-        function openDrawer() {
-            const drawer = document.getElementById('navDrawer');
-            const overlay = document.getElementById('navDrawerOverlay');
-            const menuIcon = document.getElementById('menuIcon');
-            
-            drawer.classList.add('open');
-            overlay.classList.add('open');
-            menuIcon.textContent = '✕';
-            menuIcon.classList.add('open');
-            document.body.style.overflow = 'hidden';
-            
-            if (window.updateDrawerUserSection) {
-                window.updateDrawerUserSection();
-            }
-        }
-
-        function closeDrawer() {
-            const drawer = document.getElementById('navDrawer');
-            const overlay = document.getElementById('navDrawerOverlay');
-            const menuIcon = document.getElementById('menuIcon');
-            
-            drawer.classList.remove('open');
-            overlay.classList.remove('open');
-            menuIcon.textContent = '☰';
-            menuIcon.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-
-        function navigateToSection(sectionName) {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            const clickedItem = document.querySelector(`[data-section="${sectionName}"]`);
-            if (clickedItem) {
-                clickedItem.classList.add('active');
-            }
-            
-            closeDrawer();
-            showSection(sectionName);
-        }
-
-        // Authentication functions
-        function showAuthModal(mode) {
-            window.authMode = mode;
-            const modal = document.getElementById('authModal');
-            const title = document.getElementById('authModalTitle');
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const confirmGroup = document.getElementById('confirmPasswordGroup');
-            const nameGroup = document.getElementById('displayNameGroup');
-            const switchText = document.getElementById('authSwitchText');
-            const switchBtn = document.getElementById('authSwitchBtn');
-            
-            if (mode === 'login') {
-                title.textContent = '🔐 Login';
-                submitBtn.textContent = 'Login';
-                confirmGroup.style.display = 'none';
-                nameGroup.style.display = 'none';
-                switchText.textContent = "Don't have an account?";
-                switchBtn.textContent = 'Sign Up';
-            } else {
-                title.textContent = '📝 Sign Up';
-                submitBtn.textContent = 'Create Account';
-                confirmGroup.style.display = 'block';
-                nameGroup.style.display = 'block';
-                switchText.textContent = 'Already have an account?';
-                switchBtn.textContent = 'Login';
-            }
-            
-            clearAuthError();
-            document.getElementById('authForm').reset();
-            modal.style.display = 'block';
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').style.display = 'none';
-        }
-
-        function switchAuthMode() {
-            const newMode = window.authMode === 'login' ? 'signup' : 'login';
-            showAuthModal(newMode);
-        }
-
-        function clearAuthError() {
-            const errorDiv = document.getElementById('authError');
-            if (errorDiv) {
-                errorDiv.style.display = 'none';
-            }
-        }
-
-        // Timer functions - delegates to module functions when available
-        function startTimer() {
-            if (window.startTimer && window.startTimer !== startTimer) {
-                window.startTimer();
-            }
-        }
-
-        function pauseTimer() {
-            if (window.pauseTimer && window.pauseTimer !== pauseTimer) {
-                window.pauseTimer();
-            }
-        }
-
-        function stopTimer() {
-            if (window.stopTimer && window.stopTimer !== stopTimer) {
-                window.stopTimer();
-            }
-        }
-
-        // Quick workout starter
-        function startQuickWorkout() {
-            console.log('Starting quick workout');
-            showSection('dayA');
-            setTimeout(() => {
-                startTimer();
-            }, 200);
-        }
-
-        // Utility functions
-        function openSettings() {
-            alert('Settings panel coming in Phase 2! Will include:\n• Training frequency configuration\n• Weight tracking setup\n• Exercise customization\n• Goal setting');
-        }
-
-        function openFeedback() {
-            document.getElementById('feedbackModal').style.display = 'block';
-            document.getElementById('feedbackSuccess').style.display = 'none';
-            document.getElementById('feedbackForm').style.display = 'block';
-            updateFeedbackContext();
-            document.getElementById('feedbackText').focus();
-        }
-
-        function closeFeedback() {
-            document.getElementById('feedbackModal').style.display = 'none';
-            document.getElementById('feedbackForm').reset();
-            window.selectedFeedbackType = 'bug';
-            updateFeedbackTypeButtons();
-        }
-
-        function selectFeedbackType(type) {
-            window.selectedFeedbackType = type;
-            updateFeedbackTypeButtons();
-        }
-
-        function updateFeedbackTypeButtons() {
-            document.querySelectorAll('.feedback-type-btn').forEach(btn => {
-                if (btn.dataset.type === window.selectedFeedbackType) {
-                    btn.style.background = '#3498db';
-                    btn.style.color = 'white';
-                    btn.style.borderColor = '#3498db';
-                } else {
-                    btn.style.background = 'white';
-                    btn.style.color = '#333';
-                    btn.style.borderColor = '#e9ecef';
-                }
-            });
-        }
-
-        function updateFeedbackContext() {
-            const context = {
-                currentSection: window.appState?.currentSection || 'unknown',
-                currentDay: window.appState?.currentDay || 'unknown',
-                isLoggedIn: !!window.currentUser,
-                userAgent: navigator.userAgent,
-                timestamp: new Date().toISOString(),
-                url: window.location.href,
-                timerRunning: window.appState?.timer?.isRunning || false,
-                workoutActive: window.appState?.workout?.active || false
-            };
-            
-            const contextInfo = document.getElementById('contextInfo');
-            if (contextInfo) {
-                contextInfo.innerHTML = `
-                    Current Section: ${context.currentSection}<br>
-                    Current Day: ${context.currentDay}<br>
-                    Logged In: ${context.isLoggedIn ? 'Yes' : 'No'}<br>
-                    Device: ${context.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'}<br>
-                    Workout Active: ${context.workoutActive ? 'Yes' : 'No'}<br>
-                    Timer Running: ${context.timerRunning ? 'Yes' : 'No'}
-                `;
-            }
-        }
-
-        // Modal click-outside-to-close functionality
-        window.onclick = function(event) {
-            const authModal = document.getElementById('authModal');
-            const feedbackModal = document.getElementById('feedbackModal');
-            
-            if (event.target === authModal) {
-                closeAuthModal();
-            }
-            if (event.target === feedbackModal) {
-                closeFeedback();
-            }
-        }
-    </script>
-</body>
-</html>
+                <button class="nav-item" onclick="WorkoutApp.
