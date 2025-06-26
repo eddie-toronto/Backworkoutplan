@@ -399,6 +399,51 @@
             margin-top: 0;
         }
         
+ /* MOBILE TIMER FIX: Horizontal button row for mobile screens */
+.timer-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+}
+.timer-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 44px;
+    padding: 12px 0;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    box-sizing: border-box;
+}
+@media (max-width: 600px) {
+    .day-banner-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    .timer-controls {
+        flex-direction: row !important;
+        gap: 8px;
+        width: 100%;
+    }
+    .timer-btn {
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 44px;
+        padding: 12px 0;
+        font-size: 1em;
+    }
+    .timer-controls-section {
+        order: -1;
+        margin-bottom: 10px;
+        padding: 0;
+        width: 100%;
+        max-width: 100vw;
+    }
+}
         /* Timer Controls Section - Above timer as requested */
         .timer-controls-section {
             margin-bottom: 15px;
@@ -839,134 +884,6 @@
             
             .day-banner.minimized .timer-display {
                 font-size: 1em;
-            }
-            
-            /* Fixed: Timer controls mobile layout - Enhanced */
-            .timer-controls {
-                flex-direction: column;
-                gap: 8px;
-                width: 100%;
-                box-sizing: border-box;
-            }
-            
-            .timer-btn {
-                width: 100% !important;
-                padding: 14px 20px;
-                font-size: 1em;
-                min-width: unset;
-                box-sizing: border-box;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                font-weight: 600;
-                transition: all 0.3s ease;
-            }
-            
-            /* Ensure timer controls section has proper spacing and no overflow */
-            .timer-controls-section {
-                margin-bottom: 15px;
-                padding: 0 10px;
-                width: 100%;
-                box-sizing: border-box;
-                overflow: hidden;
-            }
-            
-            /* Force proper button colors on mobile */
-            .timer-btn.start-btn {
-                background: #2ecc71 !important;
-                color: white !important;
-            }
-            
-            .timer-btn.pause-btn {
-                background: #f39c12 !important;
-                color: white !important;
-            }
-            
-            .timer-btn.stop-btn {
-                background: #e74c3c !important;
-                color: white !important;
-            }
-            
-            /* Day banner responsive adjustments - Enhanced */
-            .day-banner {
-                margin-bottom: 15px;
-                padding: 15px;
-                border-radius: 0 0 12px 12px;
-                width: 100%;
-                box-sizing: border-box;
-                overflow: hidden;
-            }
-            
-            .day-banner.minimized {
-                padding: 10px 15px;
-            }
-            
-            /* Timer display responsive */
-            .day-banner-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 15px;
-                margin-bottom: 15px;
-            }
-            
-            .day-banner.minimized .day-banner-header {
-                flex-direction: row;
-                align-items: center;
-                gap: 10px;
-                margin-bottom: 0;
-            }
-            
-            .timer-display-section {
-                text-align: center;
-                order: 2;
-            }
-            
-            .day-banner.minimized .timer-display-section {
-                text-align: right;
-                order: 1;
-                flex-shrink: 0;
-            }
-            
-            .day-info {
-                order: 1;
-            }
-            
-            .day-banner.minimized .day-info {
-                order: 2;
-                flex: 1;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .quick-actions {
-                flex-direction: column;
-            }
-            
-            /* Exercise cards mobile optimization */
-            .exercise-content {
-                padding: 15px;
-            }
-            
-            .set-item {
-                padding: 10px 12px;
-                margin: 6px 0;
-            }
-            
-            .rep-controls {
-                gap: 8px;
-            }
-            
-            .rep-btn {
-                width: 32px;
-                height: 32px;
-                font-size: 0.9em;
-            }
-            
-            .complete-set-btn {
-                padding: 6px 12px;
-                font-size: 0.8em;
             }
         }
         
@@ -1877,6 +1794,134 @@
                 }
                 return sum;
             }, 0);
+            
+            const avgDuration = workouts.length > 0 ? 
+                Math.round(workouts.reduce((sum, w) => sum + (w.duration || 0), 0) / workouts.length / 60) : 0;
+            
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            const thisWeek = workouts.filter(w => new Date(w.date) > oneWeekAgo).length;
+            
+            const streak = calculateStreak(workouts);
+            
+            document.getElementById('totalWorkouts').textContent = totalWorkouts;
+            document.getElementById('totalPullUps').textContent = totalPullUps;
+            document.getElementById('avgDuration').textContent = avgDuration;
+            document.getElementById('thisWeek').textContent = thisWeek;
+            document.getElementById('streakCount').textContent = streak;
+        }
+
+        function calculateStreak(workouts) {
+            if (workouts.length === 0) return 0;
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            let streak = 0;
+            let currentDate = new Date(today);
+            
+            for (let workout of workouts) {
+                const workoutDate = new Date(workout.date);
+                workoutDate.setHours(0, 0, 0, 0);
+                
+                if (workoutDate.getTime() === currentDate.getTime()) {
+                    streak++;
+                    currentDate.setDate(currentDate.getDate() - 2); // Every other day
+                } else if (workoutDate.getTime() < currentDate.getTime()) {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+
+        // Authentication functions
+        window.updateAuthUI = function(user) {
+            const authInfo = document.getElementById('authInfo');
+            
+            if (user) {
+                authInfo.innerHTML = `
+                    <span style="color: white; font-size: 0.8em; margin-right: 10px;">
+                        ${user.displayName || user.email || 'User'}
+                    </span>
+                    <button class="auth-btn" onclick="signOut()">Sign Out</button>
+                `;
+            } else {
+                authInfo.innerHTML = `
+                    <button class="auth-btn" onclick="showAuthModal('login')">Login</button>
+                `;
+            }
+            
+            // Update the navigation drawer user section
+            updateDrawerUserSection();
+        };
+
+        window.updateDrawerUserSection = function() {
+            const navUserSection = document.getElementById('navUserSection');
+            const user = window.currentUser;
+            
+            if (user) {
+                const initials = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
+                navUserSection.innerHTML = `
+                    <div class="nav-user-info">
+                        <div class="nav-user-avatar">${initials}</div>
+                        <div class="nav-user-details">
+                            <div class="nav-user-name">${user.displayName || 'User'}</div>
+                            <div class="nav-user-email">${user.email}</div>
+                        </div>
+                    </div>
+                    <div class="nav-auth-buttons">
+                        <button class="nav-auth-btn" onclick="signOut()">Sign Out</button>
+                    </div>
+                `;
+            } else {
+                navUserSection.innerHTML = `
+                    <div class="nav-auth-buttons">
+                        <button class="nav-auth-btn primary" onclick="showAuthModal('signup')">Sign Up</button>
+                        <button class="nav-auth-btn" onclick="showAuthModal('login')">Login</button>
+                    </div>
+                `;
+            }
+        };
+
+        // Sign out function
+        window.signOut = async function() {
+            try {
+                await window.firebase.signOut(window.firebase.auth);
+                
+                // Clear local state on sign out
+                localStorage.removeItem('workoutAppState');
+                
+                // Reset app state
+                appState.workout.exercises = {};
+                appState.timer.elapsed = 0;
+                appState.timer.isRunning = false;
+                appState.workout.active = false;
+                
+                // Show sign out confirmation
+                updateStateIndicator('signed-out');
+                
+                console.log('User signed out successfully');
+                
+            } catch (error) {
+                console.error('Sign out error:', error);
+                updateStateIndicator('error');
+            }
+        };
+
+        // Authentication functions
+        function showAuthError(message) {
+            const errorDiv = document.getElementById('authError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function clearAuthError() {
+            document.getElementById('authError').style.display = 'none';
+        }
+
+        async function handleAuth(event) {
+            event.preventDefault();
             
             const avgDuration = workouts.length > 0 ? 
                 Math.round(workouts.reduce((sum, w) => sum + (w.duration || 0), 0) / workouts.length / 60) : 0;
